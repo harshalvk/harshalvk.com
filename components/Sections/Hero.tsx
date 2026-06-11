@@ -3,7 +3,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { SectionCorners } from './shared/Navbar';
+import { SectionCorners } from '../shared/Navbar';
 import { inter } from '@/lib/fonts';
 
 const Hero = () => {

@@ -5,7 +5,7 @@ import {
   GitHubContributionsFallback,
 } from '@/components/ui/github-contributions';
 import { getCachedContributions } from '@/lib/get-cached-contributions';
-import SectionBorders from './shared/SectionBorders';
+import SectionBorders from '@/components/shared/SectionBorders';
 
 const GITHUB_USERNAME = 'Harshalvk';
 const GITHUB_PROFILE_URL = 'https://github.com/Harshalvk';

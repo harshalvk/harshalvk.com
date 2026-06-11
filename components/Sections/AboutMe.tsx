@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { SiGithub } from 'react-icons/si';
 import Link from 'next/link';
-import SectionBorders from './shared/SectionBorders';
+import SectionBorders from '@/components/shared/SectionBorders';
 import { inter } from '@/lib/fonts';
-import { Title } from './Typography';
+import { Title } from '@/components/Typography';
 
 const AboutMe = () => {
   return (

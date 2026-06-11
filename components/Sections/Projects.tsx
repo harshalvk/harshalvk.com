@@ -3,8 +3,8 @@
 import React from 'react';
 import { projects } from '@/components/constants';
 import { Check, ChevronsUpDown, Link } from 'lucide-react';
-import { Title } from './Typography';
-import SectionBorders from './shared/SectionBorders';
+import { Title } from '@/components/Typography';
+import SectionBorders from '@/components/shared/SectionBorders';
 import { inter } from '@/lib/fonts';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { AnimatePresence, motion } from 'motion/react';
