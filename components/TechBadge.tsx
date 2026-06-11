@@ -1,6 +1,5 @@
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import React from "react";
+import { cn } from '@/lib/utils';
+import React from 'react';
 
 const TechBadge = ({
   name,
@@ -14,19 +13,12 @@ const TechBadge = ({
   return (
     <div
       className={cn(
-        "h-8 border rounded-sm flex items-center gap-1 w-fit py-1 px-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 hover:border-zinc-500/40 transition-all duration-200 cursor-default",
+        'flex h-8 w-fit cursor-default items-center gap-1 rounded-sm border px-2 py-1 transition-all duration-200 hover:border-zinc-500/40 hover:bg-zinc-100 dark:hover:bg-zinc-900',
         className
       )}
     >
       {Logo && <div className="h-5 w-5">{Logo}</div>}
-      <p
-        className={cn(
-          "text-sm font-medium tracking-wide cursor-default",
-          className
-        )}
-      >
-        {name}
-      </p>
+      <p className={cn('cursor-default text-sm font-medium tracking-wide', className)}>{name}</p>
     </div>
   );
 };
