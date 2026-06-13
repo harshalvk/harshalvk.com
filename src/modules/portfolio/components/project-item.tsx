@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { LinkIcon, LinkIconHandle } from '@/components/icons/link-icon';
 import Link from 'next/link';
 import { ChevronDownIcon, ChevronDownIconHandle } from '@/components/icons/chevron-icon';
+import TechBadge from '@/components/TechBadge';
 
 export function ProjectItem({ project }: { project: Project }) {
   const [isOpen, setIsOpen] = React.useState(project.isExpanded ?? false);
@@ -35,7 +36,7 @@ export function ProjectItem({ project }: { project: Project }) {
       <CollapsibleTrigger asChild>
         <button
           type="button"
-          className="flex w-full items-center border-b text-left hover:bg-zinc-800/30"
+          className="flex w-full items-center border-b text-left hover:bg-zinc-100/30 dark:hover:bg-zinc-800/30"
         >
           <div className="flex aspect-square items-center justify-center self-stretch p-5">
             {project.logo ? (
@@ -132,12 +133,7 @@ export function ProjectItem({ project }: { project: Project }) {
 
                 <div className="flex flex-wrap gap-2">
                   {project.skills.map((skill, index) => (
-                    <div
-                      key={index}
-                      className="text-muted-foreground cursor-default rounded-sm border bg-zinc-100 px-2 py-1 text-xs select-none md:text-sm dark:bg-zinc-800"
-                    >
-                      {skill}
-                    </div>
+                    <TechBadge key={index} name={skill} />
                   ))}
                 </div>
               </motion.div>

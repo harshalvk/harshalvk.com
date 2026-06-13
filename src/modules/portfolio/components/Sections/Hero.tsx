@@ -59,13 +59,13 @@ const Hero = () => {
       </div>
 
       <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
-        <p
+        <div
           className={`text-base leading-6 text-zinc-600 sm:text-lg sm:leading-7 dark:text-zinc-400 ${inter.className}`}
         >
           <Prose>
             <MarkdownClient>{USER.bio}</MarkdownClient>
           </Prose>
-        </p>
+        </div>
       </div>
     </section>
   );
