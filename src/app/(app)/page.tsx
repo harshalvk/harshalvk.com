@@ -9,6 +9,7 @@ import SectionBorders from '@/components/shared/SectionBorders';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 import { inter } from '@/lib/fonts';
+import Experiences from '@/modules/portfolio/components/Sections/Experiences';
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       </div>
       <Hero />
       <AboutMe />
+      <Experiences />
       <Projects />
       <TooltipProvider>
         <GitHubContri />
