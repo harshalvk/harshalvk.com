@@ -2,7 +2,12 @@ import { Slot } from '@radix-ui/react-slot';
 import { cn } from '@/lib/utils';
 
 export function Panel({ className, ...props }: React.ComponentProps<'section'>) {
-  return <section className={cn('border-border relative border-x', className)} {...props} />;
+  return (
+    <section
+      className={cn('border-border relative scroll-mt-[75px] border-x', className)}
+      {...props}
+    />
+  );
 }
 
 export function PanelHeader({ className, ...props }: React.ComponentProps<'div'>) {
