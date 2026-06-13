@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Title } from '../../../../components/Typography';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,13 +15,14 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ArrowRight, AtSign, Loader, Send } from 'lucide-react';
-import { AutosizeTextarea } from '../../../../components/ui/auto-resize-textarea';
-import { Discord, LinkedIn, X } from '../../../../components/logos';
+import { AutosizeTextarea } from '@/components/ui/auto-resize-textarea';
+import { Discord, LinkedIn, X } from '@/components/logos';
 import Link from 'next/link';
 import { useMutation } from '@tanstack/react-query';
 import { SendMail } from '@/actions/sendMail';
 import { toast } from 'sonner';
-import SectionBorders from '../../../../components/shared/SectionBorders';
+import SectionBorders from '@/components/shared/SectionBorders';
+import { Panel, PanelContent, PanelHeader, PanelTitle } from '../panel';
 
 const formSchema = z.object({
   name: z.string(),
@@ -68,86 +68,92 @@ const ContactMe = () => {
     mutate(values);
   };
 
+  const ID = 'contactme';
   return (
     <section className="relative border-x border-t-0">
-      <SectionBorders />
-      <div className="bg-hatching screen-line-top screen-line-bottom h-4 w-full" />
-      <Title text="Contact Me." className="px-4 py-1" />
-      <div className="bg-hatching screen-line-top screen-line-bottom h-4 w-full" />
-
-      <div className="p-4">
-        <p className="text-muted-foreground mb-5 font-mono leading-5">
-          I&apos;m always eager to explore new opportunities and take an exciting projects. If you
-          have a project in mind, or just want to say hi, feel free to send me a message.
-        </p>
-        <div className="rounded-md p-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 font-mono">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center [&_input]:rounded-sm">
-                <FormField
-                  disabled={isPending}
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Your Name" {...field} className="text-sm" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  disabled={isPending}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="harshal@xyz.com" {...field} className="text-sm" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="message"
-                disabled={isPending}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Message</FormLabel>
-                    <FormControl>
-                      <AutosizeTextarea
-                        placeholder="Hello there, I would like to ask you about..."
-                        {...field}
-                        className="min-h-36 resize-none rounded-sm text-sm"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                disabled={isPending}
-                variant={'secondary'}
-                className="w-full rounded-sm border sm:w-fit"
-              >
-                {isPending ? <Loader className="animate-spin transition-all" /> : <Send />}
-                Send
-              </Button>
-            </form>
-          </Form>
-        </div>
-        <div className="w-full border-b border-dashed" />
-        <p className="text-muted-foreground my-5 font-mono">Or contact me with...</p>
-        <div className="flex flex-wrap gap-2">
-          <OtherContacts />
-        </div>
-      </div>
+      <Panel id={ID}>
+        <SectionBorders />
+        <PanelHeader>
+          <PanelTitle>
+            <a href={`#${ID}`}>Contact Me.</a>
+          </PanelTitle>
+        </PanelHeader>
+        <PanelContent>
+          <div className="p-4">
+            <p className="text-muted-foreground leading-5">
+              I&apos;m always eager to explore new opportunities and take an exciting projects. If
+              you have a project in mind, or just want to say hi, feel free to send me a message.
+            </p>
+            <div className="rounded-md py-4">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center [&_input]:rounded-sm">
+                    <FormField
+                      disabled={isPending}
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Your Name" {...field} className="text-sm" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      disabled={isPending}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="harshal@xyz.com" {...field} className="text-sm" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    disabled={isPending}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Message</FormLabel>
+                        <FormControl>
+                          <AutosizeTextarea
+                            placeholder="Hello there, I would like to ask you about..."
+                            {...field}
+                            className="min-h-36 resize-none rounded-sm text-sm"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    disabled={isPending}
+                    variant={'secondary'}
+                    className="w-full rounded-sm border sm:w-fit"
+                  >
+                    {isPending ? <Loader className="animate-spin transition-all" /> : <Send />}
+                    Send
+                  </Button>
+                </form>
+              </Form>
+            </div>
+            <div className="w-full border-b border-dashed" />
+            <p className="text-muted-foreground my-5 font-mono">Or contact me with...</p>
+            <div className="flex flex-wrap gap-2">
+              <OtherContacts />
+            </div>
+          </div>
+        </PanelContent>
+      </Panel>
     </section>
   );
 };
