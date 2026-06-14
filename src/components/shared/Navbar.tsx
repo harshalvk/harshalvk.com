@@ -37,9 +37,9 @@ const Navbar = () => {
             <div className="mr-1 flex items-center gap-4">
               <ul className="flex gap-4">
                 {navLinks.map((navLink, idx) => (
-                  <a key={idx} href={navLink.link}>
+                  <Link key={idx} href={navLink.link}>
                     {navLink.name}
-                  </a>
+                  </Link>
                 ))}
               </ul>
               <CommandMenu docs={docPreview} />
