@@ -4,6 +4,7 @@ import * as React from 'react';
 import { useTheme } from 'next-themes';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 const SUN_RAYS = [
   { x1: '12', y1: '2', x2: '12', y2: '4' },
@@ -24,22 +25,18 @@ export function ModeToggle() {
     setMounted(true);
   }, []);
 
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.repeat) return;
-      if (e.key === 'd' || e.key === 'D') {
-        e.preventDefault();
-        toggleTheme();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [theme, resolvedTheme]);
-
   const toggleTheme = () => {
     const current = resolvedTheme || theme;
     setTheme(current === 'dark' ? 'light' : 'dark');
   };
+
+  const switchTheme = (e: KeyboardEvent) => {
+    if (e.repeat) return;
+    e.preventDefault();
+    toggleTheme();
+  };
+
+  useHotkeys('d', (e) => switchTheme(e));
 
   if (!mounted) {
     return (
