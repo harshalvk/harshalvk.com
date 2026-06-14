@@ -6,8 +6,6 @@ import GitHubContri from '@/modules/portfolio/components/Sections/GitHubContri';
 import MyTechnologies from '@/modules/portfolio/components/Sections/MyTechnologies';
 import SectionBorders from '@/components/shared/SectionBorders';
 
-import { TooltipProvider } from '@/components/ui/tooltip';
-
 import { inter } from '@/lib/fonts';
 import Experiences from '@/modules/portfolio/components/Sections/Experiences';
 
@@ -27,9 +25,7 @@ export default function Home() {
       <AboutMe />
       <Experiences />
       <Projects />
-      <TooltipProvider>
-        <GitHubContri />
-      </TooltipProvider>
+      <GitHubContri />
       <MyTechnologies />
       <ContactMe />
     </section>

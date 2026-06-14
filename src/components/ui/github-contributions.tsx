@@ -1,11 +1,11 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import { format } from 'date-fns';
+import { createPortal } from 'react-dom';
 
 import { cn } from '@/lib/utils';
 import { Spinner } from '@/components/ui/spinner';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Activity } from '@/components/ui/contribution-graph';
 import {
   ContributionGraph,
@@ -15,6 +15,56 @@ import {
   ContributionGraphLegend,
   ContributionGraphTotalCount,
 } from '@/components/ui/contribution-graph';
+
+// ── SVG-safe tooltip ──────────────────────────────────────────────────────────
+// Radix Tooltip breaks inside SVG elements because SVG bounding rects
+// behave differently from HTML elements. This uses mouse coords + portal instead.
+
+type TooltipPos = { x: number; y: number };
+
+function SVGTooltip({ content, children }: { content: string; children: React.ReactNode }) {
+  const [pos, setPos] = useState<TooltipPos | null>(null);
+
+  return (
+    <g
+      onMouseEnter={(e) => setPos({ x: e.clientX, y: e.clientY })}
+      onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
+      onMouseLeave={() => setPos(null)}
+      style={{ outline: 'none' }}
+    >
+      {children}
+      {pos &&
+        createPortal(
+          <div
+            style={{
+              position: 'fixed',
+              left: pos.x,
+              top: pos.y - 44,
+              transform: 'translateX(-50%)',
+              zIndex: 9999,
+              pointerEvents: 'none',
+            }}
+            className="bg-foreground text-background animate-in fade-in-0 zoom-in-95 rounded-md px-3 py-1.5 font-sans text-xs whitespace-nowrap"
+          >
+            {content}
+            {/* Arrow */}
+            <span
+              style={{
+                position: 'absolute',
+                bottom: -4,
+                left: '50%',
+                transform: 'translateX(-50%) rotate(45deg)',
+              }}
+              className="bg-foreground block size-2 rounded-[2px]"
+            />
+          </div>,
+          document.body
+        )}
+    </g>
+  );
+}
+
+// ── GitHubContributions ───────────────────────────────────────────────────────
 
 export function GitHubContributions({
   contributions,
@@ -37,23 +87,11 @@ export function GitHubContributions({
     >
       <ContributionGraphCalendar className="no-scrollbar px-2" title="GitHub Contributions">
         {({ activity, dayIndex, weekIndex }) => (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <g>
-                <ContributionGraphBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </g>
-            </TooltipTrigger>
-            <TooltipContent className="font-sans">
-              <p>
-                {activity.count} contribution{activity.count > 1 ? 's' : null} on{' '}
-                {format(new Date(activity.date), 'dd.MM.yyyy')}
-              </p>
-            </TooltipContent>
-          </Tooltip>
+          <SVGTooltip
+            content={`${activity.count} contribution${activity.count !== 1 ? 's' : ''} on ${format(new Date(activity.date), 'dd.MM.yyyy')}`}
+          >
+            <ContributionGraphBlock activity={activity} dayIndex={dayIndex} weekIndex={weekIndex} />
+          </SVGTooltip>
         )}
       </ContributionGraphCalendar>
 

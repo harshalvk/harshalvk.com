@@ -21,7 +21,7 @@ export default function GitHubContri() {
         <GitHubContributions
           contributions={contributions}
           githubProfileUrl={GITHUB_PROFILE_URL}
-          className="w-full p-4"
+          className="p-4"
         />
       </Suspense>
     </section>
