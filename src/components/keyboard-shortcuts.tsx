@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@bprogress/next/app';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 export function KeyboardShortcuts() {
@@ -12,7 +12,7 @@ export function KeyboardShortcuts() {
 
   useHotkeys('g>h', () => navigate('/', 'g>h'));
   useHotkeys('g>c', () => navigate('/components', 'g>c'));
-  useHotkeys('g>l', () => navigate('/blog', 'g>l'));
+  useHotkeys('g>b', () => navigate('/blog', 'g>b'));
 
   return null;
 }

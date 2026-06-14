@@ -21,7 +21,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { React as ReactLogo } from '@/components/icons';
 import { SOCIAL_LINKS } from '@/modules/portfolio/data/social-links';
 import { DocPreview } from '@/modules/doc/types/document';
-import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { copyToClipboardWithEvent } from '@/utils/copy';
 import { toast } from 'sonner';
@@ -38,6 +37,7 @@ import { Button } from './ui/button';
 import { Kbd, KbdGroup } from './ui/kbd';
 import { useMutationObserver } from '@/hooks/useMutationObserver';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { useRouter } from '@bprogress/next/app';
 
 type CommandKind = 'command' | 'page' | 'link' | 'component' | 'block';
 
@@ -51,12 +51,6 @@ type CommandLinkItem = {
   keywords?: string[];
   openInNewTab?: boolean;
 };
-
-// type BlockItem = {
-//   name: string;
-//   description: string;
-//   categories: string[];
-// };
 
 const MENU_LINKS: CommandLinkItem[] = [
   {
