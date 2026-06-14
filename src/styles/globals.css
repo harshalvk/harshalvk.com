@@ -149,6 +149,12 @@
   }
 }
 
+@layer utilities {
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 ::selection {
   background: #27272a;
   color: white;

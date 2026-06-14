@@ -347,7 +347,14 @@ export const ContributionGraphCalendar = ({
   const monthLabels = useMemo(() => getMonthLabels(weeks, labels.months), [weeks, labels.months]);
 
   return (
-    <div className={cn('max-w-full overflow-x-auto overflow-y-hidden', className)} {...props}>
+    <div
+      className={cn('hide-scrollbar max-w-full overflow-x-auto overflow-y-hidden', className)}
+      style={{
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+      }}
+      {...props}
+    >
       <svg
         className="block overflow-visible"
         height={height}
