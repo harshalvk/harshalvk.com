@@ -70,7 +70,7 @@ const ContactMe = () => {
 
   const ID = 'contactme';
   return (
-    <section className="relative border-x border-t-0">
+    <section className="relative border-t-0">
       <Panel id={ID}>
         <SectionBorders />
         <PanelHeader>

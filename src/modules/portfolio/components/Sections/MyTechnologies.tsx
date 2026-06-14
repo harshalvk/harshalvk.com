@@ -26,7 +26,7 @@ import {
   GitHub,
   Ollama,
   Turborepo,
-} from '@/components/icons/technologies';
+} from '@/components/icons';
 import SectionBorders from '@/components/shared/SectionBorders';
 import TechBadge from '@/components/TechBadge';
 import { Panel, PanelContent, PanelHeader, PanelTitle } from '@/modules/portfolio/components/panel';
