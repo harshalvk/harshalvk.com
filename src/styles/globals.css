@@ -147,6 +147,12 @@
     right: 0 !important;
     width: 100vw !important;
   }
+
+  /* Fixed an issue where the tooltip was rendered at an incorrect position */
+  [data-radix-popper-content-wrapper]:has([data-slot='tooltip-content']) {
+    right: auto !important;
+    width: auto !important;
+  }
 }
 
 @layer utilities {
