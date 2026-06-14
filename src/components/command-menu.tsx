@@ -52,11 +52,11 @@ type CommandLinkItem = {
   openInNewTab?: boolean;
 };
 
-type BlockItem = {
-  name: string;
-  description: string;
-  categories: string[];
-};
+// type BlockItem = {
+//   name: string;
+//   description: string;
+//   categories: string[];
+// };
 
 const MENU_LINKS: CommandLinkItem[] = [
   {
@@ -130,11 +130,9 @@ const OTHER_LINK_ITEMS: CommandLinkItem[] = [
 
 const CommandMenu = ({
   docs,
-  blocks,
   enableHotKeys = true,
 }: {
   docs: DocPreview[];
-  blocks: BlockItem[];
   enableHotKeys?: boolean;
 }) => {
   const router = useRouter();
@@ -210,36 +208,6 @@ const CommandMenu = ({
     );
   }, [components, handleOpenLink]);
 
-  const blocksGroup = useMemo(() => {
-    if (!blocks || blocks.length === 0) {
-      return null;
-    }
-
-    return (
-      <CommandGroup heading="Blocks">
-        {blocks.map((block) => {
-          return (
-            <CommandMenuItem
-              key={block.name}
-              keywords={['block']}
-              onHighlight={() => {
-                setSelectedCommandKind('block');
-              }}
-              onSelect={() => {
-                handleOpenLink(`/blocks/${block.categories[0]}/${block.name}`);
-              }}
-            >
-              <p className="line-clamp-1">{block.description}</p>
-              <span className="text-muted-foreground ml-auto font-mono text-xs font-normal tabular-nums max-sm:hidden">
-                {block.name}
-              </span>
-            </CommandMenuItem>
-          );
-        })}
-      </CommandGroup>
-    );
-  }, [blocks, handleOpenLink]);
-
   const blogLinks = useMemo(
     () =>
       docs
@@ -312,8 +280,6 @@ const CommandMenu = ({
               />
 
               {componentsGroup}
-
-              {blocksGroup}
 
               <CommandLinkGroup
                 heading="Blog"

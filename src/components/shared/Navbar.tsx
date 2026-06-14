@@ -1,6 +1,11 @@
 import React from 'react';
 import { ModeToggle } from '@/components/ModeToggle';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { getAllDocs } from '@/modules/doc/data/document';
+import type { DocPreview } from '@/modules/doc/types/document';
+
+const CommandMenu = dynamic(() => import('@/components/command-menu'));
 
 const navLinks = [
   {
@@ -16,6 +21,12 @@ const navLinks = [
 ];
 
 const Navbar = () => {
+  const docs = getAllDocs();
+  const docPreview: DocPreview[] = docs.map((doc) => ({
+    slug: doc.slug,
+    title: doc.metadata.title,
+    category: doc.metadata.category,
+  }));
   return (
     <div className="bg-background fixed top-0 right-0 left-0 z-50 flex justify-center">
       <div className="mt-4 w-full max-w-5xl px-4 lg:px-0">
@@ -23,14 +34,17 @@ const Navbar = () => {
           <SectionCorners />
           <Link href={'/'}>@harshalvk</Link>
           <div className="flex items-center">
-            <ul className="flex gap-5">
-              {navLinks.map((navLink, idx) => (
-                <a key={idx} href={navLink.link}>
-                  {navLink.name}
-                </a>
-              ))}
-            </ul>
-            <p className="text-muted-foreground ml-3 opacity-80">|</p>
+            <div className="mr-1 flex items-center gap-4">
+              <ul className="flex gap-4">
+                {navLinks.map((navLink, idx) => (
+                  <a key={idx} href={navLink.link}>
+                    {navLink.name}
+                  </a>
+                ))}
+              </ul>
+              <CommandMenu docs={docPreview} />
+              <p className="text-muted-foreground cursor-default opacity-80 select-none">|</p>
+            </div>
             <ModeToggle />
           </div>
         </nav>
