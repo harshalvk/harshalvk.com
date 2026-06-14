@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} flex min-h-svh flex-col font-sans antialiased`}
+        className={`${GeistSans.variable} ${GeistMono.variable} flex min-h-svh w-screen flex-col font-sans antialiased`}
       >
         <AppProvider>
           <Navbar />
