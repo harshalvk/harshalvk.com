@@ -4,6 +4,7 @@ import React from 'react';
 import { ThemeProvider } from '@/components/Providers/ThemeProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
+import { KeyboardShortcuts } from '@/components/keyboard-shortcuts';
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         >
           <Toaster />
           {children}
+          <KeyboardShortcuts />
         </ThemeProvider>
       </QueryClientProvider>
     </>
