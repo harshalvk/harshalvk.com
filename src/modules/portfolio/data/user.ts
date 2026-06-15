@@ -1,5 +1,7 @@
 import type { User } from '@/modules/portfolio/types/user';
 
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL!;
+
 export const USER: User = {
   firstName: 'Harshal',
   lastName: 'Khobragade',
@@ -7,7 +9,7 @@ export const USER: User = {
   username: 'harshalvk',
   gender: 'male',
   pronouns: 'he/him',
-  bio: 'I create quick, scalable, and user-friendly web applications with a mix of tidy code and well-considered design.',
+  bio: `Hey I'm Harshal, a Engineer. I love to learn and build products.`,
   address: 'Maharashtra, India',
   phoneNumberB64: 'OTUyOTIwNDUxNg==', // utf-8
   emailB64: 'aGFyc2hhbHZraG9icmFnYWRlQGdtYWlsLmNvbQ==',
@@ -26,8 +28,8 @@ export const USER: User = {
 - In this time, I've worked with various technologies to create fast, responsive applications, from backend architecture to frontend development and deployment.
 - I enjoy solving real-world problems with code and constantly aim to improve while staying current with tech trends.
 `,
-  avatar: '',
-  ogImage: '',
+  avatar: `${baseUrl}/profile.png`,
+  ogImage: `${baseUrl}/opengraph-image.png`,
   timeZone: 'Asia/Kolkata',
   keywords: [
     'harshalvk',
