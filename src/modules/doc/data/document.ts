@@ -31,7 +31,7 @@ function getAllDocsRaw(): Doc[] {
     const raw = docContext(filePath) as { default: string } | string;
 
     // raw-loader returns the file as a string, webpack may wrap it
-    const fileContent = typeof raw === 'string' ? raw : (raw as any).default;
+    const fileContent = typeof raw === 'string' ? raw : raw.default;
 
     const { metadata, content } = parseFrontmatter(fileContent);
     const slug = getSlug(filePath);

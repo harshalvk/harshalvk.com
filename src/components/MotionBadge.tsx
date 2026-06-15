@@ -2,8 +2,12 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
-import { myTechLogosType } from './constants';
 import TechBadge from './TechBadge';
+
+type myTechLogosType = {
+  name: string;
+  item: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+};
 
 const MotionBadge = ({ badges, reverse }: { badges: myTechLogosType[]; reverse?: boolean }) => {
   return (
@@ -25,7 +29,7 @@ const MotionBadge = ({ badges, reverse }: { badges: myTechLogosType[]; reverse?:
         {Array.from({ length: 2 }).map((_, i) => (
           <React.Fragment key={i}>
             {badges.map((badge, idx) => (
-              <TechBadge Logo={badge.item} key={idx} name={badge.name} />
+              <TechBadge icon={badge.item} key={idx} name={badge.name} />
             ))}
           </React.Fragment>
         ))}
