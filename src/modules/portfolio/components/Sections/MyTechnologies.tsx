@@ -30,6 +30,15 @@ import {
 import SectionBorders from '@/components/shared/SectionBorders';
 import TechBadge from '@/components/TechBadge';
 import { Panel, PanelContent, PanelHeader, PanelTitle } from '@/modules/portfolio/components/panel';
+import {
+  LayoutPanelTop,
+  Boxes,
+  Database,
+  CloudCog,
+  Binary,
+  Hammer,
+  LucideIcon,
+} from 'lucide-react';
 
 export type Tech = {
   name: string;
@@ -40,6 +49,7 @@ export type Tech = {
 type TechGroup = {
   label: string;
   techs: Tech[];
+  categoryIcon: LucideIcon;
 };
 
 const TECH_GROUPS: TechGroup[] = [
@@ -52,6 +62,7 @@ const TECH_GROUPS: TechGroup[] = [
       { name: 'Tailwind CSS', icon: TailwindCSS, url: 'https://tailwindcss.com/' },
       { name: 'shadcn/ui', icon: shadcnui, url: 'https://ui.shadcn.com/' },
     ],
+    categoryIcon: LayoutPanelTop,
   },
   {
     label: 'Backend',
@@ -62,6 +73,7 @@ const TECH_GROUPS: TechGroup[] = [
       { name: 'GraphQL', icon: GraphQL, url: 'https://graphql.org/' },
       { name: 'Zod', icon: Zod, url: 'https://zod.dev/' },
     ],
+    categoryIcon: Boxes,
   },
   {
     label: 'Database',
@@ -73,6 +85,7 @@ const TECH_GROUPS: TechGroup[] = [
       { name: 'Drizzle ORM', icon: DrizzleORM, url: 'https://orm.drizzle.team/' },
       { name: 'Prisma', icon: Prisma, url: 'https://www.prisma.io/' },
     ],
+    categoryIcon: Database,
   },
   {
     label: 'DevOps & Cloud',
@@ -83,6 +96,7 @@ const TECH_GROUPS: TechGroup[] = [
       { name: 'Cloudflare', icon: Cloudflare, url: 'https://www.cloudflare.com/' },
       { name: 'Linux', icon: Linux, url: 'https://www.linux.org/' },
     ],
+    categoryIcon: CloudCog,
   },
   {
     label: 'Languages',
@@ -96,6 +110,7 @@ const TECH_GROUPS: TechGroup[] = [
       { name: 'Rust', icon: Rust, url: 'https://www.rust-lang.org/' },
       { name: 'Solidity', icon: Solidity, url: 'https://soliditylang.org/' },
     ],
+    categoryIcon: Binary,
   },
   {
     label: 'Tools',
@@ -104,8 +119,10 @@ const TECH_GROUPS: TechGroup[] = [
       { name: 'Ollama', icon: Ollama, url: 'https://ollama.com/' },
       { name: 'Turborepo', icon: Turborepo, url: 'https://turbo.build/' },
     ],
+    categoryIcon: Hammer,
   },
 ];
+
 const ID = 'technologies';
 
 const MyTechnologies = () => {
@@ -118,29 +135,33 @@ const MyTechnologies = () => {
         </PanelTitle>
       </PanelHeader>
       <PanelContent>
-        <div>
-          <p className="text-muted-foreground p-4 leading-5">
-            Over the years, I have worked with a variety of technologies. Here are some of the
-            technologies I have experience with:
-          </p>
-          <div className="divide-y border-t">
-            {TECH_GROUPS.map((group) => (
+        <p className="text-muted-foreground p-4 leading-5">
+          Over the years, I have worked with a variety of technologies. Here are some of the
+          technologies I have experience with:
+        </p>
+
+        <div className="divide-dashedn md:divide-normal divide-y border-t border-dashed sm:divide-y">
+          {TECH_GROUPS.map((group) => {
+            const Icon = group.categoryIcon;
+
+            return (
               <div
                 key={group.label}
-                className="grid grid-cols-[140px_1fr] divide-x divide-dashed sm:grid-cols-[180px_1fr]"
+                className="grid grid-cols-1 divide-dashed sm:grid-cols-[180px_1fr] sm:divide-x"
               >
-                <div className="flex items-center p-4">
+                <div className="flex items-center space-x-1 px-4 pt-3 pb-2 sm:p-4">
+                  <Icon className="text-muted-foreground size-4" />
                   <span className="text-muted-foreground font-mono text-sm">{group.label}</span>
                 </div>
 
-                <div className="flex flex-wrap gap-2 p-4">
+                <div className="flex flex-wrap gap-2 px-4 pb-4 sm:p-4">
                   {group.techs.map((tech) => (
                     <TechBadge key={tech.name} {...tech} />
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </PanelContent>
     </Panel>
