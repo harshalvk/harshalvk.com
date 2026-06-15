@@ -9,12 +9,14 @@ export const USER: User = {
   username: 'harshalvk',
   gender: 'male',
   pronouns: 'he/him',
-  bio: `Hey I'm Harshal, a Engineer. I love to learn and build products.`,
+  bio: `Hey I'm Harshal, a Engineer. I love to learn and build products.
+  - Learning: System Design, Go`,
   address: 'Maharashtra, India',
   phoneNumberB64: 'OTUyOTIwNDUxNg==', // utf-8
   emailB64: 'aGFyc2hhbHZraG9icmFnYWRlQGdtYWlsLmNvbQ==',
   website: 'https://harshalvk.com',
   jobTitle: 'Full-Stack Developer',
+  flipSentences: ['Full-Stack Developer', 'Backend Developer'],
   jobs: [
     {
       title: 'Full-Stack Developer',

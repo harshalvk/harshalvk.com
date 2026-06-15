@@ -2,6 +2,24 @@ import type { Project } from '@/modules/portfolio/types/projects';
 
 export const PROJECTS: Project[] = [
   {
+    id: 'meetlume',
+    title: 'MeetLume',
+    period: {
+      start: '09.2025',
+    },
+    link: '',
+    skills: ['NextJS', 'TypeScript', 'Better-Auth', 'Polar.sh', 'Automation', 'Docker'],
+    description: `MeetLume is an AI-powered meeting assistant that records, transcribes, summarizes, and helps you search through your conversations.
+  - Live Transcription: get real-time, accurate transcripts of your Google Meet.
+  - AI-Powered Summaries: automatically generate concise summaries, action items, and key takeaways after every meeting.
+  - Smart Search: find any conversation, topic, or decision instantly by searching through your entire meeting history.
+  - Organized Workspace: create channels and folders to organize meetings by project, team, or client.
+  - Seamless Integration: works with your favorite calendar and team apps. (Calendars, trello, etc.)
+  - Collaboration: share meeting notes and highlights with teammates, even if they couldn't attend.`,
+    logo: '',
+    isExpanded: true,
+  },
+  {
     id: 'webextract',
     title: 'WebExtract',
     period: {
@@ -17,7 +35,7 @@ export const PROJECTS: Project[] = [
   - Enabled scheduled workflows and webhook-based integrations
   - Provided real-time execution tracking, analytics, and secure credential management`,
     logo: '',
-    isExpanded: true,
+    isExpanded: false,
   },
   {
     id: 'quala',
