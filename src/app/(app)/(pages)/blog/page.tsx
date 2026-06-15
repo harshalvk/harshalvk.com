@@ -1,4 +1,16 @@
 import { NotebookPen } from 'lucide-react';
+import type { Metadata } from 'next';
+
+const title = 'Blog';
+const description = 'Writing about code, systems, and everything in between.';
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: {
+    canonical: 'blog',
+  },
+};
 
 const BlogPage = () => {
   return (

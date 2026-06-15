@@ -6,7 +6,7 @@ export const defaultWebsiteMetadata: Metadata = {
   metadataBase: new URL(SITE_INFO.url),
   title: {
     default: `${SITE_INFO.name} \u2013 Engineer`,
-    template: `%s | ${SITE_INFO.name}`,
+    template: `%s — ${SITE_INFO.name}`,
   },
   description: SITE_INFO.description,
   keywords: SITE_INFO.keywords,

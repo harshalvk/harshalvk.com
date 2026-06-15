@@ -1,4 +1,16 @@
 import { Blocks } from 'lucide-react';
+import type { Metadata } from 'next';
+
+const title = 'Components';
+const description = '';
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: {
+    canonical: 'blog',
+  },
+};
 
 const ComponentsPage = () => {
   return (
