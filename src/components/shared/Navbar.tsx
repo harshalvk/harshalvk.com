@@ -35,7 +35,7 @@ const Navbar = () => {
           <Link href={'/'}>@harshalvk</Link>
           <div className="flex items-center">
             <div className="mr-1 flex items-center gap-4">
-              <ul className="flex gap-4">
+              <ul className="hidden gap-4 md:flex">
                 {navLinks.map((navLink, idx) => (
                   <Link key={idx} href={navLink.link}>
                     {navLink.name}
@@ -43,8 +43,8 @@ const Navbar = () => {
                 ))}
               </ul>
               <CommandMenu docs={docPreview} />
-              <p className="text-muted-foreground cursor-default opacity-80 select-none">|</p>
             </div>
+            <p className="text-muted-foreground mx-1 cursor-default opacity-80 select-none">|</p>
             <ModeToggle />
           </div>
         </nav>
