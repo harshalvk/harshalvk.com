@@ -8,7 +8,15 @@ export const PROJECTS: Project[] = [
       start: '09.2025',
     },
     link: '',
-    skills: ['NextJS', 'TypeScript', 'Better-Auth', 'Polar.sh', 'Automation', 'Docker'],
+    skills: [
+      'NextJS',
+      'TypeScript',
+      'Better-Auth',
+      'Polar.sh',
+      'Automation',
+      'Docker',
+      'Cloudflare Workers',
+    ],
     description: `MeetLume is an AI-powered meeting assistant that records, transcribes, summarizes, and helps you search through your conversations.
   - Live Transcription: get real-time, accurate transcripts of your Google Meet.
   - AI-Powered Summaries: automatically generate concise summaries, action items, and key takeaways after every meeting.
