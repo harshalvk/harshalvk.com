@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { SectionCorners } from '../../../../components/shared/Navbar';
 import { inter } from '@/lib/fonts';
@@ -13,15 +13,13 @@ const IMAGES = ['/profile.png', '/profile4.jpg'];
 
 const Hero = () => {
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
 
   const handleClick = () => {
-    setDirection(index === 0 ? 1 : -1);
     setIndex((prev) => (prev === 0 ? 1 : 0));
   };
 
   return (
-    <section className="border-border relative border border-t-0 border-b-0 p-4 sm:p-6 md:p-8">
+    <section className="border-border relative border border-t-0 border-b-0 p-4">
       <SectionCorners />
 
       <div className="flex w-full flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-6">
@@ -50,9 +48,11 @@ const Hero = () => {
               Hey, I&apos;m Harshal
             </h1>
             <h3
-              className={`text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl ${inter.className}`}
+              className={`flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl ${inter.className}`}
             >
-              A Full Stack Developer
+              <FlipWords
+                words={USER.flipSentences ?? ['Full Stack Developer', 'Backend Engineer']}
+              />
             </h3>
           </div>
         </div>
@@ -72,3 +72,32 @@ const Hero = () => {
 };
 
 export default Hero;
+
+function FlipWords({ words }: { words: string[] }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % words.length);
+    }, 2300);
+
+    return () => clearInterval(interval);
+  }, [words.length]);
+
+  return (
+    <span className="relative inline-block min-w-[18ch] align-baseline">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={words[index]}
+          initial={{ opacity: 0, y: 10, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -10, filter: 'blur(8px)' }}
+          transition={{ duration: 0.3 }}
+          className="inline-block"
+        >
+          {words[index]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
