@@ -5,9 +5,6 @@ import AppProvider from '@/components/Providers/AppProvider';
 
 import '@/styles/globals.css';
 
-import Navbar from '@/components/shared/Navbar';
-import Footer from '@/modules/portfolio/components/Sections/Footer';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { defaultWebsiteMetadata } from '@/config/metadata';
 
 export const metadata: Metadata = defaultWebsiteMetadata;
@@ -22,14 +19,7 @@ export default function RootLayout({
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} flex min-h-svh w-screen flex-col font-sans antialiased`}
       >
-        <AppProvider>
-          <Navbar />
-          <div className="bg-background h-19" />
-          <main className="flex flex-1 flex-col">
-            <TooltipProvider>{children}</TooltipProvider>
-          </main>
-        </AppProvider>
-        <Footer />
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
