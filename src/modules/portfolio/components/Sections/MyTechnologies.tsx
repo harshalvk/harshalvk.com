@@ -140,7 +140,7 @@ const MyTechnologies = () => {
           technologies I have experience with:
         </p>
 
-        <div className="divide-dashedn md:divide-normal divide-y border-t border-dashed sm:divide-y">
+        <div className="divide-y divide-dashed border-t border-dashed sm:divide-y">
           {TECH_GROUPS.map((group) => {
             const Icon = group.categoryIcon;
 
