@@ -4,11 +4,11 @@ import { getDocsByCategory } from '@/modules/doc/data/document';
 export const revalidate = false;
 export const dynamic = 'force-static';
 
-const FEED_URL = `${SITE_INFO.url}/rss.xml`;
+const FEED_URL = `${SITE_INFO.url}/rss`;
 
 export async function GET() {
-  const blogs = getDocsByCategory('blogs');
-  const components = getDocsByCategory('components');
+  const blogs = await getDocsByCategory('blogs');
+  const components = await getDocsByCategory('components');
 
   const allItems = [
     ...blogs.map((doc) => ({
