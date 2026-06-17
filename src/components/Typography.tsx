@@ -41,7 +41,23 @@ export function Prose({
   return (
     <Comp
       data-slot="prose"
-      className={cn('prose prose-zinc dark:prose-invert max-w-none', className)}
+      className={cn('prose prose-harshalvk dark:prose-invert max-w-none', className)}
+      {...props}
+    />
+  );
+}
+
+export function Code({ className, ...props }: React.ComponentProps<'code'>) {
+  const isCodeBlock = 'data-language' in props;
+
+  return (
+    <code
+      data-slot={isCodeBlock ? 'code-block' : 'code-inline'}
+      className={cn(
+        !isCodeBlock &&
+          'not-prose bg-muted font-geist-mono rounded-md px-1.5 py-0.5 text-sm whitespace-pre-wrap',
+        className
+      )}
       {...props}
     />
   );
