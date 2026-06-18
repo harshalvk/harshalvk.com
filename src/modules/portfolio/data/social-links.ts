@@ -1,36 +1,36 @@
+import { Icons } from '@/components/icons/icons';
 import type { SocialLink } from '../types/social-links';
-import { XformerlyTwitter, Discord, LinkedIn, dailydev, GitHub } from '@/components/icons';
 
 /** @deprecated */
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    icon: XformerlyTwitter,
+    icon: Icons.x,
     title: 'X',
-    subtitle: '@iamncdai',
+    subtitle: '@harshalvk_',
     href: 'https://x.com/harshalvk',
   },
   {
-    icon: GitHub,
+    icon: Icons.github,
     title: 'GitHub',
-    subtitle: 'ncdai',
+    subtitle: 'harshalvk',
     href: 'https://github.com/harshalvk',
   },
   {
-    icon: LinkedIn,
+    icon: Icons.linkedin,
     title: 'LinkedIn',
-    subtitle: 'ncdai',
+    subtitle: 'harshalvk',
     href: 'https://linkedin.com/in/harshalvk',
   },
   {
-    icon: dailydev,
+    icon: Icons.dailydev,
     title: 'daily.dev',
-    subtitle: '@ncdai',
+    subtitle: '@harshalvk',
     href: 'https://app.daily.dev/harshalvk',
   },
   {
-    icon: Discord,
+    icon: Icons.discord,
     title: 'Discord',
-    subtitle: 'ncdai',
+    subtitle: 'harsshal',
     href: 'https://discord.com/users/',
   },
 ];
