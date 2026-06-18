@@ -1,47 +1,51 @@
+'use server';
+
+import fs from 'fs/promises';
+import path from 'path';
 import { cache } from 'react';
 import matter from 'gray-matter';
 
 import type { Doc, DocMetadata } from '@/modules/doc/types/document';
 
-// Webpack require.context — resolved at build time, no fs needed.
-// This statically bundles all .mdx files in the content directory.
-// @ts-ignore
-const docContext = require.context(
-  '@/modules/doc/content',
-  true, // include subdirectories
-  /\.mdx$/, // match .mdx files only
-  'sync'
-);
-
 function parseFrontmatter(fileContent: string) {
   const file = matter(fileContent);
+
   return {
     metadata: file.data as DocMetadata,
     content: file.content,
   };
 }
 
-function getSlug(filePath: string) {
-  // "./getting-started.mdx" → "getting-started"
-  return filePath.replace(/^\.\//, '').replace(/\.mdx$/, '');
+async function getMDXFiles(dir: string) {
+  const files = await fs.readdir(dir);
+  return files.filter((file) => path.extname(file) === '.mdx');
 }
 
-function getAllDocsRaw(): Doc[] {
-  return docContext.keys().map((filePath: string) => {
-    const raw = docContext(filePath) as { default: string } | string;
-
-    // raw-loader returns the file as a string, webpack may wrap it
-    const fileContent = typeof raw === 'string' ? raw : raw.default;
-
-    const { metadata, content } = parseFrontmatter(fileContent);
-    const slug = getSlug(filePath);
-
-    return { metadata, slug, content };
-  });
+async function readMDXFile(filePath: string) {
+  const rawContent = await fs.readFile(filePath, 'utf-8');
+  return parseFrontmatter(rawContent);
 }
 
-export const getAllDocs = cache(() => {
-  return getAllDocsRaw().sort((a, b) => {
+async function getMDXData(dir: string): Promise<Doc[]> {
+  const mdxFiles = await getMDXFiles(dir);
+
+  return Promise.all(
+    mdxFiles.map(async (file) => {
+      const { metadata, content } = await readMDXFile(path.join(dir, file));
+
+      return {
+        metadata,
+        content,
+        slug: path.basename(file, path.extname(file)),
+      };
+    })
+  );
+}
+
+export const getAllDocs = cache(async (): Promise<Doc[]> => {
+  const docs = await getMDXData(path.join(process.cwd(), 'src/modules/doc/content'));
+
+  return docs.sort((a, b) => {
     if (a.metadata.pinned && !b.metadata.pinned) return -1;
     if (!a.metadata.pinned && b.metadata.pinned) return 1;
 
@@ -49,25 +53,28 @@ export const getAllDocs = cache(() => {
   });
 });
 
-export function getDocBySlug(slug: string) {
-  return getAllDocs().find((doc) => doc.slug === slug);
+export async function getDocBySlug(slug: string) {
+  const docs = await getAllDocs();
+  return docs.find((doc) => doc.slug === slug);
 }
 
-export function getDocsByCategory(category: string) {
-  return getAllDocs().filter((doc) => doc.metadata?.category === category);
+export async function getDocsByCategory(category: string) {
+  const docs = await getAllDocs();
+  return docs.filter((doc) => doc.metadata.category === category);
 }
 
-export function findNeighbour(docs: Doc[], slug: string) {
-  const len = docs.length;
+export async function findNeighbour(docs: Doc[], slug: string) {
+  const index = docs.findIndex((doc) => doc.slug === slug);
 
-  for (let i = 0; i < len; ++i) {
-    if (docs[i].slug === slug) {
-      return {
-        previous: i > 0 ? docs[i - 1] : null,
-        next: i < len - 1 ? docs[i + 1] : null,
-      };
-    }
+  if (index === -1) {
+    return {
+      previous: null,
+      next: null,
+    };
   }
 
-  return { previous: null, next: null };
+  return {
+    previous: index > 0 ? docs[index - 1] : null,
+    next: index < docs.length - 1 ? docs[index + 1] : null,
+  };
 }
