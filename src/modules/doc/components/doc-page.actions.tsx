@@ -3,7 +3,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import { ChevronDownIcon } from 'lucide-react';
+import { Check, ChevronDownIcon, Copy, X } from 'lucide-react';
 import { Icons } from '@/components/icons/icons';
 import type { CopyState } from '@/hooks/useCopyToClipboard';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { CopyStateIcon } from '@/components/copy-button';
 
 const cache = new Map<string, string>();
 
@@ -68,6 +69,7 @@ export function LLMCopyButton({ markdownUrl }: { markdownUrl: string }) {
       disabled={isCopying}
       onClick={handleCopy}
     >
+      <CopyStateIcon state={state} idleIcon={<Copy />} doneIcon={<Check />} errorIcon={<X />} />
       <span className="max-[28rem]:hidden">Copy Page</span>
     </Button>
   );
@@ -107,7 +109,7 @@ export function ViewOptions({
       },
       {
         title: 'Open in GitHub',
-        href: `https://github.com/harshalvk/harshalvk.com/blob/main/src/features/doc/content/${markdownUrl.split('/').slice(-1).join('/')}`,
+        href: `https://github.com/harshalvk/harshalvk.com/blob/master/src/modules/doc/content/${markdownUrl.split('/').slice(-1).join('/')}`,
         icon: Icons.github,
       },
       {
