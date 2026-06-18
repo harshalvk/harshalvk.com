@@ -27,8 +27,8 @@ export const defaultWebsiteMetadata: Metadata = {
     images: [
       {
         url: SITE_INFO.ogImage,
-        width: 1250,
-        height: 624,
+        width: 1200,
+        height: 630,
         alt: `${SITE_INFO.name} \u2013 Engineer`,
       },
     ],
