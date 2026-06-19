@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "harshalvk",
+  "homepage": "https://harshalvk.com/components",
+  "items": [
+    {
+      "name": "wallet-adapter",
+      "title": "Wallet Adapter",
+      "description": "A Solana wallet connection button with a dialog wallet picker and connected-state dropdown.",
+      "files": [
+        {
+          "path": "src/registry/components/wallet-adapter/wallet-adapter.tsx",
+          "type": "registry:component",
+          "target": "@components/wallet-adapter"
+        }
+      ],
+      "docs": "https://harshalvk.com/components/wallet-adapter",
+      "categories": ["web3", "authentication"],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    }
+  ]
+}

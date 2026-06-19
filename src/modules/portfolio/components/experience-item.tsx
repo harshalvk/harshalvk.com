@@ -11,6 +11,7 @@ import { formatDate } from '@/lib/formatDate';
 import { ChevronDownIcon, ChevronDownIconHandle } from '@/components/icons/chevron-icon';
 import { LinkIcon, LinkIconHandle } from '@/components/icons/link-icon';
 import type { Experience, ExperiencePosition } from '@/modules/portfolio/types/experiences';
+import { Route } from 'next';
 
 // ── Position item ─────────────────────────────────────────────────────────────
 
@@ -186,7 +187,7 @@ export function ExperienceItem({
         <h3 className="text-base font-semibold md:text-lg">
           {experience.companyWebsite ? (
             <Link
-              href={experience.companyWebsite}
+              href={experience.companyWebsite as Route}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5"

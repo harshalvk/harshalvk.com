@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { KeyboardShortcuts } from '@/components/keyboard-shortcuts';
 import { ProgressProvider } from '@bprogress/next/app';
 import { TooltipProvider } from '../ui/tooltip';
+import { WalletContextProvider } from '@/registry/transformed/components/wallet-adapter';
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
@@ -28,7 +29,9 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
               options={{ showSpinner: false }}
             >
               <Toaster />
-              {children}
+              <WalletContextProvider network="devnet" autoConnect={true}>
+                {children}
+              </WalletContextProvider>
               <KeyboardShortcuts />
             </ProgressProvider>
           </ThemeProvider>

@@ -18,7 +18,6 @@ import {
   SunMedium,
 } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
-import { React as ReactLogo } from '@/components/icons';
 import { SOCIAL_LINKS } from '@/modules/portfolio/data/social-links';
 import { DocPreview } from '@/modules/doc/types/document';
 import { useTheme } from 'next-themes';
@@ -38,6 +37,7 @@ import { Kbd, KbdGroup } from './ui/kbd';
 import { useMutationObserver } from '@/hooks/useMutationObserver';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useRouter } from '@bprogress/next/app';
+import { Icons } from './icons/icons';
 
 type CommandKind = 'command' | 'page' | 'link' | 'component' | 'block';
 
@@ -64,7 +64,7 @@ const MENU_LINKS: CommandLinkItem[] = [
     title: 'Components',
     href: '/components',
     kind: 'page',
-    icon: <ReactLogo />,
+    icon: Icons.react,
     shortcut: 'GC',
   },
   {

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { getAllDocs } from '@/modules/doc/data/document';
 import type { DocPreview } from '@/modules/doc/types/document';
+import { UrlObject } from 'url';
 
 const CommandMenu = dynamic(() => import('@/components/command-menu'));
 
@@ -20,8 +21,8 @@ const navLinks = [
   },
 ];
 
-const Navbar = () => {
-  const docs = getAllDocs();
+const Navbar = async () => {
+  const docs = await getAllDocs();
   const docPreview: DocPreview[] = docs.map((doc) => ({
     slug: doc.slug,
     title: doc.metadata.title,
@@ -37,7 +38,7 @@ const Navbar = () => {
             <div className="mr-1 flex items-center gap-4">
               <ul className="hidden gap-4 md:flex">
                 {navLinks.map((navLink, idx) => (
-                  <Link key={idx} href={navLink.link}>
+                  <Link key={idx} href={navLink.link as unknown as UrlObject}>
                     {navLink.name}
                   </Link>
                 ))}

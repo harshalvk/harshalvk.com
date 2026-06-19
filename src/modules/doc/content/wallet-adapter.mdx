@@ -1,0 +1,111 @@
+---
+title: Wallet Adapter
+description: A Solana wallet connection button with a dialog wallet picker and connected-state dropdown.
+image: /wallet-adapter.png
+category: components
+createdAt: 2026-06-16
+updatedAt: 2026-06-19
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-40"
+  name="wallet-adapter-demo"
+  openInV0Url="https://harshalvk.com/r/wallet-adapter.json"
+/>
+
+## Features
+
+- Dialog-based wallet picker listing detected wallet adapters in the browser.
+- Dropdown menu with truncated public key and disconnect action once connected.
+- Loading state on the trigger button, and per-row, while a connection is in progress.
+- Inline error message in the dialog if a connection attempt fails or is rejected.
+- Safe handling of rapid wallet switching — only the most recently selected wallet's result is applied.
+- Configurable Solana network and auto-connect behavior.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add @harshalvk/wallet-adapter
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-base
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="wallet-adapter" title="components/wallet-adapter.tsx" />
+Update the import paths to match your project setup.
+
+<Step>Add the `WalletContextProvider` to the root of your app.</Step>
+
+```tsx title="app/layout.tsx" showLineNumbers
+import { WalletContextProvider } from '@/components/wallet-adapter';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <WalletContextProvider network="devnet">{children}</WalletContextProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { WalletAdapter } from '@/components/wallet-adapter';
+```
+
+```tsx
+<WalletAdapter />
+```
+
+## API Reference
+
+### WalletAdapter
+
+| Prop        | Type     | Default | Description                                       |
+| ----------- | -------- | ------- | ------------------------------------------------- |
+| `className` | `string` | —       | Additional classes applied to the trigger button. |
+
+Connection state is otherwise managed internally via the `useWallet` hook — connection status, the active public key, and the list of detected adapters all come from context.
+
+### WalletContextProvider
+
+Wraps your application with Solana connection and wallet context.
+
+| Prop          | Type        | Default | Description                                              |
+| ------------- | ----------- | ------- | -------------------------------------------------------- |
+| `children`    | `ReactNode` | —       | Application content.                                     |
+| `network`     | `Network`   | devnet  | Solana cluster to connect to.                            |
+| `autoConnect` | `boolean`   | true    | Automatically reconnect to previously connected wallets. |
+
+## Notes
+
+- Renders a `DialogTrigger` button when no wallet is connected, opening a list of detected wallet adapters to choose from.
+- Once connected, swaps to a `DropdownMenu` showing the truncated public key with a disconnect action.
+- Connection failures, including a user rejecting the request in their wallet extension, are shown as an inline message in the dialog.
+- `WalletProvider` is configured with an empty `wallets` array. Wallets that implement the Wallet Standard (Phantom, Solflare, Backpack, MetaMask, etc.) are auto-detected automatically — add adapters to that array only if you need to support a legacy, non-Wallet-Standard wallet.

@@ -14,6 +14,7 @@ import { LinkIcon, LinkIconHandle } from '@/components/icons/link-icon';
 import Link from 'next/link';
 import { ChevronDownIcon, ChevronDownIconHandle } from '@/components/icons/chevron-icon';
 import TechBadge from '@/components/TechBadge';
+import { Route } from 'next';
 
 export function ProjectItem({ project }: { project: Project }) {
   const [isOpen, setIsOpen] = React.useState(project.isExpanded ?? false);
@@ -64,7 +65,11 @@ export function ProjectItem({ project }: { project: Project }) {
             </div>
 
             <div className="flex items-center gap-4">
-              <Link href={project.link} target="_blank" onClick={(e) => e.stopPropagation()}>
+              <Link
+                href={project.link as Route}
+                target="_blank"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <LinkIcon
                   ref={linkRef}
                   className="text-muted-foreground h-4 w-4"

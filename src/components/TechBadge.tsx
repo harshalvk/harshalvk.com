@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import type { Tech } from '@/modules/portfolio/components/Sections/MyTechnologies';
 import Link from 'next/link';
+import { Route } from 'next';
 
 const TechBadge = ({ name, icon: Icon, url, className }: Tech & { className?: string }) => {
   const classes = cn(
@@ -18,7 +19,7 @@ const TechBadge = ({ name, icon: Icon, url, className }: Tech & { className?: st
 
   if (url) {
     return (
-      <Link href={url} target="_blank" className={`cursor-pointer select-none ${classes}`}>
+      <Link href={url as Route} target="_blank" className={`cursor-pointer select-none ${classes}`}>
         {content}
       </Link>
     );

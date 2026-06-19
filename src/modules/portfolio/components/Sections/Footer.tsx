@@ -1,4 +1,5 @@
 import SectionBorders from '@/components/shared/SectionBorders';
+import { Route } from 'next';
 import Link from 'next/link';
 import React from 'react';
 
@@ -29,7 +30,7 @@ const FooterLinkGroup = ({
     {links.map((link) => (
       <Link
         key={link.name}
-        href={link.href}
+        href={link.href as Route}
         target={link.href.startsWith('http') ? '_blank' : undefined}
         rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
         className="text-muted-foreground font-mono text-sm underline-offset-4 hover:underline"

@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { SectionCorners } from '../../../../components/shared/Navbar';
+import SectionCorners from '@/components/shared/SectionBorders';
 import { inter } from '@/lib/fonts';
-import { Prose } from '../../../../components/Typography';
-import { MarkdownClient } from '../../../../components/markdown';
+import { Prose } from '@/components/Typography';
+import { MarkdownClient } from '@/components/markdown';
 import { USER } from '@/modules/portfolio/data/user';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -19,7 +19,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="border-border relative border border-t-0 border-b-0 p-4">
+    <section className="border-border relative border border-y-0 p-4">
       <SectionCorners />
 
       <div className="flex w-full flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-6">

@@ -7,12 +7,12 @@ export const revalidate = false;
 export const dynamic = 'force-static';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = getAllDocs().map((post) => ({
+  const posts = (await getAllDocs()).map((post) => ({
     url: `${SITE_INFO}/blog/${post.slug}`,
     lastModified: new Date(post.metadata.updatedAt).toISOString(),
   }));
 
-  const components = getDocsByCategory('components').map((post) => ({
+  const components = (await getDocsByCategory('components')).map((post) => ({
     url: `${SITE_INFO.url}/components/${post.slug}`,
     lastModified: new Date().toISOString(),
   }));

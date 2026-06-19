@@ -2,14 +2,73 @@
 @import 'tw-animate-css';
 @import './scroll-fade-effect.css';
 
-@plugin '@tailwindcss/typography';
 @plugin 'tailwind-scrollbar-hide';
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:is(.dark *));
 
 @custom-variant supports-timeline-scroll {
   @supports (animation-timeline: scroll()) {
     @slot;
+  }
+}
+@custom-variant retina {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2x) {
+    @slot;
+  }
+}
+
+@utility prose-harshalvk {
+  @apply prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-pretty md:prose-headings:text-balance prose-h2:text-xl prose-h3:text-lg;
+  @apply prose-a:font-normal prose-a:wrap-break-word prose-a:text-foreground prose-a:link-underline;
+  @apply prose-code:rounded-md prose-code:bg-muted/50 prose-code:px-1 prose-code:py-px prose-code:text-sm prose-code:font-normal prose-code:before:content-none prose-code:after:content-none;
+  @apply prose-strong:font-medium;
+  @apply prose-hr:border-line;
+  @apply prose-blockquote:border-l prose-blockquote:border-line prose-blockquote:font-normal prose-blockquote:text-muted-foreground prose-blockquote:not-italic prose-blockquote:[&_p:first-of-type]:before:content-none prose-blockquote:[&_p:last-of-type]:after:content-none;
+  @apply prose-ul:marker:text-xs/none;
+}
+
+@utility code-inline {
+  @apply bg-muted/50 retina:border-[0.5px] rounded-md border px-1 py-px font-mono text-sm font-normal whitespace-pre-wrap in-data-table-nowrap:whitespace-nowrap;
+}
+
+@utility prose-no-margin {
+  & > :first-child {
+    @apply mt-0;
+  }
+
+  & > :last-child {
+    @apply mb-0;
+  }
+
+  :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)),
+  :where([data-rehype-pretty-code-figure]) {
+    @apply mt-3 mb-3;
+  }
+}
+
+@utility prose-no-margin {
+  & > :first-child {
+    @apply mt-0;
+  }
+
+  & > :last-child {
+    @apply mb-0;
+  }
+
+  :where(p):not(:where([class~='not-prose'], [class~='not-prose'] *)),
+  :where([data-rehype-pretty-code-figure]) {
+    @apply mt-3 mb-3;
+  }
+}
+
+@utility step {
+  @apply max-md:pl-10;
+  counter-increment: step;
+
+  &:before {
+    @apply bg-muted text-foreground absolute inline-flex size-6 items-center justify-center rounded-lg text-center indent-0 text-[0.8125rem]/6 font-normal max-md:left-0 md:-ml-10;
+    content: counter(step);
   }
 }
 
@@ -53,6 +112,12 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --color-line: var(--line);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-code: var(--code);
+  --color-code-foreground: var(--code-foreground);
+  --color-code-number: var(--code-number);
+  --color-code-highlight: var(--code-highlight);
 }
 
 :root {
@@ -92,6 +157,13 @@
   --line: color-mix(in oklab, var(--border) 100%, var(--background));
   --navbar-height: 60px;
   --footer-height: 148px;
+
+  --surface: oklch(0.985 0 0);
+  --surface-foreground: oklch(0.141 0.005 285.823);
+  --code: var(--background);
+  --code-foreground: var(--foreground);
+  --code-number: oklch(0.24 0.01 0 / 0.3);
+  --code-highlight: oklch(0.49 0.18 257.61 / 0.06);
 }
 
 .dark {
@@ -127,6 +199,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  --surface: oklch(0.21 0.006 285.885);
+  --surface-foreground: oklch(0.985 0 0);
+  --code: var(--background);
+  --code-foreground: var(--foreground);
+  --code-number: oklch(0.43 0 0);
+  --code-highlight: oklch(0.71 0.24 42.36 / 0.06);
 }
 
 @layer base {
@@ -154,6 +233,11 @@
     right: auto !important;
     width: auto !important;
   }
+  /* Fixed an issue where the dropdown was rendered at an incorrect position */
+  [data-radix-popper-content-wrapper]:has([data-slot='dropdown-menu-content']) {
+    right: auto !important;
+    width: auto !important;
+  }
 
   /* Custom scrollbar styling. Thanks @shadcn-ui */
   ::-webkit-scrollbar {
@@ -174,11 +258,129 @@
   [id] {
     @apply scroll-mt-18;
   }
+
+  .prose :where(h1, h2, h3, h4) {
+    @apply scroll-mt-24;
+  }
+
+  /* .dark .prose { */
+  .dark {
+    --tw-prose-body: var(--foreground);
+    --tw-prose-headings: var(--foreground);
+    --tw-prose-invert: 1;
+  }
 }
 
 @layer utilities {
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@layer components {
+  [data-rehype-pretty-code-figure] {
+    @apply bg-surface text-surface-foreground inset-ring-border/64 relative my-[1.25em] rounded-md p-1 inset-ring-1;
+    @apply has-data-rehype-pretty-code-title:pt-0;
+    @apply has-data-[slot=code-block-command]:pt-0;
+
+    pre {
+      @apply no-scrollbar overflow-x-auto overscroll-x-contain py-4 outline-none;
+    }
+
+    code {
+      @apply min-w-full font-mono text-sm;
+    }
+
+    [data-line] {
+      @apply pr-(--code-padding-right,0) pl-4;
+    }
+  }
+
+  [data-line] span {
+    @apply text-(--shiki-light) dark:text-(--shiki-dark);
+  }
+
+  [data-rehype-pretty-code-title] {
+    @apply text-muted-foreground [&_svg]:text-muted-foreground flex items-center gap-3 py-2.5 pr-8.5 pl-3 font-mono text-sm [&_svg]:size-4 [&_svg]:shrink-0;
+  }
+
+  [data-line-numbers] {
+    counter-reset: line;
+  }
+
+  [data-line-numbers] [data-line] {
+    @apply pl-0;
+  }
+
+  [data-line-numbers] [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply bg-code text-code-number sticky left-0 z-1 inline-block w-16 pe-6 text-right text-sm;
+  }
+
+  [data-highlighted-line] {
+    @apply after:bg-code-highlight relative after:pointer-events-none after:absolute after:inset-0 after:z-2;
+  }
+
+  [data-highlighted-chars] {
+    @apply before:bg-code-highlight relative bg-transparent before:pointer-events-none before:absolute before:inset-0 before:rounded-sm;
+  }
+
+  [data-fade-overlay] {
+    @apply pointer-events-none absolute top-0 right-0 z-1 rounded-tr-lg;
+
+    --fade-linear-gradient: linear-gradient(
+      to right,
+      transparent 0,
+      color-mix(in oklab, var(--fade-color, var(--background)) 20%, transparent) 10px,
+      color-mix(in oklab, var(--fade-color, var(--background)) 50%, transparent) 25px,
+      color-mix(in oklab, var(--fade-color, var(--background)) 80%, transparent) 35px,
+      var(--fade-color, var(--background)) 45px
+    );
+
+    --fade-radial-gradient: radial-gradient(
+      ellipse at top right,
+      var(--fade-color, var(--background)) 30%,
+      color-mix(in oklab, var(--fade-color, var(--background)) 80%, transparent) 40%,
+      color-mix(in oklab, var(--fade-color, var(--background)) 50%, transparent) 50%,
+      color-mix(in oklab, var(--fade-color, var(--background)) 20%, transparent) 60%,
+      transparent 70%
+    );
+
+    width: var(--fade-width, 5rem);
+    height: var(--fade-height, 2.25rem);
+    background: var(--fade-background, var(--fade-linear-gradient));
+  }
+
+  .duck-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+
+    pointer-events: none;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+
+    will-change: transform;
+    transition: none;
+  }
+
+  .twemoji {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    margin: 0 0.05em 0 0.1em;
+    vertical-align: -0.1em;
+  }
+
+  .activity-mosaic-cell {
+    @apply data-[level=0]:fill-muted-foreground/10;
+    @apply data-[level=1]:fill-muted-foreground/20;
+    @apply data-[level=2]:fill-muted-foreground/40;
+    @apply data-[level=3]:fill-muted-foreground/60;
+    @apply data-[level=4]:fill-muted-foreground/80;
   }
 }
 
@@ -189,6 +391,15 @@
 
 @utility screen-line-top {
   @apply before:bg-line relative before:absolute before:top-0 before:left-[-100vw] before:-z-1 before:h-px before:w-[300vw];
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @utility screen-line-bottom {

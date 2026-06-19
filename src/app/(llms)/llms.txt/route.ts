@@ -1,7 +1,7 @@
 import { SITE_INFO } from '@/config/site';
 import { getAllDocs } from '@/modules/doc/data/document';
 
-const allPosts = getAllDocs();
+const allPosts = await getAllDocs();
 
 const content = `<SYSTEM>
 You are reading the llms.txt file for harshalvk.com — the personal portfolio of Harshal Vasant Khobragade, a Full-Stack Developer based in Nagpur, India.
