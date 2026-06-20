@@ -16,7 +16,7 @@ export const Index: Record<string, any> = {
       {
         path: 'src/registry/components/wallet-adapter/wallet-adapter.tsx',
         type: 'registry:component',
-        target: '@components/wallet-adapter',
+        target: '@components/wallet-adapter.tsx',
       },
     ],
     component: React.lazy(async () => {
@@ -38,7 +38,7 @@ export const Index: Record<string, any> = {
       {
         path: 'src/registry/components/wallet-adapter/wallet-adapter.tsx',
         type: 'registry:component',
-        target: '@components/wallet-adapter',
+        target: '@components/wallet-adapter.tsx',
       },
     ],
     component: React.lazy(async () => {

@@ -11,7 +11,7 @@ export const components: Registry['items'] = [
       {
         path: 'components/wallet-adapter/wallet-adapter.tsx',
         type: 'registry:component',
-        target: '@components/wallet-adapter',
+        target: '@components/wallet-adapter.tsx',
       },
     ],
     categories: ['web3', 'authentication'],

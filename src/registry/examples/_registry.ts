@@ -8,7 +8,7 @@ export const examples: Registry['items'] = [
       {
         path: 'components/wallet-adapter/wallet-adapter.tsx',
         type: 'registry:component',
-        target: '@components/wallet-adapter',
+        target: '@components/wallet-adapter.tsx',
       },
     ],
   },
