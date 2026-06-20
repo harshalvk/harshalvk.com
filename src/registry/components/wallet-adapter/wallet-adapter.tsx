@@ -163,7 +163,10 @@ export function WalletAdapter({ className }: WalletButtonProps) {
                   <span className="max-w-[140px] truncate select-none">{publicKey.toBase58()}</span>
                 </p>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-0">
+              <DropdownMenuContent
+                align="center"
+                className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-0 p-0"
+              >
                 <DropdownMenuItem asChild>
                   <Button onClick={handleDisconnect} className="w-full" variant={'ghost'}>
                     Disconnect
