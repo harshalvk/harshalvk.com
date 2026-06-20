@@ -11,7 +11,7 @@
         {
           "path": "src/registry/components/wallet-adapter/wallet-adapter.tsx",
           "type": "registry:component",
-          "target": "@components/wallet-adapter.tsx"
+          "target": "@components/wallet-adapter"
         }
       ],
       "docs": "https://harshalvk.com/components/wallet-adapter",
