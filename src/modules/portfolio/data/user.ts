@@ -9,8 +9,8 @@ export const USER: User = {
   username: 'harshalvk',
   gender: 'male',
   pronouns: 'he/him',
-  bio: `Hey I'm Harshal, a Engineer. I love to learn and build products.`,
-  additionalInfo: `- Currently learning: System Design, Go`,
+  bio: `Hey I'm Harshal, an Engineer. I love to learn and build products.`,
+  additionalInfo: `- Currently learning: System Design, Go(lang)`,
   address: 'Maharashtra, India',
   phoneNumberB64: 'OTUyOTIwNDUxNg==', // utf-8
   emailB64: 'aGFyc2hhbHZraG9icmFnYWRlQGdtYWlsLmNvbQ==',
