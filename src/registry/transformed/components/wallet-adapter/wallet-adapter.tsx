@@ -23,6 +23,7 @@ import Image from 'next/image';
 import { Loader2, Wallet } from 'lucide-react';
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
 import { useCallback, useRef, useState } from 'react';
+import { NetworkContextProvider } from '@/registry/components/wallet-adapter/components/network-context';
 
 /**
  * Supported Solana networks.
@@ -253,7 +254,9 @@ export function WalletContextProvider({
           auto-detected at runtime and do not need to be listed here.
           Only add legacy, non-Wallet-Standard adapters to this array. */}
       <WalletProvider wallets={[]} autoConnect={autoConnect}>
-        <WalletModalProvider>{children}</WalletModalProvider>
+        <WalletModalProvider>
+          <NetworkContextProvider>{children}</NetworkContextProvider>
+        </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );
