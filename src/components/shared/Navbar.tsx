@@ -57,10 +57,10 @@ const Navbar = async () => {
 export function SectionCorners() {
   return (
     <>
-      <div className="border-muted-foreground/50 absolute -top-px -left-px h-2 w-2 border-t-1 border-l-1" />
-      <div className="border-muted-foreground/50 absolute -top-px -right-px h-2 w-2 border-t-1 border-r-1" />
-      <div className="border-muted-foreground/50 absolute -bottom-px -left-px h-2 w-2 border-b-1 border-l-1" />
-      <div className="border-muted-foreground/50 absolute -right-px -bottom-px h-2 w-2 border-r-1 border-b-1" />
+      <div className="border-muted-foreground/50 absolute top-0 -left-[1px] z-5 h-2 w-2 border-t border-l" />
+      <div className="border-muted-foreground/50 absolute top-0 -right-[1px] z-5 h-2 w-2 border-t border-r" />
+      <div className="border-muted-foreground/50 absolute bottom-0 -left-[1px] z-5 h-2 w-2 border-b border-l" />
+      <div className="border-muted-foreground/50 absolute -right-[1px] bottom-0 z-5 h-2 w-2 border-r border-b" />
     </>
   );
 }
