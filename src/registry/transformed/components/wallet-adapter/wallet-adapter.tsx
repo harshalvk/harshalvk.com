@@ -23,7 +23,12 @@ import Image from 'next/image';
 import { Loader2, Wallet } from 'lucide-react';
 import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base';
 import { useCallback, useRef, useState } from 'react';
-import { NetworkContextProvider } from '@/registry/components/wallet-adapter/components/network-context';
+import { WalletBalance } from './components/wallet-balance';
+import { WalletAvatar } from './components/wallet-avatar';
+import { CopyAddressButton } from './components/copy-address-button';
+import { ExplorerLink } from './components/explorer-link';
+import { NetworkSwitcher } from './components/network-switcher';
+import { useNetwork, NetworkContextProvider } from './components/network-context';
 
 /**
  * Supported Solana networks.
@@ -68,6 +73,7 @@ export interface WalletButtonProps {
 
 export function WalletAdapter({ className }: WalletButtonProps) {
   const { select, connect, wallets, publicKey, disconnect, connecting } = useWallet();
+  const { network } = useNetwork();
 
   const [open, setOpen] = useState(false);
   const [connectingWallet, setConnectingWallet] = useState<WalletName | null>(null);
@@ -161,10 +167,26 @@ export function WalletAdapter({ className }: WalletButtonProps) {
                     variant: 'outline',
                   })}
                 >
-                  <span className="max-w-[140px] truncate select-none">{publicKey.toBase58()}</span>
+                  <span className="flex items-center gap-2">
+                    <WalletAvatar address={publicKey.toBase58()} size={20} />
+                    <span className="max-w-[100px] truncate select-none">
+                      {publicKey.toBase58()}
+                    </span>
+                    <WalletBalance />
+                  </span>
                 </p>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="p-0">
+              <DropdownMenuContent
+                align="center"
+                className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-0 p-0"
+              >
+                <div className="flex items-center justify-between gap-1 px-2 py-1">
+                  <CopyAddressButton address={publicKey.toBase58()} />
+                  <ExplorerLink address={publicKey.toBase58()} network={network} />
+                </div>
+                <div className="px-2 py-1">
+                  <NetworkSwitcher />
+                </div>
                 <DropdownMenuItem asChild>
                   <Button onClick={handleDisconnect} className="w-full" variant={'ghost'}>
                     Disconnect
@@ -242,21 +264,34 @@ const NETWORK_URLS: Record<Network, string> = {
 
 export function WalletContextProvider({
   children,
-  network = 'devnet',
+  network: initialNetwork = 'devnet',
   autoConnect = true,
 }: WalletProviderProps) {
+  return (
+    <NetworkContextProvider defaultNetwork={initialNetwork}>
+      <WalletContextProviderInner autoConnect={autoConnect}>{children}</WalletContextProviderInner>
+    </NetworkContextProvider>
+  );
+}
+
+function WalletContextProviderInner({
+  children,
+  autoConnect,
+}: {
+  children: React.ReactNode;
+  autoConnect: boolean;
+}) {
+  const { network } = useNetwork();
   const endpoint = NETWORK_URLS[network];
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
+    <ConnectionProvider endpoint={endpoint} key={network}>
       {/* Pass an empty array: wallets that implement the Wallet Standard
           (Phantom, MetaMask Snaps, Backpack, Solflare, etc.) are
           auto-detected at runtime and do not need to be listed here.
           Only add legacy, non-Wallet-Standard adapters to this array. */}
       <WalletProvider wallets={[]} autoConnect={autoConnect}>
-        <WalletModalProvider>
-          <NetworkContextProvider>{children}</NetworkContextProvider>
-        </WalletModalProvider>
+        <WalletModalProvider>{children}</WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
   );

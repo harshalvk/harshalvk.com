@@ -1,5 +1,14 @@
-import { WalletAdapter } from '@/registry/transformed/components/wallet-adapter';
+'use client';
+
+import {
+  WalletAdapter,
+  WalletContextProvider,
+} from '@/registry/components/wallet-adapter/wallet-adapter';
 
 export default function WalletAdapterDemo() {
-  return <WalletAdapter />;
+  return (
+    <WalletContextProvider network="devnet">
+      <WalletAdapter />
+    </WalletContextProvider>
+  );
 }
