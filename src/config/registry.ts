@@ -18,15 +18,15 @@ export const registryConfig = {
 
 export const componentCategories = [
   {
-    name: 'text-effects',
-    title: 'Text Effects',
-    description:
-      'Applies complex visual animations, artistic styling, and interactive micro-interactions explicitly to textual content to create focal points.',
-  },
-  {
     name: 'wallet-adapter',
     title: 'Wallet Adapter',
     description:
       'A Solana wallet connection button with a dialog wallet picker and connected-state dropdown.',
+  },
+  {
+    name: 'key-screen',
+    title: 'Key Screen',
+    description:
+      'A floating overlay that captures and displays keyboard shortcuts and keypresses in real time — ideal for demos, screencasts, and presentations.',
   },
 ];

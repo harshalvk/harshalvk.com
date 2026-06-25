@@ -17,4 +17,20 @@ export const components: Registry['items'] = [
     categories: ['web3', 'authentication'],
     docs: 'https://harshalvk.com/components/wallet-adapter',
   },
+  {
+    name: 'key-screen',
+    type: 'registry:component',
+    title: 'Key Screen',
+    description:
+      'A floating overlay that captures and displays keyboard shortcuts and keypresses in real time — ideal for demos, screencasts, and presentations.',
+    files: [
+      {
+        path: 'components/key-screen/key-screen.tsx',
+        type: 'registry:component',
+        target: '@components/key-screen.tsx',
+      },
+    ],
+    categories: ['utility', 'overlay', 'keyboard', 'interaction'],
+    docs: 'https://harshalvk.com/components/key-screen',
+  },
 ];

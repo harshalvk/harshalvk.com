@@ -18,6 +18,22 @@
       "categories": ["web3", "authentication"],
       "type": "registry:component",
       "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
+      "name": "key-screen",
+      "title": "Key Screen",
+      "description": "A floating overlay that captures and displays keyboard shortcuts and keypresses in real time — ideal for demos, screencasts, and presentations.",
+      "files": [
+        {
+          "path": "src/registry/components/key-screen/key-screen.tsx",
+          "type": "registry:component",
+          "target": "@components/key-screen.tsx"
+        }
+      ],
+      "docs": "https://harshalvk.com/components/key-screen",
+      "categories": ["utility", "overlay", "keyboard", "interaction"],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
     }
   ]
 }

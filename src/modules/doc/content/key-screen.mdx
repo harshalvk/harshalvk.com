@@ -1,0 +1,108 @@
+---
+title: Key Screen
+description: A floating overlay that captures and displays keyboard shortcuts and keypresses in real time — ideal for demos, screencasts, and presentations.
+image: /key-screen.png
+category: components
+createdAt: 2026-06-25
+updatedAt: 2026-06-25
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-40"
+  name="key-screen-demo"
+  openInV0Url="https://harshalvk.com/r/key-screen.json"
+/>
+
+## Features
+
+- Listens to `keydown` / `keyup` events globally and renders the active key combo as styled keycaps.
+- Modifier keys (`Ctrl`, `⌘`, `Alt`, `Shift`) are captured and ordered consistently before regular keys.
+- Special keys are normalized to readable symbols — `Space`, `↵`, `⌫`, `↑`, `↓`, `←`, `→`, `Esc`, and more.
+- Combo history shows the last N presses, fading older entries and removing the current one after a configurable delay.
+- Five anchor positions: `bottom-left`, `bottom-right`, `bottom-center`, `top-left`, `top-right`.
+- Keycap styling uses shadcn/ui CSS variables — inherits your theme automatically.
+- `pointer-events: none` so it never interferes with the page below it.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://www.harshalvk.com/r/key-screen.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="key-screen" title="components/key-screen.tsx" />
+Update the import paths to match your project setup.
+
+<Step>Mount `KeyScreen` anywhere in your layout tree.</Step>
+
+Because the component uses `position: fixed`, it renders relative to the viewport regardless of where it sits in the DOM. Placing it once in your root layout is the most common setup:
+
+```tsx title="app/layout.tsx" showLineNumbers
+import { KeyScreen } from '@/components/key-screen';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <KeyScreen position="bottom-left" />
+      </body>
+    </html>
+  );
+}
+```
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { KeyScreen } from '@/components/key-screen';
+```
+
+```tsx
+<KeyScreen position="bottom-left" fadeDelay={1800} historySize={3} />
+```
+
+## API Reference
+
+### KeyScreen
+
+| Prop          | Type                                                                | Default         | Description                                                                    |
+| ------------- | ------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------ |
+| `position`    | `bottom-left` `bottom-right` `bottom-center` `top-left` `top-right` | `"bottom-left"` | Anchor corner for the floating overlay.                                        |
+| `fadeDelay`   | `number`                                                            | `1800`          | Milliseconds before the current combo fades out after the last keypress.       |
+| `historySize` | `number`                                                            | `3`             | Maximum number of combos shown simultaneously. Older entries scroll off.       |
+| `verbose`     | `boolean`                                                           | `false`         | Show full modifier names (`Control`, `Meta`) instead of symbols (`Ctrl`, `⌘`). |
+| `className`   | `string`                                                            | —               | Additional classes applied to the outermost container.                         |
+
+## Notes
+
+- The component attaches listeners directly to `window`, so it captures keypresses regardless of which element has focus. Wrap it in a context or conditionally render it to scope it to a specific mode (e.g. a "presentation" toggle).
+- A `blur` event on `window` clears the tracked pressed-key set, preventing stuck modifier keys when the user tabs away.
+- Modifier-only presses (`Shift` held alone, etc.) do not emit a combo — a regular key must be included.
+- The keycap depth effect is achieved with an inset box-shadow using `--border` variables; it follows your shadcn/ui theme without any extra configuration.
+- For screencasts or live demos, pair with a `useHotkeys` hook from `react-hotkeys-hook` to trigger side-effects on specific shortcuts while `KeyScreen` handles the visual feedback independently.

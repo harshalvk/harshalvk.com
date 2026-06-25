@@ -30,19 +30,64 @@ export const Index: Record<string, any> = {
     categories: ['web3', 'authentication'],
     meta: undefined,
   },
+  'key-screen': {
+    name: 'key-screen',
+    description:
+      'A floating overlay that captures and displays keyboard shortcuts and keypresses in real time — ideal for demos, screencasts, and presentations.',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/components/key-screen/key-screen.tsx',
+        type: 'registry:component',
+        target: '@components/key-screen.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/components/key-screen/key-screen.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: ['utility', 'overlay', 'keyboard', 'interaction'],
+    meta: undefined,
+  },
   'wallet-adapter-demo': {
     name: 'wallet-adapter-demo',
     description: '',
     type: 'registry:example',
     files: [
       {
-        path: 'src/registry/components/wallet-adapter/wallet-adapter.tsx',
-        type: 'registry:component',
-        target: '@components/wallet-adapter.tsx',
+        path: 'src/registry/examples/wallet-adapter-demo.tsx',
+        type: 'registry:example',
+        target: '@components/wallet-adapter-demo.tsx',
       },
     ],
     component: React.lazy(async () => {
-      const mod = await import('@/registry/components/wallet-adapter/wallet-adapter.tsx');
+      const mod = await import('@/registry/examples/wallet-adapter-demo.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  'key-screen-demo': {
+    name: 'key-screen-demo',
+    description: '',
+    type: 'registry:example',
+    files: [
+      {
+        path: 'src/registry/examples/key-screen-demo.tsx',
+        type: 'registry:example',
+        target: '@components/key-screen-demo.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/examples/key-screen-demo.tsx');
       const exportName =
         Object.keys(mod).find(
           (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
