@@ -23,4 +23,15 @@ export const examples: Registry['items'] = [
       },
     ],
   },
+  {
+    name: 'masonry-feed-demo',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'examples/masonry-feed-demo.tsx',
+        type: 'registry:example',
+        target: '@components/masonry-feed-demo.tsx',
+      },
+    ],
+  },
 ];

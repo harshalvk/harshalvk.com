@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "masnory-feed-demo",
+  "author": "harshalvk <harshalvkhobragade@gmail.com>",
+  "files": [
+    {
+      "path": "src/registry/examples/masnory-feed-demo.tsx",
+      "content": "import { MasonryFeed } from '@/registry/components/masnory-feed';\r\n\r\nconst images = [\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=400&h=300&fit=crop',\r\n  }, // laptop coding desk\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=300&h=500&fit=crop',\r\n  }, // developer workspace\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop',\r\n  }, // macbook minimal setup\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=350&h=650&fit=crop',\r\n  }, // dual monitor setup\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&h=450&fit=crop',\r\n  }, // code on screen dark\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=450&h=700&fit=crop',\r\n  }, // aesthetic desk\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&h=500&fit=crop',\r\n  }, // coding environment\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=500&h=800&fit=crop',\r\n  }, // clean setup vertical\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&h=300&fit=crop',\r\n  }, // monitor with code\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=320&h=640&fit=crop',\r\n  }, // keyboard aesthetic\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=550&h=350&fit=crop',\r\n  }, // team coding\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400&h=750&fit=crop',\r\n  }, // dark workstation\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=650&h=420&fit=crop',\r\n  }, // minimal workspace\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1517336714739-489689fd1ca8?w=380&h=580&fit=crop',\r\n  }, // macbook closeup\r\n\r\n  {\r\n    src: 'https://images.unsplash.com/photo-1522199755839-a2bacb67c546?w=750&h=500&fit=crop',\r\n  }, // modern dev setup\r\n];\r\n\r\nconst MasonryFeedDemo = () => {\r\n  return (\r\n    <>\r\n      <MasonryFeed images={images} />\r\n    </>\r\n  );\r\n};\r\n\r\nexport default MasonryFeedDemo;\r\n",
+      "type": "registry:example",
+      "target": "@components/masnory-feed-demo.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

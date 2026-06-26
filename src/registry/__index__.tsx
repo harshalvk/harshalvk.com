@@ -53,6 +53,29 @@ export const Index: Record<string, any> = {
     categories: ['utility', 'overlay', 'keyboard', 'interaction'],
     meta: undefined,
   },
+  'masonry-feed': {
+    name: 'masonry-feed',
+    description:
+      'A Pinterest-style image feed that places images left to right into the shortest column using manual height calculation — no CSS grid required.',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/components/masonry-feed/masonry-feed.tsx',
+        type: 'registry:component',
+        target: '@components/masonry-feed.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/components/masonry-feed/masonry-feed.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: ['media', 'gallery', 'interactive'],
+    meta: undefined,
+  },
   'wallet-adapter-demo': {
     name: 'wallet-adapter-demo',
     description: '',
@@ -88,6 +111,28 @@ export const Index: Record<string, any> = {
     ],
     component: React.lazy(async () => {
       const mod = await import('@/registry/examples/key-screen-demo.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  'masonry-feed-demo': {
+    name: 'masonry-feed-demo',
+    description: '',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/examples/masonry-feed-demo.tsx',
+        type: 'registry:example',
+        target: '@components/masonry-feed-demo.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/examples/masonry-feed-demo.tsx');
       const exportName =
         Object.keys(mod).find(
           (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'

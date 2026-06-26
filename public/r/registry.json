@@ -34,6 +34,34 @@
       "categories": ["utility", "overlay", "keyboard", "interaction"],
       "type": "registry:component",
       "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
+      "name": "masonry-feed",
+      "title": "Masonry Feed",
+      "description": "A Pinterest-style image feed that places images left to right into the shortest column using manual height calculation — no CSS grid required.",
+      "files": [
+        {
+          "path": "src/registry/components/masonry-feed/masonry-feed.tsx",
+          "type": "registry:component",
+          "target": "@components/masonry-feed.tsx"
+        }
+      ],
+      "docs": "https://harshalvk.com/components/masonry-feed.tsx",
+      "categories": ["media", "gallery", "interactive"],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
+      "name": "masonry-feed-demo",
+      "files": [
+        {
+          "path": "src/registry/examples/masonry-feed-demo.tsx",
+          "type": "registry:example",
+          "target": "@components/masonry-feed-demo.tsx"
+        }
+      ],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
     }
   ]
 }

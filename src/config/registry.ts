@@ -29,4 +29,10 @@ export const componentCategories = [
     description:
       'A floating overlay that captures and displays keyboard shortcuts and keypresses in real time — ideal for demos, screencasts, and presentations.',
   },
+  {
+    name: 'masnory-feed',
+    title: 'Masnory Feed',
+    description:
+      'A Pinterest-style image feed that places images left to right into the shortest column using manual height calculation — no CSS grid required.',
+  },
 ];

@@ -33,4 +33,20 @@ export const components: Registry['items'] = [
     categories: ['utility', 'overlay', 'keyboard', 'interaction'],
     docs: 'https://harshalvk.com/components/key-screen',
   },
+  {
+    name: 'masonry-feed',
+    type: 'registry:component',
+    title: 'Masonry Feed',
+    description:
+      'A Pinterest-style image feed that places images left to right into the shortest column using manual height calculation — no CSS grid required.',
+    files: [
+      {
+        path: 'components/masonry-feed/masonry-feed.tsx',
+        type: 'registry:component',
+        target: '@components/masonry-feed.tsx',
+      },
+    ],
+    categories: ['media', 'gallery', 'interactive'],
+    docs: 'https://harshalvk.com/components/masonry-feed.tsx',
+  },
 ];

@@ -1,0 +1,152 @@
+---
+title: Masonry Feed
+description: A Pinterest-style image feed that places images left to right into the shortest column using manual height calculation — no CSS grid required. Includes an optional fullscreen lightbox with carousel navigation.
+image: /masonry-feed.png
+category: components
+createdAt: 2026-06-26
+updatedAt: 2026-06-26
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-40"
+  name="masonry-feed-demo"
+  openInV0Url="https://harshalvk.com/r/masonry-feed.json"
+  canReplay
+/>
+
+## Features
+
+- Images are placed left to right into the shortest column — no CSS grid, no `column-count`, pure arithmetic.
+- Aspect ratios are always preserved — column width is fixed and height is derived from each image's natural ratio.
+- Unknown image dimensions are measured via invisible probe elements; if you supply `width` and `height` on each image object, layout runs instantly with no flicker.
+- Container width is tracked via `ResizeObserver` — layout recalculates automatically on resize.
+- Configurable columns, gap, and border radius via props.
+- Optional click handler and hover overlay slot for custom UI on each card.
+- Optional fullscreen lightbox — opens on card click with a smooth backdrop blur overlay.
+- Optional carousel mode inside the lightbox — prev/next buttons, keyboard arrow navigation, a position counter, and dot indicators (shown when the image count is ≤ 20).
+- `pointer-events: none` is never set on the container — cards are fully interactive.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://www.harshalvk.com/r/masonry-feed.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="masonry-feed" title="components/masonry-feed.tsx" />
+Update the import paths to match your project setup.
+
+<Step>Pass your image array to the component.</Step>
+
+Pre-supply `width` and `height` on each item to skip the measurement step and get instant layout on mount:
+
+```tsx title="app/page.tsx" showLineNumbers
+import { MasonryFeed } from '@/components/masonry-feed';
+
+const images = [
+  { src: '/photos/a.jpg', width: 600, height: 900, alt: 'Mountain lake' },
+  { src: '/photos/b.jpg', width: 600, height: 400, alt: 'Forest path' },
+  { src: '/photos/c.jpg', width: 600, height: 750, alt: 'Autumn trees' },
+];
+
+export default function Page() {
+  return <MasonryFeed images={images} columns={3} gap={12} />;
+}
+```
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { MasonryFeed } from '@/components/masonry-feed';
+```
+
+Basic grid:
+
+```tsx
+<MasonryFeed
+  images={images}
+  columns={3}
+  gap={12}
+  radius={12}
+  onImageClick={(image, index) => console.log(image, index)}
+/>
+```
+
+With lightbox and carousel:
+
+```tsx
+<MasonryFeed images={images} columns={3} gap={12} radius={12} lightbox carousel />
+```
+
+With a custom hover overlay:
+
+```tsx
+<MasonryFeed
+  images={images}
+  lightbox
+  carousel
+  renderOverlay={(image, index) => (
+    <div className="flex h-full items-end bg-gradient-to-t from-black/60 p-3">
+      <span className="text-sm font-medium text-white">{image.alt}</span>
+    </div>
+  )}
+/>
+```
+
+## API Reference
+
+### MasonryFeed
+
+| Prop                 | Type                                                | Default | Description                                                                                                          |
+| -------------------- | --------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| `images`             | `MasonryImage[]`                                    | —       | Array of image objects to render. See `MasonryImage` below.                                                          |
+| `columns`            | `number`                                            | `3`     | Number of columns.                                                                                                   |
+| `gap`                | `number`                                            | `12`    | Gap between cards in px.                                                                                             |
+| `radius`             | `number`                                            | `12`    | Border radius on each card in px.                                                                                    |
+| `lightbox`           | `boolean`                                           | `false` | Opens a fullscreen lightbox when a card is clicked. Must be `true` for `carousel` to have any effect.                |
+| `carousel`           | `boolean`                                           | `false` | Enables prev/next navigation inside the lightbox. Only active when `lightbox` is also `true`.                        |
+| `onImageClick`       | `(image: MasonryImage, index: number) => void`      | —       | Called when a card is clicked, before the lightbox opens. Adds `role="button"` and keyboard support automatically.   |
+| `renderOverlay`      | `(image: MasonryImage, index: number) => ReactNode` | —       | Rendered inside each card on hover with a fade transition. Use for captions, action buttons, or any custom hover UI. |
+| `loadingPlaceholder` | `ReactNode`                                         | —       | Shown while image ratios are being measured. Defaults to a mono `loading…` label.                                    |
+| `className`          | `string`                                            | —       | Additional classes on the outermost container.                                                                       |
+
+### MasonryImage
+
+| Field    | Type               | Description                                                                   |
+| -------- | ------------------ | ----------------------------------------------------------------------------- |
+| `src`    | `string`           | Image URL.                                                                    |
+| `alt`    | `string`           | Alt text for the image. Also shown as a caption overlay inside the lightbox.  |
+| `width`  | `number`           | Natural width hint. Provide alongside `height` to skip the measurement probe. |
+| `height` | `number`           | Natural height hint. Provide alongside `width` to skip the measurement probe. |
+| `id`     | `string \| number` | Arbitrary identifier passed back in `onImageClick` and `renderOverlay`.       |
+
+## Notes
+
+- The layout engine tracks a `colHeights[]` array — one entry per column. For each image it finds the column with the minimum current height, places the image there, and increments that column's height by the card's calculated height plus the gap.
+- When `width` and `height` are omitted on an image object, an invisible 1×1 `<img>` probe is mounted to trigger a natural-size `onLoad`. Once measured, the ratio is stored and layout re-runs. This only happens once per unique `src`.
+- Cards use `position: absolute` inside a `position: relative` container whose height is set to the tallest column's total height. This means the component grows naturally in the document flow — no fixed height needed on a parent.
+- `ResizeObserver` watches the container element directly, so layout recalculates correctly inside drawers, modals, sidebars, or any other collapsible container.
+- The lightbox locks `document.body` scroll while open and restores it on close. It closes on backdrop click, close button click, or the `Escape` key.
+- In carousel mode, the `←` / `→` arrow keys navigate between images. Navigation wraps around — pressing next on the last image goes back to the first.
+- Dot indicators appear at the bottom of the lightbox only when `carousel` is true and the image array contains 20 or fewer items. Clicking a dot jumps directly to that image.
+- `carousel` has no effect unless `lightbox` is also `true`. The component enforces this internally — setting `carousel={true}` alone is silently ignored.
+- For responsive column counts, manage `columns` externally with a `useMediaQuery` hook or a CSS-breakpoint-aware value rather than hardcoding a number.
