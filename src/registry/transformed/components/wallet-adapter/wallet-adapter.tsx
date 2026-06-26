@@ -178,17 +178,22 @@ export function WalletAdapter({ className }: WalletButtonProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="center"
-                className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-0 p-0"
+                className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-0 p-1"
               >
                 <div className="flex items-center justify-between gap-1 px-2 py-1">
                   <CopyAddressButton address={publicKey.toBase58()} />
                   <ExplorerLink address={publicKey.toBase58()} network={network} />
                 </div>
                 <div className="px-2 py-1">
+                  <span className="text-muted-foreground text-sm">Change network:</span>
                   <NetworkSwitcher />
                 </div>
                 <DropdownMenuItem asChild>
-                  <Button onClick={handleDisconnect} className="w-full" variant={'ghost'}>
+                  <Button
+                    onClick={handleDisconnect}
+                    className="w-full border-none ring-0 outline-none"
+                    variant={'outline'}
+                  >
                     Disconnect
                   </Button>
                 </DropdownMenuItem>
