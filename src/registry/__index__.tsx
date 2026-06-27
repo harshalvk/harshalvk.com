@@ -76,6 +76,28 @@ export const Index: Record<string, any> = {
     categories: ['media', 'gallery', 'interactive'],
     meta: undefined,
   },
+  'drag-to-confirm': {
+    name: 'drag-to-confirm',
+    description: '',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/components/drag-to-confirm/drag-to-confirm.tsx',
+        type: 'registry:component',
+        target: '@components/drag-to-confirm.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/components/drag-to-confirm/drag-to-confirm.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: [''],
+    meta: undefined,
+  },
   'wallet-adapter-demo': {
     name: 'wallet-adapter-demo',
     description: '',
@@ -133,6 +155,28 @@ export const Index: Record<string, any> = {
     ],
     component: React.lazy(async () => {
       const mod = await import('@/registry/examples/masonry-feed-demo.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  'drag-to-confirm-demo': {
+    name: 'drag-to-confirm-demo',
+    description: '',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/examples/drag-to-confirm-demo.tsx',
+        type: 'registry:example',
+        target: '@components/drag-to-confirm-demo.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/examples/drag-to-confirm-demo.tsx');
       const exportName =
         Object.keys(mod).find(
           (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'

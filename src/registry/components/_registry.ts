@@ -47,6 +47,21 @@ export const components: Registry['items'] = [
       },
     ],
     categories: ['media', 'gallery', 'interactive'],
-    docs: 'https://harshalvk.com/components/masonry-feed.tsx',
+    docs: 'https://harshalvk.com/components/masonry-feed',
+  },
+  {
+    name: 'drag-to-confirm',
+    type: 'registry:component',
+    title: 'Drag To Confirm',
+    description: '',
+    files: [
+      {
+        path: 'components/drag-to-confirm/drag-to-confirm.tsx',
+        type: 'registry:component',
+        target: '@components/drag-to-confirm.tsx',
+      },
+    ],
+    categories: [''],
+    docs: 'https://harshalvk.com/components/drag-to-confirm',
   },
 ];

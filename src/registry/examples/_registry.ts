@@ -34,4 +34,15 @@ export const examples: Registry['items'] = [
       },
     ],
   },
+  {
+    name: 'drag-to-confirm-demo',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'examples/drag-to-confirm-demo.tsx',
+        type: 'registry:example',
+        target: '@components/drag-to-confirm-demo.tsx',
+      },
+    ],
+  },
 ];

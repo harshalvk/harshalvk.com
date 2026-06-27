@@ -46,8 +46,24 @@
           "target": "@components/masonry-feed.tsx"
         }
       ],
-      "docs": "https://harshalvk.com/components/masonry-feed.tsx",
+      "docs": "https://harshalvk.com/components/masonry-feed",
       "categories": ["media", "gallery", "interactive"],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
+      "name": "drag-to-confirm",
+      "title": "Drag To Confirm",
+      "description": "",
+      "files": [
+        {
+          "path": "src/registry/components/drag-to-confirm/drag-to-confirm.tsx",
+          "type": "registry:component",
+          "target": "@components/drag-to-confirm.tsx"
+        }
+      ],
+      "docs": "https://harshalvk.com/components/drag-to-confirm",
+      "categories": [""],
       "type": "registry:component",
       "author": "harshalvk <harshalvkhobragade@gmail.com>"
     },
@@ -58,6 +74,18 @@
           "path": "src/registry/examples/masonry-feed-demo.tsx",
           "type": "registry:example",
           "target": "@components/masonry-feed-demo.tsx"
+        }
+      ],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
+      "name": "drag-to-confirm-demo",
+      "files": [
+        {
+          "path": "src/registry/examples/drag-to-confirm-demo.tsx",
+          "type": "registry:example",
+          "target": "@components/drag-to-confirm-demo.tsx"
         }
       ],
       "type": "registry:component",

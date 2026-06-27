@@ -1,0 +1,198 @@
+---
+title: Drag To Confirm
+description: A slider the user must drag all the way to the right to confirm a destructive or irreversible action — safer than a confirm dialog, harder to trigger by accident.
+image: /drag-to-confirm.png
+category: components
+createdAt: 2026-06-27
+updatedAt: 2026-06-27
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-40"
+  name="drag-to-confirm-demo"
+  openInV0Url="https://harshalvk.com/r/drag-to-confirm.json"
+  canReplay
+/>
+
+## Features
+
+- Thumb must be dragged past a configurable threshold (default 90%) before the action fires — accidental taps never trigger it.
+- Three variants: `danger` (red), `neutral` (gray), and `success` (green) — defined as a small internal color token map, easy to repoint at your own CSS variables if you want full theme integration.
+- `onConfirm` accepts a sync or async function. Returning `false` (or throwing) signals failure — the thumb springs back to idle and an error message is exposed via the live region.
+- The thumb locks in place and shows a spinner while an async `onConfirm` is pending.
+- No built-in auto-reset timer. Use the `confirmed` prop to control state externally, or bump `resetKey` to force the thumb back to idle on demand.
+- Fill width, label opacity, and the arrow → checkmark swap are driven by `useTransform` off a single motion value — no re-renders during drag.
+- Snaps back with spring physics if released below the threshold.
+- Full keyboard support — arrow keys nudge the thumb, `Home`/`End` jump to the ends, `Enter`/`Space` confirms at or past threshold.
+- Fully accessible — `role="slider"` with `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`, and a polite live region announcing status changes.
+- RTL support via the `dir` prop — drag direction and layout mirror correctly.
+- Respects `prefers-reduced-motion` — skips spring/scale animation in favor of instant snaps.
+- Re-measures the track with a `ResizeObserver`, so it stays correct if the container resizes mid-session, including while sitting in the confirmed state.
+- Optional `name` prop lets it report a value (`"idle"` / `"confirmed"`) inside a native `<form>`.
+- `disabled` prop locks all interaction (pointer and keyboard) and dims the control.
+- Exposes an imperative ref (`reset()`, `confirm()`) for programmatic control.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://www.harshalvk.com/r/drag-to-confirm.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="drag-to-confirm" title="components/drag-to-confirm.tsx" />
+Update the import paths to match your project setup.
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { DragToConfirm } from '@/components/drag-to-confirm';
+```
+
+### Basic
+
+Fires `onConfirm` once the threshold is crossed and stays in the confirmed state — there's no auto-reset, so pair it with your own state if you need the control to go away or reset.
+
+```tsx
+<DragToConfirm label="Drag to delete" variant="danger" onConfirm={() => console.log('confirmed')} />
+```
+
+### Async action with loading state
+
+Pass an async function to `onConfirm`. The thumb locks at the end and shows a spinner until the promise resolves. Return `false`, throw, or reject to signal failure — the thumb springs back to idle automatically and the user can try again.
+
+```tsx
+<DragToConfirm
+  label="Drag to delete account"
+  confirmedLabel="Account deleted"
+  variant="danger"
+  onConfirm={async () => {
+    await deleteAccount();
+  }}
+/>
+```
+
+### Controlling confirmed state externally
+
+Pass `confirmed` to drive the slider from your own state instead of letting it manage status internally. Useful when the parent already knows the outcome (e.g. from a mutation hook).
+
+```tsx
+const [archived, setArchived] = useState(false);
+
+return (
+  <DragToConfirm
+    label="Drag to archive"
+    variant="default"
+    confirmed={archived}
+    onConfirm={async () => {
+      await archiveItem();
+      setArchived(true);
+    }}
+  />
+);
+```
+
+### Resetting on demand
+
+Bump `resetKey` (any string or number) whenever you want to force the thumb back to idle — for example after showing the confirmed state for a while, or after the user dismisses a follow-up toast.
+
+```tsx
+const [resetKey, setResetKey] = useState(0);
+
+<DragToConfirm
+  label="Drag to confirm"
+  variant="default"
+  onConfirm={handleConfirm}
+  resetKey={resetKey}
+/>
+<button onClick={() => setResetKey((k) => k + 1)}>Reset</button>
+```
+
+### Imperative ref
+
+```tsx
+const ref = useRef<DragToConfirmRef>(null);
+
+<DragToConfirm ref={ref} label="Drag to confirm" onConfirm={handleConfirm} />
+<button onClick={() => ref.current?.confirm()}>Confirm programmatically</button>
+<button onClick={() => ref.current?.reset()}>Reset programmatically</button>
+```
+
+### RTL
+
+```tsx
+<DragToConfirm dir="rtl" label="גרור לאישור" confirmedLabel="אושר" />
+```
+
+### Disabled state
+
+```tsx
+<DragToConfirm label="Drag to confirm" variant="danger" disabled />
+```
+
+## API Reference
+
+### DragToConfirm
+
+| Prop                    | Type                                                | Default               | Description                                                                                                                                                                |
+| ----------------------- | --------------------------------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `label`                 | `string`                                            | `"Drag to confirm"`   | Text shown inside the track while idle.                                                                                                                                    |
+| `confirmedLabel`        | `string`                                            | `"Confirmed"`         | Text shown once the slider reaches the end and is confirmed.                                                                                                               |
+| `variant`               | `"danger" \| "neutral" \| "success"`                | `"danger"`            | Controls the track, fill, and thumb colors.                                                                                                                                |
+| `threshold`             | `number`                                            | `0.9`                 | Fraction (0–1) of the track the thumb must cross to fire `onConfirm`. Values are clamped to 0–1.                                                                           |
+| `onConfirm`             | `() => void \| boolean \| Promise<void \| boolean>` | —                     | Called when the threshold is crossed. Return/resolve `false`, or throw, to signal failure.                                                                                 |
+| `disabled`              | `boolean`                                           | `false`               | Disables all pointer and keyboard interaction, dims the control.                                                                                                           |
+| `confirmed`             | `boolean`                                           | —                     | Controls confirmed/idle state externally. Omit for uncontrolled (internal) state.                                                                                          |
+| `resetKey`              | `string \| number`                                  | —                     | Bump this value to force the slider back to idle from outside.                                                                                                             |
+| `dir`                   | `"ltr" \| "rtl"`                                    | `"ltr"`               | Text/drag direction. `"rtl"` mirrors the thumb's resting edge and drag direction.                                                                                          |
+| `thumbContent`          | `ReactNode`                                         | arrow glyph           | Custom content rendered inside the thumb in idle/dragging state.                                                                                                           |
+| `confirmedThumbContent` | `ReactNode`                                         | checkmark glyph       | Custom content rendered inside the thumb once confirmed.                                                                                                                   |
+| `height`                | `number`                                            | `56`                  | Track height in px. The thumb is always a circle sized to fit this height — there's no separate thumb-size prop, so the thumb can never overflow the track's rounded ends. |
+| `className`             | `string`                                            | —                     | Classes/styles on the outermost container.                                                                                                                                 |
+| `thumbClassName`        | `string`                                            | —                     | Classes/styles applied to the thumb element specifically.                                                                                                                  |
+| `aria-label`            | `string`                                            | falls back to `label` | Accessible name for the slider.                                                                                                                                            |
+| `id`                    | `string`                                            | —                     | Passed to the underlying `role="slider"` element.                                                                                                                          |
+| `name`                  | `string`                                            | —                     | If set, renders a hidden `<input>` with value `"idle"` / `"confirmed"` for native form submission.                                                                         |
+
+### DragToConfirmRef
+
+| Method      | Description                                                        |
+| ----------- | ------------------------------------------------------------------ |
+| `reset()`   | Forces the slider back to idle, cancelling any in-flight confirm.  |
+| `confirm()` | Programmatically drives the thumb to the end and runs `onConfirm`. |
+
+## Notes
+
+- The thumb's hit-box and visual size are tied directly to `height` — earlier drafts exposed a separate `thumbSize` prop, but that let the thumb become wider than the track and overflow its rounded corners at full drag. `height` alone now determines both track and thumb dimensions, so this can't happen.
+- `useMotionValue` drives the thumb's `x` position directly — Motion owns drag updates once `dragConstraints` is set, so the component never re-derives position from pointer offset itself. (An earlier version did this and it fought Motion's own constraint math, especially under RTL — fixed.)
+- `useTransform` derives fill width and label opacity from the same motion value, with zero intermediate `setState` calls during drag.
+- A throttled integer-percent value is still mirrored into React state for `aria-valuenow`/`aria-valuetext`, since motion values don't trigger re-renders on their own — without this, screen readers would see a frozen percentage mid-drag.
+- The track is measured with a `ResizeObserver`, not recalculated on `pointerdown`, so it also stays correct if the container resizes while the slider is sitting idle or confirmed (not just at drag start).
+- There's no built-in auto-reset timer. If you want the confirmed state to revert after a delay, drive it yourself with `resetKey` and `setTimeout`, or use the `confirmed` controlled prop.
+- If `onConfirm` rejects, throws, or resolves to `false`, the thumb springs back and status returns to `idle` automatically — the user can try again without refreshing.
+- Colors are defined as a small internal hex token map (`VARIANT_TOKENS`), not shadcn CSS variables — swap them for `var(--...)` references yourself if you want the variants to follow your theme.
+- Keyboard users get full parity with drag: arrow keys step the thumb, `Home`/`End` jump to the ends, and `Enter`/`Space` either confirms (at or past threshold) or nudges forward by one step (below threshold).
