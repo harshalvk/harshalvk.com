@@ -1,11 +1,4 @@
 import type { AlgorithmCategoryMeta, AlgorithmMeta } from '@/modules/theia/types/algorithm';
-// import {
-//   bubbleSortSteps,
-//   selectionSortSteps,
-//   insertionSortSteps,
-//   mergeSortSteps,
-//   quickSortSteps,
-// } from '@/modules/dsa-visualizer/lib/sorting-algorithms';
 
 export const CATEGORIES: AlgorithmCategoryMeta[] = [
   {
@@ -18,7 +11,11 @@ export const CATEGORIES: AlgorithmCategoryMeta[] = [
     title: 'Linked List',
     description: 'Insertion, deletion, traversal — coming soon.',
   },
-  // future: { slug: 'ml', title: 'Machine Learning', description: '...' }
+  {
+    slug: 'ml',
+    title: 'Machine Learning',
+    description: 'Algorithms that learn patterns from data to make predictions and decisions.',
+  },
 ];
 
 export const ALGORITHMS: AlgorithmMeta[] = [
@@ -29,7 +26,6 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     description: 'Repeatedly swaps adjacent elements if they are in the wrong order.',
     timeComplexity: { best: 'O(n)', average: 'O(n²)', worst: 'O(n²)' },
     spaceComplexity: 'O(1)',
-    // generator: bubbleSortSteps,
   },
   {
     slug: 'selection-sort',
@@ -38,7 +34,6 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     description: 'Finds the minimum from the unsorted part and places it at the front.',
     timeComplexity: { best: 'O(n²)', average: 'O(n²)', worst: 'O(n²)' },
     spaceComplexity: 'O(1)',
-    // generator: selectionSortSteps,
   },
   {
     slug: 'insertion-sort',
@@ -47,7 +42,6 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     description: 'Builds sorted array one element at a time by inserting into correct position.',
     timeComplexity: { best: 'O(n)', average: 'O(n²)', worst: 'O(n²)' },
     spaceComplexity: 'O(1)',
-    // generator: insertionSortSteps,
   },
   {
     slug: 'merge-sort',
@@ -56,7 +50,6 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     description: 'Divides array into halves, sorts each, then merges them back together.',
     timeComplexity: { best: 'O(n log n)', average: 'O(n log n)', worst: 'O(n log n)' },
     spaceComplexity: 'O(n)',
-    // generator: mergeSortSteps,
   },
   {
     slug: 'quick-sort',
@@ -65,7 +58,6 @@ export const ALGORITHMS: AlgorithmMeta[] = [
     description: 'Picks a pivot, partitions array around it, recursively sorts each side.',
     timeComplexity: { best: 'O(n log n)', average: 'O(n log n)', worst: 'O(n²)' },
     spaceComplexity: 'O(log n)',
-    // generator: quickSortSteps,
   },
   {
     slug: 'heap-sort',
