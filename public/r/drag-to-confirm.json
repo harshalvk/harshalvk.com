@@ -13,6 +13,6 @@
     }
   ],
   "docs": "https://harshalvk.com/components/drag-to-confirm",
-  "categories": [""],
+  "categories": ["interaction", "forms"],
   "type": "registry:component"
 }
