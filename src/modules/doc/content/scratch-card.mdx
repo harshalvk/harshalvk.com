@@ -1,0 +1,181 @@
+---
+title: Scratch Card
+description: A canvas-based scratch-to-reveal card with built-in reward variants, scoped confetti, and an imperative handle for programmatic control — ideal for promotions, giveaways, and reward flows.
+image: /scratch-card.png
+category: components
+createdAt: 2026-06-28
+updatedAt: 2026-06-28
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-52"
+  name="scratch-card-demo"
+  openInV0Url="https://harshalvk.com/r/scratch-card.json"
+  canReplay
+/>
+
+## Features
+
+- Canvas overlay is erased with `destination-out` compositing as the user drags a pointer across it — works with mouse, touch, and stylus.
+- Five built-in reward variants: `default`, `gold`, `success`, `brand`, and `mystery` — pass any `ReactNode` for fully custom content.
+- Configurable `threshold` (0–1) triggers an auto-complete fade once enough of the overlay is cleared.
+- Scoped confetti engine renders on a canvas layered between the reward and the scratch overlay, so particles appear to burst out from behind the card on reveal.
+- `ScratchCardHandle` exposes `reveal()` and `reset()` for programmatic control via `ref`.
+- Overlay has a subtle coin-texture dot pattern and diagonal shimmer stripe for a tactile, physical feel.
+- `pointer-events` are disabled on the overlay once revealed, so the reward content becomes fully interactive.
+- Keyboard-accessible "Reveal" button appears over the card for non-pointer users.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://www.harshalvk.com/r/scratch-card.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="scratch-card" title="components/scratch-card.tsx" />
+Update the import paths to match your project setup.
+
+<Step>Add the component to your page</Step>
+
+```tsx title="app/page.tsx" showLineNumbers
+import { ScratchCard } from '@/components/scratch-card';
+
+export default function Page() {
+  return (
+    <ScratchCard
+      reward="20% OFF"
+      rewardLabel="your entire order"
+      variant="gold"
+      confetti
+      className="h-40 w-72"
+    />
+  );
+}
+```
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ScratchCard, ScratchCardHandle } from '@/components/scratch-card';
+```
+
+```tsx
+<ScratchCard
+  reward="20% OFF"
+  rewardLabel="your entire order"
+  variant="gold"
+  confetti
+  className="h-40 w-72"
+  onComplete={() => console.log('revealed!')}
+/>
+```
+
+### Imperative control
+
+Use `ref` with `ScratchCardHandle` to reveal or reset programmatically:
+
+```tsx showLineNumbers
+import { useRef } from 'react';
+import { ScratchCard, ScratchCardHandle } from '@/components/scratch-card';
+
+export function RewardFlow() {
+  const cardRef = useRef<ScratchCardHandle>(null);
+
+  return (
+    <>
+      <ScratchCard
+        ref={cardRef}
+        reward="FREE SHIPPING"
+        variant="success"
+        confetti
+        className="h-40 w-72"
+      />
+      <button onClick={() => cardRef.current?.reveal()}>Reveal now</button>
+      <button onClick={() => cardRef.current?.reset()}>Play again</button>
+    </>
+  );
+}
+```
+
+### Custom reward content
+
+Pass any `ReactNode` to `reward` for fully custom content inside the card:
+
+```tsx showLineNumbers
+<ScratchCard
+  reward={
+    <div className="flex h-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-amber-400 to-yellow-300">
+      <span className="text-4xl">🏆</span>
+      <span className="text-2xl font-black text-amber-950">$500</span>
+      <span className="text-xs font-semibold tracking-widest text-amber-800 uppercase">
+        store credit
+      </span>
+    </div>
+  }
+  overlayColor="#44403c"
+  overlayText="Grand prize inside"
+  confetti
+  className="h-48 w-80"
+/>
+```
+
+## API Reference
+
+### ScratchCard
+
+| Prop           | Type                                         | Default               | Description                                                                                               |
+| -------------- | -------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------- |
+| `reward`       | `string \| ReactNode`                        | —                     | Content revealed under the scratch layer. A string uses the built-in styled layout; a node renders as-is. |
+| `variant`      | `default` `gold` `success` `brand` `mystery` | `"default"`           | Visual style of the built-in reward area. Ignored when `reward` is a `ReactNode`.                         |
+| `rewardLabel`  | `string`                                     | —                     | Secondary text shown beneath the reward string. Only used when `reward` is a string.                      |
+| `overlayColor` | `string`                                     | `"#a1a1aa"`           | Base fill color of the scratch overlay. Any valid CSS color string.                                       |
+| `overlayText`  | `string`                                     | `"Scratch to reveal"` | Label drawn on top of the overlay. Pass `""` to omit.                                                     |
+| `brushSize`    | `number`                                     | `32`                  | Diameter in CSS px of the scratch eraser brush.                                                           |
+| `threshold`    | `number`                                     | `0.6`                 | Fraction (0–1) of the overlay that must be cleared before auto-complete triggers.                         |
+| `confetti`     | `boolean`                                    | `false`               | Burst scoped confetti from within the card when revealed.                                                 |
+| `onComplete`   | `() => void`                                 | —                     | Called once when the threshold is crossed or `reveal()` is called imperatively.                           |
+| `disabled`     | `boolean`                                    | `false`               | Disables scratching entirely; overlay stays visible and inert.                                            |
+| `className`    | `string`                                     | —                     | Additional classes applied to the outermost container. Use this to set the card dimensions.               |
+
+### ScratchCardHandle
+
+Returned by `ref` when forwarded to the component.
+
+| Method     | Signature    | Description                                            |
+| ---------- | ------------ | ------------------------------------------------------ |
+| `reveal()` | `() => void` | Instantly completes the reveal and fires `onComplete`. |
+| `reset()`  | `() => void` | Redraws the overlay and allows scratching again.       |
+
+## Notes
+
+- Give the component explicit dimensions via `className` (e.g. `h-40 w-72`). The canvas sizes itself to its container using `ResizeObserver`, so fluid widths work too.
+- A resize clears scratch progress by design — preserving a partially-scratched bitmap across a dimension change is not meaningful, so the overlay redraws fresh.
+- The confetti canvas sits between the reward content and the scratch overlay in the stacking order, so particles appear to emerge from behind the card as the overlay fades out.
+- Progress sampling reads every 8th pixel's alpha channel for performance. On very small cards this may cause the threshold check to be slightly imprecise; lower `threshold` slightly if auto-complete feels sluggish.
+- A `window` blur event is not used here — the component tracks pointer state locally via `setPointerCapture` / `releasePointerCapture`, so there are no stuck-stroke issues when the user drags outside the card.
+- For a lottery or game flow, combine `onComplete` with your own prize-determination logic on the server side. Never store the prize value only in the client — use `onComplete` to call an API that returns the authoritative result.
