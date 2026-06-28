@@ -63,7 +63,23 @@
         }
       ],
       "docs": "https://harshalvk.com/components/drag-to-confirm",
-      "categories": [""],
+      "categories": ["interaction", "forms"],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
+      "name": "scratch-card",
+      "title": "Scratch Card",
+      "description": "A canvas-based scratch-to-reveal card with built-in reward variants, scoped confetti, and an imperative handle for programmatic control — ideal for promotions, giveaways, and reward flows.",
+      "files": [
+        {
+          "path": "src/registry/components/scratch-card/scratch-card.tsx",
+          "type": "registry:component",
+          "target": "@components/scratch-card.tsx"
+        }
+      ],
+      "docs": "https://harshalvk.com/components/scratch-card",
+      "categories": ["interactive"],
       "type": "registry:component",
       "author": "harshalvk <harshalvkhobragade@gmail.com>"
     },
