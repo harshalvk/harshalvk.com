@@ -40,7 +40,7 @@ const Navbar = async () => {
       <div className="mt-4 w-full max-w-5xl px-4 lg:px-0">
         <nav className="screen-line-top screen-line-bottom pointer-events-auto relative flex w-full items-center justify-between border-x px-4 py-3">
           <SectionCorners />
-          <Link href={'/'} className={cn('text-shadow', inter.className)}>
+          <Link href={'/'} className={cn('text-shadow text-sm sm:text-base', inter.className)}>
             @harshalvk
           </Link>
           <div className="flex items-center">

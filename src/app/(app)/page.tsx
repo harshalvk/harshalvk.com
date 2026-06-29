@@ -13,13 +13,15 @@ export default function Home() {
   return (
     <section className="container mx-auto max-w-5xl px-4 lg:px-0">
       <div
-        className="border-border relative flex h-[12rem] w-full items-center justify-center border border-t-0 bg-[radial-gradient(circle,rgba(0,0,0,0.1)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)]"
+        className="border-border relative flex h-[9rem] w-full items-center justify-center border border-t-0 bg-[radial-gradient(circle,rgba(0,0,0,0.1)_1px,transparent_1px)] sm:h-[12rem] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)]"
         style={{
           backgroundSize: '15px 15px',
         }}
       >
         <SectionBorders />
-        <h1 className={`text-foreground text-2xl ${inter.className}`}>Build | Ship | Execute</h1>
+        <h1 className={`text-foreground text-lg sm:text-2xl ${inter.className}`}>
+          Build | Ship | Execute
+        </h1>
       </div>
       <Hero />
       <AboutMe />
