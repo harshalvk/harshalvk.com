@@ -8,6 +8,7 @@ import { Prose } from '@/components/Typography';
 import { MarkdownClient } from '@/components/markdown';
 import { USER } from '@/modules/portfolio/data/user';
 import { AnimatePresence, motion } from 'motion/react';
+import { useWebHaptics } from 'web-haptics/react';
 
 const IMAGES = ['/profile.png', '/profile4.jpg'];
 
@@ -15,8 +16,11 @@ const Hero = () => {
   const [index, setIndex] = useState(0);
 
   const handleClick = () => {
+    haptic('success');
     setIndex((prev) => (prev === 0 ? 1 : 0));
   };
+
+  const { trigger: haptic } = useWebHaptics();
 
   return (
     <section className="border-border relative border border-y-0 p-4">

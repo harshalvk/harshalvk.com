@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { useWebHaptics } from 'web-haptics/react';
 
 const SUN_RAYS = [
   { x1: '12', y1: '2', x2: '12', y2: '4' },
@@ -21,12 +22,15 @@ export function ModeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
+  const { trigger: haptic } = useWebHaptics();
+
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
   const toggleTheme = () => {
     const current = resolvedTheme || theme;
+    haptic('success');
     setTheme(current === 'dark' ? 'light' : 'dark');
   };
 
