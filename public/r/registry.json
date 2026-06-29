@@ -84,6 +84,22 @@
       "author": "harshalvk <harshalvkhobragade@gmail.com>"
     },
     {
+      "name": "component-playground",
+      "title": "Component Playground",
+      "description": "",
+      "files": [
+        {
+          "path": "src/registry/components/component-playground/component-playground.tsx",
+          "type": "registry:component",
+          "target": "@components/component-playground.tsx"
+        }
+      ],
+      "docs": "https://harshalvk.com/components/component-playground",
+      "categories": ["developer-tools", "documentation"],
+      "type": "registry:component",
+      "author": "harshalvk <harshalvkhobragade@gmail.com>"
+    },
+    {
       "name": "masonry-feed-demo",
       "files": [
         {

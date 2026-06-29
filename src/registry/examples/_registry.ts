@@ -56,4 +56,15 @@ export const examples: Registry['items'] = [
       },
     ],
   },
+  {
+    name: 'component-playground-demo',
+    type: 'registry:example',
+    files: [
+      {
+        path: 'examples/component-playground-demo.tsx',
+        type: 'registry:example',
+        target: '@components/component-playground-demo.tsx',
+      },
+    ],
+  },
 ];

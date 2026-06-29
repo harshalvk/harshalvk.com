@@ -80,4 +80,19 @@ export const components: Registry['items'] = [
     categories: ['interactive'],
     docs: 'https://harshalvk.com/components/scratch-card',
   },
+  {
+    name: 'component-playground',
+    type: 'registry:component',
+    title: 'Component Playground',
+    description: '',
+    files: [
+      {
+        path: 'components/component-playground/component-playground.tsx',
+        type: 'registry:component',
+        target: '@components/component-playground.tsx',
+      },
+    ],
+    categories: ['developer-tools', 'documentation'],
+    docs: 'https://harshalvk.com/components/component-playground',
+  },
 ];
