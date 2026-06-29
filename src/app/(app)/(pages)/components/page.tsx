@@ -43,9 +43,17 @@ export default async function ComponentsPage() {
         <p className="text-muted-foreground text-sm md:text-base">{description}</p>
       </div>
       <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
-      <div className="divide-y-1 divide-dashed border-b border-dashed md:flex md:divide-x-1 md:divide-y-0">
+      <div className="grid auto-rows-fr grid-cols-2 sm:grid-cols-3">
         {docs.map((doc) => (
-          <ComponentItem key={doc.slug} href={`/components/${doc.slug}` as Route}>
+          <ComponentItem
+            className={cn(
+              'border-b border-dashed',
+              'odd:border-r sm:odd:border-r-0',
+              'sm:[&:not(:nth-child(3n))]:border-r'
+            )}
+            key={doc.slug}
+            href={`/components/${doc.slug}` as Route}
+          >
             <ComponentItemTitle>{doc.metadata.title}</ComponentItemTitle>
           </ComponentItem>
         ))}
