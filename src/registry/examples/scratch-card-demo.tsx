@@ -95,7 +95,7 @@ export default function ScratchCardDemo() {
         brushSize={36}
         threshold={0.58}
         confetti
-        className="h-40 w-72"
+        className="h-36 w-60 sm:h-40 sm:w-72"
       />
 
       {/* Reset link */}
