@@ -1,4 +1,4 @@
-import { NotebookPen } from 'lucide-react';
+import { PanelTitle } from '@/modules/portfolio/components/panel';
 import type { Metadata } from 'next';
 
 const title = 'Blog';
@@ -14,13 +14,16 @@ export const metadata: Metadata = {
 
 const BlogPage = () => {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
-      <NotebookPen className="text-muted-foreground h-8 w-8" strokeWidth={1.5} />
-      <h2 className="text-lg font-medium tracking-tight">Blogs coming soon</h2>
-      <p className="text-muted-foreground max-w-xs text-sm">
-        I&apos;m working on some articles. Check back later.
+    <section aria-labelledby="blogs-heading" className="flex-1 gap-3 border-x">
+      <div className="space-y-2 px-4 py-2">
+        <PanelTitle>{title}</PanelTitle>
+        <p className="text-muted-foreground text-sm md:text-base">{description}</p>
+      </div>
+      <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
+      <p className="text-muted-foreground p-4 text-sm md:text-base">
+        Nothing to read. Please comback after some time.
       </p>
-    </div>
+    </section>
   );
 };
 
