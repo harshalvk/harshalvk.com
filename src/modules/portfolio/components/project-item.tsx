@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import type { Project } from '@/modules/portfolio/types/projects';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Box } from 'lucide-react';
+import { Box, SquareArrowOutUpRight } from 'lucide-react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Prose } from '@/components/Typography';
@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { ChevronDownIcon, ChevronDownIconHandle } from '@/components/icons/chevron-icon';
 import TechBadge from '@/components/TechBadge';
 import { Route } from 'next';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export function ProjectItem({ project }: { project: Project }) {
   const [isOpen, setIsOpen] = React.useState(project.isExpanded ?? false);
@@ -65,6 +66,14 @@ export function ProjectItem({ project }: { project: Project }) {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link href={`/projects/${project.title.toLowerCase()}`} className="flex items-center">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <SquareArrowOutUpRight className="text-muted-foreground size-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>Project Details</TooltipContent>
+                </Tooltip>
+              </Link>
               <Link
                 href={project.link as Route}
                 target="_blank"
