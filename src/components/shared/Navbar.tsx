@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { getAllDocs } from '@/modules/doc/data/document';
 import type { DocPreview } from '@/modules/doc/types/document';
 import { UrlObject } from 'url';
+import { cn } from '@/lib/utils';
+import { inter } from '@/lib/fonts';
 
 const CommandMenu = dynamic(() => import('@/components/command-menu'));
 
@@ -38,7 +40,9 @@ const Navbar = async () => {
       <div className="mt-4 w-full max-w-5xl px-4 lg:px-0">
         <nav className="screen-line-top screen-line-bottom pointer-events-auto relative flex w-full items-center justify-between border-x px-4 py-3">
           <SectionCorners />
-          <Link href={'/'}>@harshalvk</Link>
+          <Link href={'/'} className={cn('text-shadow', inter.className)}>
+            @harshalvk
+          </Link>
           <div className="flex items-center">
             <div className="mr-1 flex items-center gap-4">
               <ul className="hidden gap-4 md:flex">
