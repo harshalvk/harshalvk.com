@@ -190,7 +190,7 @@ const ComponentItemPage = async ({ params }: { params: Promise<{ slug: string }>
             <PanelTitle>{doc.metadata.title}</PanelTitle>
             <p className="text-muted-foreground text-sm md:text-base">{doc.metadata.description}</p>
           </div>
-          <div className="screen-line-top screen-line-bottom bg-hatching h-4" />
+          <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
 
           <Prose className="px-4">
             <div>
