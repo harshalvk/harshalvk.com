@@ -1,4 +1,4 @@
-import SectionBorders from '@/components/shared/SectionBorders';
+import { SectionCorners } from '@/components/shared/Navbar';
 import { Route } from 'next';
 import Link from 'next/link';
 import React from 'react';
@@ -46,7 +46,7 @@ const Footer = () => {
     <footer className="flex justify-center">
       <div className="mb-4 w-full max-w-5xl px-4 lg:px-0">
         <div className="screen-line-top screen-line-bottom relative flex w-full flex-col gap-4 border-x px-4 py-3">
-          <SectionBorders />
+          <SectionCorners />
 
           <p className="text-muted-foreground font-mono text-sm">
             Copyright &#169; 2021 - 2026 Harshal Khobragade
