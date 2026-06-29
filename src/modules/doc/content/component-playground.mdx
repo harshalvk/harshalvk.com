@@ -1,0 +1,179 @@
+---
+title: Component Playground
+description: An interactive props editor that renders a component alongside live-editable controls — like Storybook's controls panel, but a plain component you can drop into MDX docs.
+image: /component-playground.png
+category: components
+createdAt: 2026-06-29
+updatedAt: 2026-06-29
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-72"
+  name="component-playground-demo"
+  openInV0Url="https://harshalvk.com/r/component-playground.json"
+/>
+
+## Features
+
+- Renders a live component preview next to controls generated from a small props schema — no Storybook setup, no separate `.stories` file, just a component import.
+- Five control types out of the box: `boolean`, `string`, `number` (slider when bounded, plain input otherwise), `select`, and `color`.
+- The JSX snippet underneath always matches the current control values exactly — no drift between what the reader sees rendered and what the copied code produces.
+- Boolean props render with JSX shorthand (`disabled`, not `disabled={true}`) so the generated snippet reads like something a person actually typed.
+- One-click copy with inline check-mark feedback, and a reset button that's only enabled once a value has actually changed from its default.
+- Static props (e.g. `children`) stay separate from editable ones — not everything passed to the demoed component needs to be exposed as a live control.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://www.harshalvk.com/r/component-playground.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies</Step>
+
+```bash
+npm install motion
+```
+
+This component also relies on shadcn's `switch` and `slider`, in addition to `input`, `select`, and `button`. Add whichever you don't already have:
+
+```bash
+npx shadcn@latest add switch slider input select button
+```
+
+<Step>Copy and paste the following code into your project</Step>
+
+<ComponentSource name="component-playground" title="components/component-playground.tsx" />
+Update the import paths to match your project setup.
+
+<Step>Use it in an MDX doc.</Step>
+
+```tsx title="docs/button.mdx" showLineNumbers
+import { Button } from '@/components/ui/button';
+import { ComponentPlayground } from '@/components/component-playground';
+
+<ComponentPlayground
+  component={Button}
+  componentName="Button"
+  controls={{
+    variant: {
+      type: 'select',
+      defaultValue: 'default',
+      options: ['default', 'outline', 'ghost', 'destructive'],
+    },
+    disabled: { type: 'boolean', defaultValue: false },
+  }}
+  staticProps={{ children: 'Click me' }}
+/>;
+```
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ComponentPlayground } from '@/components/component-playground';
+```
+
+```tsx
+<ComponentPlayground
+  component={Button}
+  componentName="Button"
+  controls={{
+    variant: { type: 'select', defaultValue: 'default', options: ['default', 'outline', 'ghost'] },
+    size: { type: 'select', defaultValue: 'default', options: ['default', 'sm', 'lg', 'icon'] },
+    disabled: { type: 'boolean', defaultValue: false },
+  }}
+  staticProps={{ children: 'Click me' }}
+/>
+```
+
+### Number controls — slider vs. plain input
+
+A `number` control renders as a `Slider` when both `min` and `max` are given, and falls back to a plain numeric `Input` otherwise — bounding a slider with no range doesn't mean anything.
+
+```tsx
+<ComponentPlayground
+  component={Avatar}
+  componentName="Avatar"
+  controls={{
+    size: { type: 'number', defaultValue: 40, min: 16, max: 96, step: 4 },
+  }}
+/>
+```
+
+### Color controls
+
+```tsx
+<ComponentPlayground
+  component={Badge}
+  componentName="Badge"
+  controls={{
+    color: { type: 'color', defaultValue: '#6366f1' },
+  }}
+/>
+```
+
+### Static props
+
+Anything in `staticProps` is always passed to the component but never shown as an editable control or included in the generated snippet's variable props — useful for things like `children` that you don't want turned into a live text box.
+
+```tsx
+<ComponentPlayground
+  component={Alert}
+  componentName="Alert"
+  controls={{
+    variant: { type: 'select', defaultValue: 'default', options: ['default', 'destructive'] },
+  }}
+  staticProps={{ children: "Heads up — this action can't be undone." }}
+/>
+```
+
+## API Reference
+
+### ComponentPlayground
+
+| Prop               | Type                          | Default | Description                                                                                          |
+| ------------------ | ----------------------------- | ------- | ---------------------------------------------------------------------------------------------------- |
+| `component`        | `React.ComponentType<any>`    | —       | The component being demoed.                                                                          |
+| `componentName`    | `string`                      | —       | Name used when generating the JSX snippet. Not read from `displayName` — pass the exact import name. |
+| `controls`         | `Record<string, PropControl>` | —       | Editable props, in the order their controls should render.                                           |
+| `staticProps`      | `Record<string, unknown>`     | —       | Props always passed to the component, but not exposed to editing or shown in the snippet.            |
+| `previewClassName` | `string`                      | —       | Applied to the preview surface — use to constrain or center the rendered demo.                       |
+| `className`        | `string`                      | —       | Applied to the outer container.                                                                      |
+
+### PropControl
+
+A discriminated union, keyed by `type`:
+
+| Type      | Shape                                                                                                 |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| `boolean` | `{ type: 'boolean'; defaultValue: boolean; label?: string }`                                          |
+| `string`  | `{ type: 'string'; defaultValue: string; placeholder?: string; label?: string }`                      |
+| `number`  | `{ type: 'number'; defaultValue: number; min?: number; max?: number; step?: number; label?: string }` |
+| `select`  | `{ type: 'select'; defaultValue: string; options: string[]; label?: string }`                         |
+| `color`   | `{ type: 'color'; defaultValue: string; label?: string }`                                             |
+
+`label` overrides the auto-generated control label, which otherwise defaults to the prop's key.
+
+## Notes
+
+- **The snippet is generated, not parsed** — it's built directly from the current `values` state against the `controls` schema, so it's always in sync with what's rendered. There's no AST parsing or source inspection involved.
+- **Long prop lists wrap to multiple lines** once the single-line snippet would exceed ~60 characters, matching what Prettier would typically output — keeps the copied code readable instead of one long line.
+- **`componentName` is a plain string, not inferred** — in a minified production bundle, `Component.displayName` is exactly the kind of metadata that gets dropped or mangled, so this avoids relying on it. It does mean a manual rename of the component's export won't automatically update here.
+- **Resetting restores the schema's defaults**, not some prior state — there's no undo history, just "back to where this started."
