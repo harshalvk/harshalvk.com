@@ -8,6 +8,11 @@ const ComponentPlaygroundDemo = () => {
         component={Button}
         componentName="Button"
         controls={{
+          children: {
+            type: 'string',
+            defaultValue: 'Click Me',
+            label: 'Text',
+          },
           variant: {
             type: 'select',
             defaultValue: 'default',

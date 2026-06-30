@@ -258,13 +258,14 @@ function ColorControl({
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = React.useState(false);
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
       timeoutRef.current = setTimeout(() => setCopied(false), 1500);
     } catch {
       // Clipboard API can fail in insecure contexts / older browsers —
@@ -272,7 +273,11 @@ function CopyButton({ text }: { text: string }) {
     }
   };
 
-  React.useEffect(() => () => clearTimeout(timeoutRef.current), []);
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return (
     <Button
@@ -354,11 +359,15 @@ export function ComponentPlayground({
       <div className="grid md:grid-cols-[1fr_240px]">
         <div
           className={cn(
-            'flex min-h-48 items-center justify-center bg-[image:repeating-linear-gradient(45deg,var(--muted)_0,var(--muted)_1px,transparent_0,transparent_50%)] bg-[size:16px_16px] p-8',
+            'flex min-h-48 items-center justify-center p-8',
+            'bg-[image:repeating-linear-gradient(45deg,var(--muted)_0,var(--muted)_1px,transparent_0,transparent_50%)]',
+            'bg-[size:16px_16px]',
             previewClassName
           )}
         >
-          <Component {...staticProps} {...values} />
+          <div className="flex h-full w-full min-w-[400px] items-center justify-center">
+            <Component {...staticProps} {...values} />
+          </div>
         </div>
 
         <div className="bg-muted/30 border-t p-4 md:border-t-0 md:border-l">
