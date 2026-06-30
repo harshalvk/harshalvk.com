@@ -121,6 +121,29 @@ export const Index: Record<string, any> = {
     categories: ['interactive'],
     meta: undefined,
   },
+  'component-playground': {
+    name: 'component-playground',
+    description: '',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/components/component-playground/component-playground.tsx',
+        type: 'registry:component',
+        target: '@components/component-playground.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod =
+        await import('@/registry/components/component-playground/component-playground.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: ['developer-tools', 'documentation'],
+    meta: undefined,
+  },
   'wallet-adapter-demo': {
     name: 'wallet-adapter-demo',
     description: '',
@@ -222,6 +245,28 @@ export const Index: Record<string, any> = {
     ],
     component: React.lazy(async () => {
       const mod = await import('@/registry/examples/scratch-card-demo.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  'component-playground-demo': {
+    name: 'component-playground-demo',
+    description: '',
+    type: 'registry:example',
+    files: [
+      {
+        path: 'src/registry/examples/component-playground-demo.tsx',
+        type: 'registry:example',
+        target: '@components/component-playground-demo.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/examples/component-playground-demo.tsx');
       const exportName =
         Object.keys(mod).find(
           (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'

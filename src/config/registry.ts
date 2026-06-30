@@ -35,4 +35,22 @@ export const componentCategories = [
     description:
       'A Pinterest-style image feed that places images left to right into the shortest column using manual height calculation — no CSS grid required.',
   },
+  {
+    name: 'component-playground',
+    title: 'Component Playground',
+    description:
+      "An interactive props editor that renders a component alongside live-editable controls — like Storybook's controls panel, but a plain component you can drop into MDX docs.",
+  },
+  {
+    name: 'drag-to-confirm',
+    title: 'Drag To Confirm',
+    description:
+      'A slider the user must drag all the way to the right to confirm a destructive or irreversible action — safer than a confirm dialog, harder to trigger by accident.',
+  },
+  {
+    name: 'scratch-card',
+    title: 'Scratch Card',
+    description:
+      'A canvas-based scratch-to-reveal card with built-in reward variants, scoped confetti, and an imperative handle for programmatic control — ideal for promotions, giveaways, and reward flows.',
+  },
 ];
