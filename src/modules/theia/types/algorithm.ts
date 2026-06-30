@@ -6,6 +6,7 @@ export type ArrayStep = {
   description: string;
   comparisons?: number;
   swaps?: number;
+  line?: number; // 1-indexed line in the source snippet this step corresponds to
 };
 
 export type ComplexityInfo = {
