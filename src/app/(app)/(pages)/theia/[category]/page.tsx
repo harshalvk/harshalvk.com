@@ -4,6 +4,9 @@ import { CATEGORIES, getAlgorithmsByCategory, getCategory } from '@/modules/thei
 import { AlgorithmList } from '@/modules/theia/components/algorithm-list';
 import { PanelTitle } from '@/modules/portfolio/components/panel';
 import { X_HANDLE } from '@/config/site';
+import { LinkedListPlayground } from '@/modules/theia/components/linked-list-playground';
+import { MLAlgorithmList } from '@/modules/theia/components/ml-algorithm-list';
+import { getMLAlgorithmsByCategory } from '@/modules/theia/data/ml-algorithms';
 
 export async function generateStaticParams() {
   return CATEGORIES.map((c) => ({ category: c.slug }));
@@ -73,6 +76,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   if (!cat) notFound();
 
   const algorithms = getAlgorithmsByCategory(category);
+  const mlAlgorithms = getMLAlgorithmsByCategory(category);
 
   return (
     <section className="flex-1 border-x">
@@ -81,7 +85,16 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         <p className="text-muted-foreground text-sm md:text-base">{cat.description}</p>
       </div>
       <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
-      <AlgorithmList algorithms={algorithms} category={category} />
+
+      {category === 'linked-list' ? (
+        <div className="p-4">
+          <LinkedListPlayground />
+        </div>
+      ) : category === 'ml' ? (
+        <MLAlgorithmList algorithms={mlAlgorithms} category={category} />
+      ) : (
+        <AlgorithmList algorithms={algorithms} category={category} />
+      )}
     </section>
   );
 }
