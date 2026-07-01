@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,28 @@ export function StepExplanation({
 }) {
   const [open, setOpen] = useState(false);
   const step = steps[currentStep];
+
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+
+    const activeEl = container.querySelector<HTMLButtonElement>(`[data-step="${currentStep}"]`);
+    if (!activeEl) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const elRect = activeEl.getBoundingClientRect();
+
+    const offset =
+      elRect.top -
+      containerRect.top +
+      container.scrollTop -
+      container.clientHeight / 2 +
+      activeEl.offsetHeight / 2;
+
+    container.scrollTo({ top: offset, behavior: 'smooth' });
+  }, [currentStep]);
 
   return (
     <Collapsible
@@ -50,9 +72,10 @@ export function StepExplanation({
       </CollapsibleTrigger>
 
       <CollapsibleContent>
-        <div className="max-h-80 overflow-y-auto border-t">
+        <div ref={listRef} className="max-h-80 overflow-y-auto border-t">
           {steps.map((s, idx) => (
             <button
+              data-step={idx}
               key={idx}
               type="button"
               onClick={() => onStepSelect(idx)}

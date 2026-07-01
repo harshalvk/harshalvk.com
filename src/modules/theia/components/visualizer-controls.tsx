@@ -32,7 +32,7 @@ export function VisualizerControls({
   totalSteps: number;
 }) {
   return (
-    <div className="bg-surface inset-ring-border/64 flex w-fit flex-col gap-4 rounded-xl p-4 inset-ring-1">
+    <div className="bg-surface inset-ring-border/64 flex h-fit flex-col gap-4 rounded-xl p-4 inset-ring-1 md:w-fit">
       <div className="flex flex-wrap items-center gap-2">
         <Button
           variant="outline"

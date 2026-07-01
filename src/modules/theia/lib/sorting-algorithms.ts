@@ -1,13 +1,22 @@
-import type { ArrayStep, StepStatus } from '@/modules/theia/types/algorithm';
+import { ArrayStep, StepStatus } from '../types/algorithm';
 
 function snap(
   arr: number[],
   highlights: Record<number, StepStatus>,
   description: string,
   comparisons: number,
-  swaps: number
+  swaps: number,
+  line?: number
 ): ArrayStep {
-  return { array: [...arr], highlights: { ...highlights }, description, comparisons, swaps };
+  return { array: [...arr], highlights: { ...highlights }, description, comparisons, swaps, line };
+}
+
+function rangeHighlight(lo: number, hi: number, status: StepStatus): Record<number, StepStatus> {
+  const highlights: Record<number, StepStatus> = {};
+  for (let i = lo; i <= hi; i++) {
+    highlights[i] = status;
+  }
+  return highlights;
 }
 
 export function bubbleSortSteps(input: number[]): ArrayStep[] {
@@ -17,9 +26,11 @@ export function bubbleSortSteps(input: number[]): ArrayStep[] {
   let swaps = 0;
   const n = arr.length;
 
-  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0, 2));
 
   for (let i = 0; i < n - 1; i++) {
+    steps.push(snap(arr, {}, `Outer pass ${i + 1} of ${n - 1}.`, comparisons, swaps, 3));
+
     for (let j = 0; j < n - i - 1; j++) {
       comparisons++;
       steps.push(
@@ -28,7 +39,8 @@ export function bubbleSortSteps(input: number[]): ArrayStep[] {
           { [j]: 'comparing', [j + 1]: 'comparing' },
           `Comparing index ${j} (${arr[j]}) with index ${j + 1} (${arr[j + 1]}).`,
           comparisons,
-          swaps
+          swaps,
+          5
         )
       );
 
@@ -41,7 +53,8 @@ export function bubbleSortSteps(input: number[]): ArrayStep[] {
             { [j]: 'swapping', [j + 1]: 'swapping' },
             `${arr[j + 1]} > ${arr[j]} is false now — swapped, since left was bigger.`,
             comparisons,
-            swaps
+            swaps,
+            6
           )
         );
       }
@@ -52,14 +65,15 @@ export function bubbleSortSteps(input: number[]): ArrayStep[] {
         { [n - 1 - i]: 'sorted' },
         `Index ${n - 1 - i} is now in its final sorted position.`,
         comparisons,
-        swaps
+        swaps,
+        9
       )
     );
   }
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 11));
 
   return steps;
 }
@@ -71,7 +85,7 @@ export function selectionSortSteps(input: number[]): ArrayStep[] {
   let swaps = 0;
   const n = arr.length;
 
-  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0, 2));
 
   for (let i = 0; i < n - 1; i++) {
     let minIdx = i;
@@ -81,7 +95,8 @@ export function selectionSortSteps(input: number[]): ArrayStep[] {
         { [i]: 'active' },
         `Assume index ${i} (${arr[i]}) is the smallest in the remaining unsorted part.`,
         comparisons,
-        swaps
+        swaps,
+        4
       )
     );
 
@@ -93,7 +108,8 @@ export function selectionSortSteps(input: number[]): ArrayStep[] {
           { [minIdx]: 'pivot', [j]: 'comparing' },
           `Comparing current minimum (${arr[minIdx]}) with index ${j} (${arr[j]}).`,
           comparisons,
-          swaps
+          swaps,
+          6
         )
       );
 
@@ -105,7 +121,8 @@ export function selectionSortSteps(input: number[]): ArrayStep[] {
             { [minIdx]: 'pivot' },
             `New minimum found: index ${minIdx} (${arr[minIdx]}).`,
             comparisons,
-            swaps
+            swaps,
+            7
           )
         );
       }
@@ -120,74 +137,102 @@ export function selectionSortSteps(input: number[]): ArrayStep[] {
           { [i]: 'swapping', [minIdx]: 'swapping' },
           `Swapping index ${i} with index ${minIdx} to place smallest value.`,
           comparisons,
-          swaps
+          swaps,
+          11
         )
       );
     }
 
-    steps.push(snap(arr, { [i]: 'sorted' }, `Index ${i} locked in as sorted.`, comparisons, swaps));
+    steps.push(
+      snap(arr, { [i]: 'sorted' }, `Index ${i} locked in as sorted.`, comparisons, swaps, 13)
+    );
   }
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 15));
 
   return steps;
 }
+
+// src/modules/theia/lib/sorting-algorithms.ts — append these to existing file
+
+// ── Insertion Sort (update existing) ───────────────────────────────────────
 
 export function insertionSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
   const steps: ArrayStep[] = [];
   let comparisons = 0;
   let swaps = 0;
-  const n = arr.length;
 
-  steps.push(snap(arr, { 0: 'sorted' }, 'Start: first element treated as sorted.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0, 2));
 
-  for (let i = 1; i < n; i++) {
+  for (let i = 1; i < arr.length; i++) {
     const key = arr[i];
-    let j = i - 1;
     steps.push(
       snap(
         arr,
         { [i]: 'active' },
-        `Picking index ${i} (${key}) to insert into sorted part.`,
+        `Key at index ${i} is ${key}. Inserting into sorted portion [0..${i - 1}].`,
         comparisons,
-        swaps
+        swaps,
+        4
       )
     );
 
-    while (j >= 0 && arr[j] > key) {
+    let j = i - 1;
+    while (j >= 0) {
       comparisons++;
       steps.push(
         snap(
           arr,
-          { [j]: 'comparing', [j + 1]: 'comparing' },
-          `${arr[j]} > ${key}, shifting ${arr[j]} one step right.`,
+          { [j]: 'comparing', [i]: 'active' },
+          `Comparing ${key} with ${arr[j]} at index ${j}.`,
           comparisons,
-          swaps
+          swaps,
+          6
         )
       );
-      arr[j + 1] = arr[j];
-      swaps++;
-      j--;
+
+      if (arr[j] > key) {
+        arr[j + 1] = arr[j];
+        swaps++;
+        steps.push(
+          snap(
+            arr,
+            { [j]: 'swapping', [j + 1]: 'swapping' },
+            `${arr[j]} > ${key}, shift ${arr[j]} right.`,
+            comparisons,
+            swaps,
+            7
+          )
+        );
+        j--;
+      } else {
+        break;
+      }
     }
     arr[j + 1] = key;
-
-    const sortedSoFar: Record<number, StepStatus> = {};
-    for (let k = 0; k <= i; k++) sortedSoFar[k] = 'sorted';
-    steps.push(snap(arr, sortedSoFar, `${key} inserted at index ${j + 1}.`, comparisons, swaps));
+    steps.push(
+      snap(arr, { [j + 1]: 'sorted' }, `${key} inserted at index ${j + 1}.`, comparisons, swaps, 12)
+    );
   }
+
+  const sortedAll: Record<number, StepStatus> = {};
+  arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 15));
 
   return steps;
 }
+
+// ── Merge Sort ─────────────────────────────────────────────────────────────
 
 export function mergeSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
   const steps: ArrayStep[] = [];
   let comparisons = 0;
 
-  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: will divide and conquer via merge sort.', 0, 0, 2));
 
   function merge(lo: number, mid: number, hi: number) {
     const left = arr.slice(lo, mid + 1);
@@ -200,55 +245,26 @@ export function mergeSortSteps(input: number[]): ArrayStep[] {
       snap(
         arr,
         rangeHighlight(lo, hi, 'active'),
-        `Merging sub-arrays [${lo}..${mid}] and [${mid + 1}..${hi}].`,
+        `Merging [${lo}..${mid}] and [${mid + 1}..${hi}].`,
         comparisons,
-        0
+        0,
+        8
       )
     );
 
     while (i < left.length && j < right.length) {
       comparisons++;
-      steps.push(
-        snap(arr, { [k]: 'comparing' }, `Comparing ${left[i]} and ${right[j]}.`, comparisons, 0)
-      );
-      if (left[i] <= right[j]) arr[k++] = left[i++];
-      else arr[k++] = right[j++];
-      steps.push(
-        snap(
-          arr,
-          { [k - 1]: 'swapping' },
-          `Placed ${arr[k - 1]} at index ${k - 1}.`,
-          comparisons,
-          0
-        )
-      );
+      if (left[i] <= right[j]) {
+        arr[k++] = left[i++];
+      } else {
+        arr[k++] = right[j++];
+      }
     }
-    while (i < left.length) {
-      arr[k++] = left[i++];
-      steps.push(
-        snap(
-          arr,
-          { [k - 1]: 'swapping' },
-          `Copying remaining left value ${arr[k - 1]}.`,
-          comparisons,
-          0
-        )
-      );
-    }
-    while (j < right.length) {
-      arr[k++] = right[j++];
-      steps.push(
-        snap(
-          arr,
-          { [k - 1]: 'swapping' },
-          `Copying remaining right value ${arr[k - 1]}.`,
-          comparisons,
-          0
-        )
-      );
-    }
+    while (i < left.length) arr[k++] = left[i++];
+    while (j < right.length) arr[k++] = right[j++];
+
     steps.push(
-      snap(arr, rangeHighlight(lo, hi, 'sorted'), `Range [${lo}..${hi}] sorted.`, comparisons, 0)
+      snap(arr, rangeHighlight(lo, hi, 'sorted'), `Merged [${lo}..${hi}].`, comparisons, 0, 19)
     );
   }
 
@@ -261,8 +277,15 @@ export function mergeSortSteps(input: number[]): ArrayStep[] {
   }
 
   sort(0, arr.length - 1);
+
+  const sortedAll: Record<number, StepStatus> = {};
+  arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, 0, 24));
+
   return steps;
 }
+
+// ── Quick Sort (update existing) ──────────────────────────────────────────
 
 export function quickSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -270,12 +293,12 @@ export function quickSortSteps(input: number[]): ArrayStep[] {
   let comparisons = 0;
   let swaps = 0;
 
-  steps.push(snap(arr, {}, 'Start: unsorted array.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: quicksort via divide and conquer.', 0, 0, 2));
 
   function partition(lo: number, hi: number) {
     const pivot = arr[hi];
     steps.push(
-      snap(arr, { [hi]: 'pivot' }, `Pivot chosen: index ${hi} (${pivot}).`, comparisons, swaps)
+      snap(arr, { [hi]: 'pivot' }, `Pivot: index ${hi} (${pivot}).`, comparisons, swaps, 7)
     );
     let i = lo - 1;
 
@@ -287,7 +310,8 @@ export function quickSortSteps(input: number[]): ArrayStep[] {
           { [j]: 'comparing', [hi]: 'pivot' },
           `Comparing ${arr[j]} with pivot ${pivot}.`,
           comparisons,
-          swaps
+          swaps,
+          10
         )
       );
       if (arr[j] < pivot) {
@@ -298,9 +322,10 @@ export function quickSortSteps(input: number[]): ArrayStep[] {
           snap(
             arr,
             { [i]: 'swapping', [j]: 'swapping' },
-            `${arr[j]} < pivot, swapping into place.`,
+            `${arr[j]} < pivot, swap into place.`,
             comparisons,
-            swaps
+            swaps,
+            12
           )
         );
       }
@@ -308,13 +333,7 @@ export function quickSortSteps(input: number[]): ArrayStep[] {
     [arr[i + 1], arr[hi]] = [arr[hi], arr[i + 1]];
     swaps++;
     steps.push(
-      snap(
-        arr,
-        { [i + 1]: 'sorted' },
-        `Pivot placed at its correct position: index ${i + 1}.`,
-        comparisons,
-        swaps
-      )
+      snap(arr, { [i + 1]: 'sorted' }, `Pivot placed at index ${i + 1}.`, comparisons, swaps, 15)
     );
     return i + 1;
   }
@@ -331,18 +350,12 @@ export function quickSortSteps(input: number[]): ArrayStep[] {
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 28));
 
   return steps;
 }
 
-function rangeHighlight(lo: number, hi: number, status: StepStatus) {
-  const h: Record<number, StepStatus> = {};
-  for (let k = lo; k <= hi; k++) h[k] = status;
-  return h;
-}
-
-// ── Heap Sort ──────────────────────────────────────────────────────────────
+// ── Heap Sort (update existing with lines) ────────────────────────────────
 
 export function heapSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -351,7 +364,7 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
   let swaps = 0;
   const n = arr.length;
 
-  steps.push(snap(arr, {}, 'Start: building a max heap from the array.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: building max heap.', 0, 0, 2));
 
   function heapify(size: number, i: number) {
     let largest = i;
@@ -364,9 +377,10 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
         snap(
           arr,
           { [largest]: 'pivot', [left]: 'comparing' },
-          `Comparing node ${arr[largest]} with left child ${arr[left]}.`,
+          `Comparing ${arr[largest]} with left child ${arr[left]}.`,
           comparisons,
-          swaps
+          swaps,
+          7
         )
       );
       if (arr[left] > arr[largest]) largest = left;
@@ -377,9 +391,10 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
         snap(
           arr,
           { [largest]: 'pivot', [right]: 'comparing' },
-          `Comparing current largest ${arr[largest]} with right child ${arr[right]}.`,
+          `Comparing ${arr[largest]} with right child ${arr[right]}.`,
           comparisons,
-          swaps
+          swaps,
+          11
         )
       );
       if (arr[right] > arr[largest]) largest = right;
@@ -392,9 +407,10 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
         snap(
           arr,
           { [i]: 'swapping', [largest]: 'swapping' },
-          `Swapping ${arr[largest]} up to maintain max-heap property.`,
+          `Swapped to maintain heap.`,
           comparisons,
-          swaps
+          swaps,
+          16
         )
       );
       heapify(size, largest);
@@ -404,7 +420,7 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
   for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
     heapify(n, i);
   }
-  steps.push(snap(arr, {}, 'Max heap built. Largest element now at root.', comparisons, swaps));
+  steps.push(snap(arr, {}, 'Max heap built.', comparisons, swaps, 21));
 
   for (let i = n - 1; i > 0; i--) {
     [arr[0], arr[i]] = [arr[i], arr[0]];
@@ -413,9 +429,10 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
       snap(
         arr,
         { 0: 'swapping', [i]: 'sorted' },
-        `Moving largest element (${arr[i]}) to end of array, index ${i}.`,
+        `Largest element moved to end (index ${i}).`,
         comparisons,
-        swaps
+        swaps,
+        25
       )
     );
     heapify(i, 0);
@@ -423,12 +440,12 @@ export function heapSortSteps(input: number[]): ArrayStep[] {
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 29));
 
   return steps;
 }
 
-// ── Counting Sort ────────────────────────────────────────────────────────────
+// ── Counting Sort (update with lines) ──────────────────────────────────────
 
 export function countingSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -438,22 +455,20 @@ export function countingSortSteps(input: number[]): ArrayStep[] {
   const min = Math.min(...arr);
   const range = max - min + 1;
   const count = new Array(range).fill(0);
-  const output = new Array(n).fill(0);
 
-  steps.push(snap(arr, {}, `Start: counting frequency of each value (range ${min}-${max}).`, 0, 0));
+  steps.push(snap(arr, {}, `Start: counting frequencies (range ${min}..${max}).`, 0, 0, 3));
 
   for (let i = 0; i < n; i++) {
     count[arr[i] - min]++;
-    steps.push(snap(arr, { [i]: 'comparing' }, `Counting occurrence of ${arr[i]}.`, 0, 0));
+    steps.push(snap(arr, { [i]: 'comparing' }, `Counting ${arr[i]}.`, 0, 0, 6));
   }
 
   for (let i = 1; i < range; i++) {
     count[i] += count[i - 1];
   }
-  steps.push(
-    snap(arr, {}, 'Computed cumulative counts — tells final position of each value.', 0, 0)
-  );
+  steps.push(snap(arr, {}, 'Cumulative counts computed.', 0, 0, 11));
 
+  const output = new Array(n);
   for (let i = n - 1; i >= 0; i--) {
     output[count[arr[i] - min] - 1] = arr[i];
     count[arr[i] - min]--;
@@ -463,24 +478,20 @@ export function countingSortSteps(input: number[]): ArrayStep[] {
     arr[i] = output[i];
     const placed: Record<number, StepStatus> = {};
     for (let k = 0; k <= i; k++) placed[k] = 'sorted';
-    steps.push(
-      snap(arr, placed, `Placing ${arr[i]} at index ${i} based on counted position.`, 0, 0)
-    );
+    steps.push(snap(arr, placed, `Placing ${arr[i]} at index ${i}.`, 0, 0, 19));
   }
 
   return steps;
 }
 
-// ── Radix Sort ───────────────────────────────────────────────────────────────
+// ── Radix Sort (update with lines) ────────────────────────────────────────
 
 export function radixSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
   const steps: ArrayStep[] = [];
   const max = Math.max(...arr);
 
-  steps.push(
-    snap(arr, {}, 'Start: sorting digit by digit, starting from least significant.', 0, 0)
-  );
+  steps.push(snap(arr, {}, 'Start: sorting by digits, least to most significant.', 0, 0, 2));
 
   function countingSortByDigit(exp: number) {
     const n = arr.length;
@@ -488,28 +499,19 @@ export function radixSortSteps(input: number[]): ArrayStep[] {
     const count = new Array(10).fill(0);
 
     for (let i = 0; i < n; i++) {
-      const digit = Math.floor(arr[i] / exp) % 10;
-      count[digit]++;
+      count[Math.floor(arr[i] / exp) % 10]++;
     }
     for (let i = 1; i < 10; i++) count[i] += count[i - 1];
 
     for (let i = n - 1; i >= 0; i--) {
-      const digit = Math.floor(arr[i] / exp) % 10;
-      output[count[digit] - 1] = arr[i];
-      count[digit]--;
+      output[count[Math.floor(arr[i] / exp) % 10] - 1] = arr[i];
+      count[Math.floor(arr[i] / exp) % 10]--;
     }
 
     for (let i = 0; i < n; i++) arr[i] = output[i];
 
-    steps.push(
-      snap(
-        arr,
-        {},
-        `Sorted by digit at place value ${exp} (${exp === 1 ? 'ones' : exp === 10 ? 'tens' : `10^${Math.log10(exp)}`}).`,
-        0,
-        0
-      )
-    );
+    const place = exp === 1 ? 'ones' : `10^${Math.log10(exp)}`;
+    steps.push(snap(arr, {}, `Sorted by ${place} place.`, 0, 0, 17));
   }
 
   for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
@@ -518,12 +520,12 @@ export function radixSortSteps(input: number[]): ArrayStep[] {
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(arr, sortedAll, 'Array fully sorted after processing all digit places.', 0, 0));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', 0, 0, 23));
 
   return steps;
 }
 
-// ── Shell Sort ───────────────────────────────────────────────────────────────
+// ── Shell Sort (update with lines) ────────────────────────────────────────
 
 export function shellSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -532,17 +534,11 @@ export function shellSortSteps(input: number[]): ArrayStep[] {
   let swaps = 0;
   const n = arr.length;
 
-  steps.push(snap(arr, {}, 'Start: will sort using shrinking gap sequence.', 0, 0));
+  steps.push(snap(arr, {}, 'Start: shell sort with shrinking gap.', 0, 0, 2));
 
   for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
     steps.push(
-      snap(
-        arr,
-        {},
-        `New gap size: ${gap}. Comparing elements that are ${gap} apart.`,
-        comparisons,
-        swaps
-      )
+      snap(arr, {}, `Gap: ${gap}. Comparing elements ${gap} apart.`, comparisons, swaps, 5)
     );
 
     for (let i = gap; i < n; i++) {
@@ -555,9 +551,10 @@ export function shellSortSteps(input: number[]): ArrayStep[] {
           snap(
             arr,
             { [j - gap]: 'comparing', [j]: 'comparing' },
-            `Comparing index ${j - gap} (${arr[j - gap]}) with index ${j} (${temp}).`,
+            `Compare ${arr[j - gap]} with ${temp}.`,
             comparisons,
-            swaps
+            swaps,
+            9
           )
         );
 
@@ -568,9 +565,10 @@ export function shellSortSteps(input: number[]): ArrayStep[] {
             snap(
               arr,
               { [j]: 'swapping' },
-              `${arr[j]} > ${temp}, shifting it forward by gap ${gap}.`,
+              `Shift ${arr[j]} right by ${gap}.`,
               comparisons,
-              swaps
+              swaps,
+              12
             )
           );
           j -= gap;
@@ -584,20 +582,12 @@ export function shellSortSteps(input: number[]): ArrayStep[] {
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(
-    snap(
-      arr,
-      sortedAll,
-      'Array fully sorted — gap reduced to 1 and final pass complete.',
-      comparisons,
-      swaps
-    )
-  );
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 24));
 
   return steps;
 }
 
-// ── Bucket Sort ──────────────────────────────────────────────────────────────
+// ── Bucket Sort (update with lines) ────────────────────────────────────────
 
 export function bucketSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -609,16 +599,16 @@ export function bucketSortSteps(input: number[]): ArrayStep[] {
   const bucketSize = (max - min + 1) / bucketCount;
   const buckets: number[][] = Array.from({ length: bucketCount }, () => []);
 
-  steps.push(snap(arr, {}, `Start: distributing ${n} elements into ${bucketCount} buckets.`, 0, 0));
+  steps.push(snap(arr, {}, `Start: distribute into ${bucketCount} buckets.`, 0, 0, 3));
 
   for (let i = 0; i < n; i++) {
     const idx = Math.min(bucketCount - 1, Math.floor((arr[i] - min) / bucketSize));
     buckets[idx].push(arr[i]);
-    steps.push(snap(arr, { [i]: 'comparing' }, `Placing ${arr[i]} into bucket ${idx}.`, 0, 0));
+    steps.push(snap(arr, { [i]: 'comparing' }, `Place ${arr[i]} into bucket ${idx}.`, 0, 0, 8));
   }
 
   buckets.forEach((bucket) => bucket.sort((a, b) => a - b));
-  steps.push(snap(arr, {}, 'Each bucket sorted individually.', 0, 0));
+  steps.push(snap(arr, {}, 'Each bucket sorted.', 0, 0, 12));
 
   let k = 0;
   for (const bucket of buckets) {
@@ -626,7 +616,7 @@ export function bucketSortSteps(input: number[]): ArrayStep[] {
       arr[k] = val;
       const placed: Record<number, StepStatus> = {};
       for (let i = 0; i <= k; i++) placed[i] = 'sorted';
-      steps.push(snap(arr, placed, `Placing ${val} from bucket into final position ${k}.`, 0, 0));
+      steps.push(snap(arr, placed, `Place ${val} at final index ${k}.`, 0, 0, 18));
       k++;
     }
   }
@@ -634,7 +624,7 @@ export function bucketSortSteps(input: number[]): ArrayStep[] {
   return steps;
 }
 
-// ── Tim Sort (simplified: insertion sort on runs + merge) ───────────────────
+// ── Tim Sort (update with lines) ──────────────────────────────────────────
 
 export function timSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -642,15 +632,7 @@ export function timSortSteps(input: number[]): ArrayStep[] {
   const n = arr.length;
   const RUN = 8;
 
-  steps.push(
-    snap(
-      arr,
-      {},
-      `Start: dividing array into runs of size ${RUN}, sorting each with insertion sort.`,
-      0,
-      0
-    )
-  );
+  steps.push(snap(arr, {}, `Start: divide into runs of ${RUN}, sort each.`, 0, 0, 2));
 
   function insertionSortRange(lo: number, hi: number) {
     for (let i = lo + 1; i <= hi; i++) {
@@ -662,15 +644,7 @@ export function timSortSteps(input: number[]): ArrayStep[] {
       }
       arr[j + 1] = key;
     }
-    steps.push(
-      snap(
-        arr,
-        rangeHighlight(lo, hi, 'sorted'),
-        `Run [${lo}..${hi}] sorted via insertion sort.`,
-        0,
-        0
-      )
-    );
+    steps.push(snap(arr, rangeHighlight(lo, hi, 'sorted'), `Run [${lo}..${hi}] sorted.`, 0, 0, 13));
   }
 
   for (let i = 0; i < n; i += RUN) {
@@ -688,22 +662,20 @@ export function timSortSteps(input: number[]): ArrayStep[] {
       snap(
         arr,
         rangeHighlight(lo, hi, 'active'),
-        `Merging runs [${lo}..${mid}] and [${mid + 1}..${hi}].`,
+        `Merging [${lo}..${mid}] & [${mid + 1}..${hi}].`,
         0,
-        0
+        0,
+        18
       )
     );
 
     while (i < left.length && j < right.length) {
-      if (left[i] <= right[j]) arr[k++] = left[i++];
-      else arr[k++] = right[j++];
+      arr[k++] = left[i] <= right[j] ? left[i++] : right[j++];
     }
     while (i < left.length) arr[k++] = left[i++];
     while (j < right.length) arr[k++] = right[j++];
 
-    steps.push(
-      snap(arr, rangeHighlight(lo, hi, 'sorted'), `Range [${lo}..${hi}] merged and sorted.`, 0, 0)
-    );
+    steps.push(snap(arr, rangeHighlight(lo, hi, 'sorted'), `Merged [${lo}..${hi}].`, 0, 0, 25));
   }
 
   let size = RUN;
@@ -719,7 +691,7 @@ export function timSortSteps(input: number[]): ArrayStep[] {
   return steps;
 }
 
-// ── Intro Sort (simplified: quicksort with insertion-sort fallback for small ranges) ─
+// ── Intro Sort (update with lines) ────────────────────────────────────────
 
 export function introSortSteps(input: number[]): ArrayStep[] {
   const arr = [...input];
@@ -728,9 +700,7 @@ export function introSortSteps(input: number[]): ArrayStep[] {
   let swaps = 0;
   const SIZE_THRESHOLD = 8;
 
-  steps.push(
-    snap(arr, {}, 'Start: using quicksort, falling back to insertion sort on small ranges.', 0, 0)
-  );
+  steps.push(snap(arr, {}, 'Start: intro sort (quicksort + insertion fallback).', 0, 0, 2));
 
   function insertionSortRange(lo: number, hi: number) {
     for (let i = lo + 1; i <= hi; i++) {
@@ -748,18 +718,17 @@ export function introSortSteps(input: number[]): ArrayStep[] {
       snap(
         arr,
         rangeHighlight(lo, hi, 'sorted'),
-        `Small range [${lo}..${hi}] (size ≤ ${SIZE_THRESHOLD}) sorted via insertion sort.`,
+        `Small range [${lo}..${hi}] sorted.`,
         comparisons,
-        swaps
+        swaps,
+        14
       )
     );
   }
 
   function partition(lo: number, hi: number) {
     const pivot = arr[hi];
-    steps.push(
-      snap(arr, { [hi]: 'pivot' }, `Pivot chosen: index ${hi} (${pivot}).`, comparisons, swaps)
-    );
+    steps.push(snap(arr, { [hi]: 'pivot' }, `Pivot: ${pivot}.`, comparisons, swaps, 18));
     let i = lo - 1;
 
     for (let j = lo; j < hi; j++) {
@@ -768,9 +737,10 @@ export function introSortSteps(input: number[]): ArrayStep[] {
         snap(
           arr,
           { [j]: 'comparing', [hi]: 'pivot' },
-          `Comparing ${arr[j]} with pivot ${pivot}.`,
+          `Compare ${arr[j]} with ${pivot}.`,
           comparisons,
-          swaps
+          swaps,
+          23
         )
       );
       if (arr[j] < pivot) {
@@ -781,35 +751,26 @@ export function introSortSteps(input: number[]): ArrayStep[] {
           snap(
             arr,
             { [i]: 'swapping', [j]: 'swapping' },
-            `${arr[j]} < pivot, swapping into place.`,
+            `Swap into place.`,
             comparisons,
-            swaps
+            swaps,
+            27
           )
         );
       }
     }
     [arr[i + 1], arr[hi]] = [arr[hi], arr[i + 1]];
     swaps++;
-    steps.push(
-      snap(
-        arr,
-        { [i + 1]: 'sorted' },
-        `Pivot placed at correct position: index ${i + 1}.`,
-        comparisons,
-        swaps
-      )
-    );
+    steps.push(snap(arr, { [i + 1]: 'sorted' }, `Pivot at ${i + 1}.`, comparisons, swaps, 31));
     return i + 1;
   }
 
   function sort(lo: number, hi: number) {
     if (lo >= hi) return;
-
     if (hi - lo + 1 <= SIZE_THRESHOLD) {
       insertionSortRange(lo, hi);
       return;
     }
-
     const p = partition(lo, hi);
     sort(lo, p - 1);
     sort(p + 1, hi);
@@ -819,19 +780,18 @@ export function introSortSteps(input: number[]): ArrayStep[] {
 
   const sortedAll: Record<number, StepStatus> = {};
   arr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps));
+  steps.push(snap(arr, sortedAll, 'Array fully sorted.', comparisons, swaps, 46));
 
   return steps;
 }
 
-// ── Bitonic Sort (works cleanly on power-of-2 length; pads if needed) ───────
+// ── Bitonic Sort (update with lines) ──────────────────────────────────────
 
 export function bitonicSortSteps(input: number[]): ArrayStep[] {
   let arr = [...input];
   const steps: ArrayStep[] = [];
   const originalLength = arr.length;
 
-  // pad to next power of 2 with +Infinity sentinels (kept out of view via description)
   let n = 1;
   while (n < arr.length) n *= 2;
   const padded = n !== arr.length;
@@ -841,11 +801,10 @@ export function bitonicSortSteps(input: number[]): ArrayStep[] {
     snap(
       arr.map((v) => (v === Infinity ? 0 : v)),
       {},
-      padded
-        ? `Start: padding array to power-of-2 length (${n}) required by bitonic sort.`
-        : 'Start: building bitonic sequences and merging.',
+      padded ? `Start: padding to power-of-2 (${n}).` : 'Start: bitonic sort.',
       0,
-      0
+      0,
+      2
     )
   );
 
@@ -855,9 +814,10 @@ export function bitonicSortSteps(input: number[]): ArrayStep[] {
       snap(
         arr.map((v) => (v === Infinity ? 0 : v)),
         { [i]: 'comparing', [j]: 'comparing' },
-        `Comparing index ${i} and ${j} (direction: ${dir ? 'ascending' : 'descending'}).`,
+        `Compare [${i}] & [${j}] (dir: ${dir ? 'asc' : 'desc'}).`,
         0,
-        0
+        0,
+        6
       )
     );
 
@@ -867,9 +827,10 @@ export function bitonicSortSteps(input: number[]): ArrayStep[] {
         snap(
           arr.map((v) => (v === Infinity ? 0 : v)),
           { [i]: 'swapping', [j]: 'swapping' },
-          `Swapped index ${i} and ${j} to maintain bitonic order.`,
+          `Swapped.`,
           0,
-          0
+          0,
+          10
         )
       );
     }
@@ -896,9 +857,10 @@ export function bitonicSortSteps(input: number[]): ArrayStep[] {
         snap(
           arr.map((v) => (v === Infinity ? 0 : v)),
           rangeHighlight(lo, lo + cnt - 1, 'active'),
-          `Merged bitonic block [${lo}..${lo + cnt - 1}].`,
+          `Bitonic block [${lo}..${lo + cnt - 1}] merged.`,
           0,
-          0
+          0,
+          23
         )
       );
     }
@@ -909,7 +871,7 @@ export function bitonicSortSteps(input: number[]): ArrayStep[] {
   const finalArr = arr.slice(0, originalLength);
   const sortedAll: Record<number, StepStatus> = {};
   finalArr.forEach((_, idx) => (sortedAll[idx] = 'sorted'));
-  steps.push(snap(finalArr, sortedAll, 'Array fully sorted (padding removed).', 0, 0));
+  steps.push(snap(finalArr, sortedAll, 'Sorted (padding removed).', 0, 0, 27));
 
   return steps;
 }
@@ -924,7 +886,7 @@ export const generators = {
   'counting-sort': countingSortSteps,
   'radix-sort': radixSortSteps,
   'shell-sort': shellSortSteps,
-  'bucket-sort': bubbleSortSteps,
+  'bucket-sort': bucketSortSteps,
   'tim-sort': timSortSteps,
   'intro-sort': introSortSteps,
   'bitonic-sort': bitonicSortSteps,

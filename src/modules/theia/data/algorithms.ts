@@ -9,7 +9,7 @@ export const CATEGORIES: AlgorithmCategoryMeta[] = [
   {
     slug: 'linked-list',
     title: 'Linked List',
-    description: 'Insertion, deletion, traversal — coming soon.',
+    description: 'Linked List — insertion, deletion, traversal, search.',
   },
   {
     slug: 'ml',
