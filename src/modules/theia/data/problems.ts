@@ -12,30 +12,36 @@ export const PROBLEMS: ProblemMeta[] = [
     difficulty: 'easy',
     tags: ['array', 'hash-map'],
     summary: 'Find two numbers in an array that add up to a given target.',
-    docs: `## Problem
+    my_approach: `I'll solve this problem like this: first, what's the dumb way to do it?
 
-Given an array of integers \`nums\` and an integer \`target\`, return the indices of the two numbers that add up to \`target\`.
+Check every pair of numbers and see if they add up to the target. Two nested loops, O(n²). That works, but the moment I see "find a pair" in a problem, I want to ask — can I avoid checking every pair?
 
-You may assume each input has exactly one solution, and you may not use the same element twice.
+Here's the key realization: if I'm standing at some number \`x\`, I already know exactly what I need to find — its complement, \`target - x\`. I don't need to search the rest of the array for it. I just need to know: *have I already seen it?*
+
+That "have I already seen it" question is exactly what a hash map is good at — O(1) lookup instead of scanning.
+
+So the approach becomes:
+1. Walk the array once.
+2. At each number, compute what its partner would need to be.
+3. Check the map — if that partner's already there, I'm done.
+4. Otherwise, store the current number (and its index) in the map, and keep going.
+
+The nice part is I never need a second pass. By the time I reach the actual pair, one of the two numbers has already been recorded from an earlier step — so the answer surfaces naturally as I scan forward.
 
 ## Example
 
 \`\`\`
 Input: nums = [2, 7, 11, 15], target = 9
 Output: [0, 1]
-Explanation: nums[0] + nums[1] = 2 + 7 = 9
 \`\`\`
 
-## Approach
-
-A brute-force check of every pair costs **O(n²)**. Instead, walk the array once, and for each number, check whether its *complement* (\`target - nums[i]\`) has already been seen.
-
-A hash map gives **O(1)** average lookup, so the whole scan finishes in **O(n)** time and **O(n)** space — store each number's index as you go, and check the map before inserting.
+At index 0 (value 2), I need a 7 — haven't seen one yet, so I record "2 is at index 0."
+At index 1 (value 7), I need a 2 — and yes, I've already got that stored. Done.
 
 ## Complexity
 
-- **Time:** O(n)
-- **Space:** O(n)`,
+- **Time:** O(n) — one pass, O(1) map operations
+- **Space:** O(n) — worst case, I store almost the whole array before finding the match`,
     code: {
       ts: `function twoSum(nums: number[], target: number): number[] {
   const seen = new Map<number, number>();
@@ -90,24 +96,32 @@ A hash map gives **O(1)** average lookup, so the whole scan finishes in **O(n)**
     difficulty: 'easy',
     tags: ['array', 'binary-search'],
     summary: 'Find the index of a target value in a sorted array in logarithmic time.',
-    docs: `## Problem
+    my_approach: `The array is sorted — that's the detail that changes everything here. If I ignore that fact, I'd just scan left to right, O(n). But sorted data means I can ask a much sharper question at every step: *is the middle element too big, too small, or exactly right?*
 
-Given a **sorted** array of integers and a target value, return its index, or \`-1\` if it isn't present.
+That single comparison tells me which half of the array to throw away entirely. I don't need to look at it again.
 
-## Approach
+So my approach:
+1. Keep a window over the array — \`lo\` and \`hi\`.
+2. Look at the middle of that window.
+3. If it matches, I'm done.
+4. If it's smaller than the target, the target must be somewhere to the right — so I move \`lo\` just past the middle.
+5. If it's bigger, the target's to the left — move \`hi\` just before the middle.
+6. Repeat until the window is empty (target isn't there) or I find it.
 
-Since the array is sorted, you don't need to check every element. Keep a \`lo\`/\`hi\` window over the search space. Look at the middle element:
+The thing I like about this one is how fast the search space shrinks — halving every step means even a huge array collapses to a handful of comparisons.
 
-- If it equals the target, you're done.
-- If it's smaller, the target must be to the right — move \`lo\` past the middle.
-- If it's larger, the target must be to the left — move \`hi\` before the middle.
+## Example
 
-Each step halves the search space, so it terminates in **O(log n)** steps instead of scanning all n elements.
+\`\`\`
+nums = [2, 5, 8, 12, 16, 23, 38, 45, 56, 72], target = 23
+\`\`\`
+
+Middle starts at index 4 (16). 16 < 23, so I throw away the entire left half and everything up to and including index 4. Next middle lands right on 23. Found it in two comparisons instead of checking all ten values.
 
 ## Complexity
 
-- **Time:** O(log n)
-- **Space:** O(1)`,
+- **Time:** O(log n) — the search space halves every iteration
+- **Space:** O(1) — just two pointers, no extra memory`,
     code: {
       ts: `function binarySearch(nums: number[], target: number): number {
   let lo = 0, hi = nums.length - 1;
@@ -163,34 +177,29 @@ Each step halves the search space, so it terminates in **O(log n)** steps instea
     tags: ['string', 'stack'],
     summary:
       'Check whether every opening bracket has a matching, correctly-ordered closing bracket.',
-    docs: `## Problem
+    my_approach: `My first instinct with bracket-matching problems is always: what data structure naturally "remembers" what just happened, in the right order? A stack does exactly that — last in, first out — which maps perfectly onto how brackets actually nest. The most recently opened bracket has to be the next one closed.
 
-Given a string containing only \`(\`, \`)\`, \`{\`, \`}\`, \`[\`, and \`]\`, determine if the string is valid.
+So here's how I think through it:
 
-A string is valid if every opening bracket is closed by the same type, and brackets close in the correct order.
+- Every time I see an opening bracket, I don't know yet what it pairs with — I just push it and move on.
+- Every time I see a closing bracket, it's making a claim: "I close whatever opened most recently." So I check the top of the stack. If it matches, great — pop it, that pair is resolved. If it doesn't match (or the stack's empty and there's nothing to match), the string is broken — I can stop right there.
+- At the very end, if the stack isn't empty, that means some opener never got closed — also invalid.
+
+The part that took me a second to get comfortable with: I don't need to know how deep the nesting goes, or track multiple bracket types separately. The stack handles all of that for free just by virtue of always exposing "the most recent unmatched opener" at the top.
 
 ## Example
 
 \`\`\`
-Input: "{[()()]}"
-Output: true
-
-Input: "([)]"
-Output: false  — brackets close out of order
+Input: "{[()()]}"  → valid
+Input: "([)]"      → invalid — '(' opens, then '[' opens,
+                      but ')' shows up and the top of the
+                      stack is '[', not '(' — mismatch
 \`\`\`
-
-## Approach
-
-A **stack** is a natural fit: push every opener. When a closer arrives, it must match whatever is currently on *top* of the stack — the most recently opened bracket needs to close first.
-
-- Push on any opener.
-- On a closer, pop the top and check it matches. If it doesn't (or the stack is empty), the string is invalid.
-- At the end, the string is valid only if the stack is empty — every opener found its match.
 
 ## Complexity
 
-- **Time:** O(n)
-- **Space:** O(n)`,
+- **Time:** O(n) — one pass through the string
+- **Space:** O(n) — worst case, every character is an opener sitting on the stack`,
     code: {
       ts: `function isValid(s: string): boolean {
   const pairs: Record<string, string> = { ')': '(', ']': '[', '}': '{' };
@@ -258,25 +267,40 @@ A **stack** is a natural fit: push every opener. When a closer arrives, it must 
     difficulty: 'easy',
     tags: ['linked-list', 'pointers'],
     summary: 'Reverse a singly linked list in-place.',
-    docs: `## Problem
+    my_approach: `The tricky part with linked lists is that the moment I change a \`next\` pointer, I lose my only way of getting to whatever came after it — so I have to think carefully about *what I save before I overwrite anything*.
 
-Given the head of a singly linked list, reverse it and return the new head.
+Here's how I reason through it: I want every node's \`next\` to eventually point backward instead of forward. So as I walk the list, at each node I need three things in hand at once:
+- what came before (so I can point backward to it)
+- the node I'm currently on
+- what comes after (so I don't lose the rest of the list once I rewrite this node's pointer)
 
-## Approach
+That's three pointers: \`prev\`, \`curr\`, and a temporary \`next\`.
 
-Walk the list once, keeping track of two pointers: \`prev\` (initially \`null\`) and \`curr\` (starting at the head).
+The sequence at each step:
+1. Save \`curr.next\` before touching anything — this is my lifeline to the rest of the list.
+2. Rewire \`curr.next\` to point back at \`prev\`.
+3. Slide everything forward: \`prev\` becomes \`curr\`, \`curr\` becomes the saved \`next\`.
 
-At each node:
-1. Save \`curr.next\` before overwriting it.
-2. Point \`curr.next\` back to \`prev\` — this is the actual reversal.
-3. Advance both pointers forward.
+I keep doing that until \`curr\` runs out. Whatever \`prev\` is pointing to at that point is the new head — it's simply the last node I visited.
 
-After the loop, \`prev\` is the new head — the last node you visited.
+## Example
+
+\`\`\`
+10 -> 25 -> 7 -> 42 -> 18 -> null
+\`\`\`
+
+becomes
+
+\`\`\`
+18 -> 42 -> 7 -> 25 -> 10 -> null
+\`\`\`
+
+One pass, no extra list allocated — I'm just re-pointing existing nodes as I go.
 
 ## Complexity
 
-- **Time:** O(n)
-- **Space:** O(1) — done entirely in-place, no extra list needed`,
+- **Time:** O(n) — visit every node exactly once
+- **Space:** O(1) — done entirely in-place`,
     code: {
       ts: `function reverseList(head: ListNode | null): ListNode | null {
   let prev: ListNode | null = null;
@@ -336,25 +360,24 @@ After the loop, \`prev\` is the new head — the last node you visited.
     tags: ['linked-list', 'two-pointers'],
     summary:
       "Detect whether a linked list contains a cycle, using Floyd's tortoise and hare algorithm.",
-    docs: `## Problem
+    my_approach: `The naive way to detect a cycle is to remember every node I've visited (a hash set) and check if I ever land on one twice. That works, but it costs O(n) extra space — and there's a neat trick that avoids that entirely.
 
-Given the head of a linked list, determine if it contains a cycle — a node whose \`next\` pointer eventually loops back to a previous node.
+The idea: put two pointers on the list, moving at different speeds. One (\`slow\`) takes one step at a time. The other (\`fast\`) takes two.
 
-## Approach
+If the list is a straight line with no cycle, \`fast\` just reaches the end first — simple, no cycle, done.
 
-Use two pointers moving at different speeds:
+But if there *is* a cycle, something interesting happens: \`fast\` enters the loop and starts lapping \`slow\` from behind. Since they're both stuck going around the same loop, \`fast\` is gaining one extra step on \`slow\` every iteration — eventually it has to catch up and land exactly on \`slow\`'s node. That meeting is proof a cycle exists — no bookkeeping of visited nodes needed, just watching whether the two pointers ever collide.
 
-- **Slow** advances one node per step.
-- **Fast** advances two nodes per step.
+This is Floyd's Cycle Detection ("tortoise and hare") — and honestly, the first time I saw this technique, the "why does the fast pointer have to catch up" part is the bit that takes a second to click. It clicks once you picture the loop as a literal circular track: two runners at different speeds on a loop always eventually meet.
 
-If there's no cycle, fast reaches the end (\`null\`) first. If there **is** a cycle, fast will eventually lap slow and they'll land on the same node — proving a loop exists, without needing any extra memory to track visited nodes.
+## Example
 
-This is known as **Floyd's Cycle Detection Algorithm** (or the "tortoise and hare").
+If node 18 secretly points back to node 7 instead of \`null\`, \`slow\` and \`fast\` will end up chasing each other around that loop until they land on the same node — confirming the cycle.
 
 ## Complexity
 
 - **Time:** O(n)
-- **Space:** O(1) — no hash set required, unlike a naive visited-node approach`,
+- **Space:** O(1) — no extra hash set required, unlike the naive visited-node approach`,
     code: {
       ts: `function hasCycle(head: ListNode | null): boolean {
   let slow = head;

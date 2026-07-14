@@ -27,6 +27,6 @@ export type ProblemMeta = {
   difficulty: Difficulty;
   tags: string[];
   summary: string;
-  docs: string; // markdown
+  my_approach: string; // markdown
   code: Record<CodeLang, string>;
 };

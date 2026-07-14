@@ -58,27 +58,24 @@ export default async function ProblemPage({ params }: { params: Promise<{ slug: 
 
       <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
 
-      {/* Visualization */}
       <div className="p-4">
-        <h2 className="text-muted-foreground mb-3 text-sm font-medium">Visualize</h2>
+        <h2 className="text-muted-foreground mb-3 text-xl font-medium">Visualize.</h2>
         <ProblemVisualizer problem={problem} />
       </div>
 
       <div className="screen-line-top screen-line-bottom bg-hatching h-4" />
 
-      {/* Solution */}
       <div className="p-4">
-        <h2 className="text-muted-foreground mb-3 text-sm font-medium">Solution</h2>
+        <h2 className="text-muted-foreground mb-3 text-xl font-medium">Solution.</h2>
         <ProblemSolutionTabs code={problem.code} />
       </div>
 
       <div className="screen-line-top screen-line-bottom bg-hatching h-4" />
 
-      {/* Docs */}
       <div className="p-4">
-        <h2 className="text-muted-foreground mb-3 text-sm font-medium">Docs</h2>
+        <h2 className="text-muted-foreground mb-3 text-xl font-medium">My Approach.</h2>
         <Prose className="prose-harshalvk max-w-none">
-          <MarkdownClient>{problem.docs}</MarkdownClient>
+          <MarkdownClient>{problem.my_approach}</MarkdownClient>
         </Prose>
       </div>
     </section>
