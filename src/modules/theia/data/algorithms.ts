@@ -16,6 +16,12 @@ export const CATEGORIES: AlgorithmCategoryMeta[] = [
     title: 'Machine Learning',
     description: 'Algorithms that learn patterns from data to make predictions and decisions.',
   },
+  {
+    slug: 'problems',
+    title: 'DSA problems',
+    description:
+      'These are the common dsa problems along with their solution and visulaztion and how do i approach to solve it.',
+  },
 ];
 
 export const ALGORITHMS: AlgorithmMeta[] = [
