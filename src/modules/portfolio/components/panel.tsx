@@ -15,9 +15,9 @@ export function PanelHeader({ className, ...props }: React.ComponentProps<'div'>
     <>
       <div className="bg-hatching screen-line-top screen-line-bottom h-4 w-full" />
 
-      <div className={cn('px-4 py-2', className)} {...props} />
+      <div className={cn('px-4', className)} {...props} />
 
-      <div className="bg-hatching screen-line-top screen-line-bottom h-4 w-full" />
+      <div className="bg-hatching screen-line-top screen-line-bottom h-7 w-full" />
     </>
   );
 }
