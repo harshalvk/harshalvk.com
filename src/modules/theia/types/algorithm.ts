@@ -1,4 +1,11 @@
-export type StepStatus = 'default' | 'comparing' | 'swapping' | 'sorted' | 'pivot' | 'active';
+export type StepStatus =
+  | 'default'
+  | 'comparing'
+  | 'swapping'
+  | 'sorted'
+  | 'pivot'
+  | 'active'
+  | 'found';
 
 export type ArrayStep = {
   array: number[];
