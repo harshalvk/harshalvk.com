@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { CategoryGrid } from '@/modules/theia/components/category-grid';
+import { ListGrid } from '@/modules/theia/components/lislt-grid';
 import { PanelTitle, PanelTitleSup } from '@/modules/portfolio/components/panel';
 import { X_HANDLE } from '@/config/site';
+import { CATEGORIES } from '@/modules/theia/data/algorithms';
 
 const title = 'Theia';
 const description =
@@ -70,7 +71,7 @@ export default function DsaVisualizerPage() {
         <p className="text-muted-foreground text-sm md:text-base">{description}</p>
       </div>
       <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
-      <CategoryGrid />
+      <ListGrid list={CATEGORIES} basePath="/theia" />
     </section>
   );
 }
