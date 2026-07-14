@@ -252,7 +252,7 @@ const CommandMenu = ({
         ))}
       </CommandGroup>
     );
-  }, [components, handleOpenLink, handleCommandHighlight]);
+  }, [components, handleOpenLink]);
 
   const blogLinks = useMemo(
     () =>
@@ -515,8 +515,8 @@ function CommandMenuFooter({ selectedCommandKind }: { selectedCommandKind: Comma
   return (
     <>
       <div className="flex h-10" />
-
-      <div className="absolute inset-x-0 bottom-0 flex h-10 items-center justify-end gap-2 rounded-b-2xl px-4 text-xs font-medium">
+      <div className="absolute inset-x-0 bottom-0 flex h-10 items-center justify-between gap-2 rounded-b-2xl px-4 text-xs font-medium">
+        <p>harshalvk</p>
         <div className="flex items-center gap-1 divide-x-1 max-sm:hidden">
           <CommandMenuFooterItem label="Navigate" icon={ArrowUpDown} />
           <CommandMenuFooterItem
