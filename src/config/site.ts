@@ -45,7 +45,7 @@ export const MOBILE_NAV: NavItem<Route>[] = [
   ...MAIN_NAV,
 ];
 
-export const X_HANDLE = '@harshalvk';
+export const X_HANDLE = '@harshalvk_';
 export const GITHUB_USERNAME = 'harshalvk';
 export const SOURCE_CODE_GITHUB_REPO = 'harshalvk/harshalvk.com';
 export const SOURCE_CODE_GITHUB_URL = 'https://github.com/harshalvk/harshalvk.com';
