@@ -1238,6 +1238,104 @@ export const Icons = {
       />
     </svg>
   ),
+  linkedList: (props: IconProps) => (
+    <svg
+      {...props}
+      aria-hidden
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="1" y="9" width="6" height="6" rx="1" />
+      <rect x="9.5" y="9" width="6" height="6" rx="1" />
+      <rect x="18" y="9" width="5" height="6" rx="1" />
+
+      <line x1="7" y1="12" x2="9.5" y2="12" />
+      <line x1="15.5" y1="12" x2="18" y2="12" />
+    </svg>
+  ),
+  ml: (props: IconProps) => (
+    <svg
+      {...props}
+      aria-hidden
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <line x1="3" y1="2" x2="3" y2="20" />
+      <line x1="3" y1="20" x2="21" y2="20" />
+
+      <path d="M5 16 L19 5" stroke-dasharray="2.5 2.5" stroke-width="1.5" />
+
+      <circle cx="6" cy="12" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="8" cy="17" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="11" cy="17" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="14" cy="6" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="17" cy="11" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="6" r="1.3" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  decisionTree: (props: IconProps) => (
+    <svg
+      {...props}
+      aria-hidden
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 180 180"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="6"
+      stroke-linecap="round"
+    >
+      <line x1="90" y1="45" x2="55" y2="90" />
+      <line x1="90" y1="45" x2="125" y2="90" />
+      <line x1="55" y1="90" x2="35" y2="135" />
+      <line x1="55" y1="90" x2="75" y2="135" />
+      <line x1="125" y1="90" x2="105" y2="135" />
+      <line x1="125" y1="90" x2="145" y2="135" />
+      <g fill="currentColor" stroke="none">
+        <circle cx="90" cy="45" r="7" />
+        <circle cx="55" cy="90" r="7" />
+        <circle cx="125" cy="90" r="7" />
+        <circle cx="35" cy="135" r="6" />
+        <circle cx="75" cy="135" r="6" />
+        <circle cx="105" cy="135" r="6" />
+        <circle cx="145" cy="135" r="6" />
+      </g>
+    </svg>
+  ),
+  sorting: (props: IconProps) => (
+    <svg
+      {...props}
+      aria-hidden
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 180 155"
+      fill="currentColor"
+    >
+      <rect x="35" y="110" width="14" height="35" />
+      <rect x="57" y="85" width="14" height="60" />
+      <rect x="79" y="60" width="14" height="85" />
+      <rect x="101" y="95" width="14" height="50" />
+      <rect x="123" y="75" width="14" height="70" />
+      <rect x="145" y="105" width="14" height="40" />
+      <rect x="30" y="143" width="135" height="2" />
+    </svg>
+  ),
 };
 
 export function getIconForPackageManager(manager: string) {

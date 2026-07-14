@@ -143,6 +143,33 @@ const OTHER_LINK_ITEMS: CommandLinkItem[] = [
   },
 ];
 
+const THEIA_LINKS: CommandLinkItem[] = [
+  {
+    title: 'Sorting Algo Visualization',
+    href: '/theia/sorting',
+    kind: 'page',
+    icon: Icons.sorting,
+  },
+  {
+    title: 'Linked List Simulation',
+    href: '/theia/linked-list',
+    kind: 'page',
+    icon: Icons.linkedList,
+  },
+  {
+    title: 'Machine Learning Algo Simulation',
+    href: '/theia/ml',
+    kind: 'page',
+    icon: Icons.ml,
+  },
+  {
+    title: 'DSA Problems',
+    href: '/theia/problems',
+    kind: 'page',
+    icon: Icons.decisionTree,
+  },
+];
+
 const CommandMenu = ({
   docs,
   enableHotKeys = true,
@@ -214,7 +241,9 @@ const CommandMenu = ({
           <CommandMenuItem
             key={component.slug}
             keywords={['component']}
-            onHighlight={handleCommandHighlight}
+            onHighlight={() => {
+              setSelectedCommandKind('component');
+            }}
             onSelect={() => handleOpenLink(`/components/${component.slug}`)}
           >
             <Icons.react />
@@ -301,6 +330,12 @@ const CommandMenu = ({
                 onLinkHighlight={handleLinkHighlight}
                 onLinkSelect={handleOpenLink}
               /> */}
+              <CommandLinkGroup
+                heading="Theia"
+                links={THEIA_LINKS}
+                onLinkHighlight={handleLinkHighlight}
+                onLinkSelect={handleOpenLink}
+              />
 
               <CommandLinkGroup
                 heading="Social Links"
