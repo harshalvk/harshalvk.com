@@ -7,7 +7,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     icon: Icons.x,
     title: 'X',
     subtitle: '@harshalvk_',
-    href: 'https://x.com/harshalvk',
+    href: 'https://x.com/harshalvk_',
   },
   {
     icon: Icons.github,
