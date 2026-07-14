@@ -414,7 +414,7 @@
     transparent 0,
     transparent 50%
   );
-  background-size: 10px 10px;
+  background-size: 7px 7px;
 }
 
 @utility link-underline {
