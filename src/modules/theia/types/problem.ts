@@ -1,4 +1,3 @@
-import { CodeLang } from '../data/algorithm-code';
 import type { ArrayStep } from './algorithm';
 import type { LinkedListStep } from './linked-list';
 
@@ -27,6 +26,4 @@ export type ProblemMeta = {
   difficulty: Difficulty;
   tags: string[];
   summary: string;
-  my_approach: string; // markdown
-  code: Record<CodeLang, string>;
 };
