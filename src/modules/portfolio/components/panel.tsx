@@ -1,5 +1,8 @@
+'use client';
+
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '@/lib/utils';
+import { useWebHaptics } from 'web-haptics/react';
 
 export function Panel({ className, ...props }: React.ComponentProps<'section'>) {
   return (
@@ -43,8 +46,13 @@ export function PanelTitle({
 }) {
   const Comp = asChild ? Slot : 'h2';
 
+  const { trigger: haptic } = useWebHaptics();
+
   return (
     <Comp
+      onClick={() => {
+        haptic('success');
+      }}
       className={cn('text-2xl font-medium tracking-tight md:text-3xl lg:text-4xl', className)}
       {...props}
     />
