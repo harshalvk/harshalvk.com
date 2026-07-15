@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PROBLEMS, getProblem } from '@/modules/theia/data/problems';
+import { loadProblemContent } from '@/modules/theia/lib/load-problem-content';
 import { ProblemVisualizer } from '@/modules/theia/components/problem-visualizer';
 import { ProblemSolutionTabs } from '@/modules/theia/components/problem-solution-tabs';
 import { PanelTitle } from '@/modules/portfolio/components/panel';
@@ -35,6 +36,8 @@ export default async function ProblemPage({ params }: { params: Promise<{ slug: 
   const problem = getProblem(slug);
   if (!problem) notFound();
 
+  const { approach, code } = loadProblemContent(slug);
+
   return (
     <section className="flex-1 border-x">
       <div className="space-y-2 px-4 py-2">
@@ -67,7 +70,7 @@ export default async function ProblemPage({ params }: { params: Promise<{ slug: 
 
       <div className="p-4">
         <h2 className="text-muted-foreground mb-3 text-xl font-medium">Solution.</h2>
-        <ProblemSolutionTabs code={problem.code} />
+        <ProblemSolutionTabs code={code} />
       </div>
 
       <div className="screen-line-top screen-line-bottom bg-hatching h-4" />
@@ -75,7 +78,7 @@ export default async function ProblemPage({ params }: { params: Promise<{ slug: 
       <div className="p-4">
         <h2 className="text-muted-foreground mb-3 text-xl font-medium">My Approach.</h2>
         <Prose className="prose-harshalvk max-w-none">
-          <MarkdownClient>{problem.my_approach}</MarkdownClient>
+          <MarkdownClient>{approach}</MarkdownClient>
         </Prose>
       </div>
     </section>
