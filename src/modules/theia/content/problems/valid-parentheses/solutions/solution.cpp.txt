@@ -1,0 +1,14 @@
+bool isValid(std::string s) {
+  std::unordered_map<char, char> pairs = {{')', '('}, {']', '['}, {'}', '{'}};
+  std::stack<char> st;
+
+  for (char c : s) {
+    if (c == '(' || c == '[' || c == '{') {
+      st.push(c);
+    } else {
+      if (st.empty() || st.top() != pairs[c]) return false;
+      st.pop();
+    }
+  }
+  return st.empty();
+}
