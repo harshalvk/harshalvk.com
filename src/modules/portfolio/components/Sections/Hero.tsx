@@ -9,6 +9,7 @@ import { MarkdownClient } from '@/components/markdown';
 import { USER } from '@/modules/portfolio/data/user';
 import { AnimatePresence, motion } from 'motion/react';
 import { useWebHaptics } from 'web-haptics/react';
+import PagesView from '../pages-view';
 
 const IMAGES = ['/profile.png', '/profile4.jpg'];
 
@@ -25,41 +26,43 @@ const Hero = () => {
   return (
     <section className="border-border relative border border-y-0 p-4">
       <SectionCorners />
-
-      <div className="flex w-full flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-6">
-        <div
-          className="relative h-32 w-32 shrink-0 cursor-pointer overflow-hidden rounded-sm sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-52 lg:w-52"
-          onClick={handleClick}
-        >
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
-              className="absolute inset-0"
-            >
-              <Image alt="Profile" src={IMAGES[index]} fill className="object-cover" />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        <div className="flex w-full items-center justify-between">
-          <div>
-            <h1
-              className={`text-xl tracking-tight sm:text-2xl md:text-3xl lg:text-4xl ${inter.className}`}
-            >
-              Hey, I&apos;m Harshal
-            </h1>
-            <h3
-              className={`flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl ${inter.className}`}
-            >
-              <FlipWords
-                words={USER.flipSentences ?? ['Full Stack Developer', 'Backend Engineer']}
-              />
-            </h3>
+      <div className="flex w-full items-start">
+        <div className="flex w-full flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-6">
+          <div
+            className="relative h-32 w-32 shrink-0 cursor-pointer overflow-hidden rounded-sm sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-52 lg:w-52"
+            onClick={handleClick}
+          >
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                className="absolute inset-0"
+              >
+                <Image alt="Profile" src={IMAGES[index]} fill className="object-cover" />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <div className="flex w-full items-center justify-between">
+            <div>
+              <h1
+                className={`text-xl tracking-tight sm:text-2xl md:text-3xl lg:text-4xl ${inter.className}`}
+              >
+                Hey, I&apos;m Harshal
+              </h1>
+              <h3
+                className={`flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl ${inter.className}`}
+              >
+                <FlipWords
+                  words={USER.flipSentences ?? ['Full Stack Developer', 'Backend Engineer']}
+                />
+              </h3>
+            </div>
           </div>
         </div>
+        <PagesView />
       </div>
 
       <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
