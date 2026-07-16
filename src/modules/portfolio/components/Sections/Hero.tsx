@@ -26,6 +26,9 @@ const Hero = () => {
   return (
     <section className="border-border relative border border-y-0 p-4">
       <SectionCorners />
+      <div className="absolute top-4 right-4">
+        <PagesView />
+      </div>
       <div className="flex w-full items-start">
         <div className="flex w-full flex-col items-start gap-4 sm:flex-row sm:items-end sm:gap-6">
           <div
@@ -62,7 +65,6 @@ const Hero = () => {
             </div>
           </div>
         </div>
-        <PagesView />
       </div>
 
       <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
