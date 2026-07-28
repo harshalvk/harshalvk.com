@@ -14,29 +14,29 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <ThemeProvider
-            attribute={'class'}
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ProgressProvider
-              color="var(--foreground)"
-              height="2px"
-              delay={500}
-              options={{ showSpinner: false }}
+      <ProgressProvider
+        color="var(--foreground)"
+        height="2px"
+        delay={500}
+        options={{ showSpinner: false }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <ThemeProvider
+              attribute={'class'}
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
             >
               <Toaster />
               <WalletContextProvider network="devnet" autoConnect={true}>
                 {children}
               </WalletContextProvider>
               <KeyboardShortcuts />
-            </ProgressProvider>
-          </ThemeProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
+            </ThemeProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ProgressProvider>
     </>
   );
 };
