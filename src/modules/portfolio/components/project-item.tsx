@@ -42,15 +42,23 @@ export function ProjectItem({ project }: { project: Project }) {
         >
           <div className="flex aspect-square items-center justify-center self-stretch p-5">
             {project.logo ? (
-              <Image src={project.logo} height={500} width={500} alt="Project Logo" />
+              <Image
+                src={project.logo}
+                height={52}
+                width={52}
+                alt="Project Logo"
+                className="bg-transparent"
+              />
             ) : (
-              <div className="bg-muted rounded-md p-2">
-                <Box className="text-muted-foreground size-5" />
+              <div className="px-0 sm:px-2">
+                <div className="bg-muted rounded-md p-2">
+                  <Box className="text-muted-foreground size-5" />
+                </div>
               </div>
             )}
           </div>
           <div className="self-stretch border-r border-dashed" />
-          <div className="flex h-full flex-1 items-center justify-between p-5">
+          <div className="flex h-full flex-1 items-center justify-between p-4">
             <div>
               <h3 className="font-medium lg:text-xl">{project.title}</h3>
 
@@ -63,6 +71,9 @@ export function ProjectItem({ project }: { project: Project }) {
                   <p className="text-muted-foreground text-sm">∞</p>
                 )}
               </div>
+              <p className="text-muted-foreground hidden max-w-prose text-sm leading-relaxed sm:block">
+                {project.oneLiner}
+              </p>
             </div>
 
             <div className="flex items-center gap-4">

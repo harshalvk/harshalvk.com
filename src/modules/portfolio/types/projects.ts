@@ -6,6 +6,10 @@ export type Project = {
    * Project period for display and sorting.
    * Use "MM.YYYY" format. Omit `end` for ongoing projects.
    */
+  oneLiner?: string;
+  /**
+   * Expresses the project in one line
+   */
   period: {
     /** Start date (e.g., "05.2025"). */
     start: string;

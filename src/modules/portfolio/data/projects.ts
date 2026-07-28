@@ -7,6 +7,8 @@ export const PROJECTS: Project[] = [
     period: {
       start: '09.2025',
     },
+    oneLiner:
+      'An AI-powered meeting assistant that records, transcribes, and summarizes your conversations in real time.',
     link: '',
     skills: [
       'NextJS',
@@ -34,6 +36,8 @@ export const PROJECTS: Project[] = [
       start: '01.2025',
       end: '05.2025',
     },
+    oneLiner:
+      'A no-code workflow automation platform for visually designing and executing web data extraction pipelines.',
     link: 'https://webextract.vercel.app',
     skills: ['Open Source', 'React', 'NextJS', 'TypeScript', 'Next-Auth', 'Prisma', 'Docker'],
     description: `Built a no-code workflow automation platform that enables users to visually design, schedule, and execute web data extraction pipelines through a drag-and-drop editor
@@ -52,6 +56,8 @@ export const PROJECTS: Project[] = [
       start: '06.2025',
       end: '08.2025',
     },
+    oneLiner:
+      'A drop-in webhook analytics platform that logs requests to a real-time dashboard and pushes alerts to your team channels.',
     link: 'https://quala-theta.vercel.app',
     skills: ['NextJs', 'Better-Auth', 'Prisma', 'PostgresSQL', 'Docker'],
     description: `A lightweight, drop-in webhook analytics platform. Embed a single tracking link into any project — every request is instantly logged to a real-time dashboard and pushed to your team's messaging channels (Discord, Slack, and more). Zero SDK, zero config, just insights.
@@ -67,7 +73,9 @@ export const PROJECTS: Project[] = [
     period: {
       start: '07.2026',
     },
-    link: '',
+    oneLiner:
+      'A high-throughput distributed ledger and wallet system built from scratch in TypeScript.',
+    link: 'https://github.com/harshalvk/isonomy',
     skills: ['TypeScript', 'Distributed Systems', 'Crypto', 'Ledger', 'Wallet'],
     description: `A high-throughput distributed ledger & wallet system, built from scratch in TypeScript.
   - Implements a custom distributed ledger with cryptographic transaction validation
@@ -83,7 +91,9 @@ export const PROJECTS: Project[] = [
     period: {
       start: '07.2026',
     },
-    link: '',
+    oneLiner:
+      'A distributed job queue built from scratch in Go for reliable background task processing at scale.',
+    link: 'https://github.com/harshalvk/kairos',
     skills: ['Go', 'Distributed Systems', 'Job Queue', 'Redis'],
     description: `A distributed job queue built from scratch in Go — a mini Sidekiq/Celery built without off-the-shelf frameworks.
   - Custom worker pool and task scheduler with reliable background job processing
@@ -99,7 +109,9 @@ export const PROJECTS: Project[] = [
     period: {
       start: '07.2026',
     },
-    link: 'https://harshalvk.github.io/cage/',
+    oneLiner:
+      'A REST API that programmatically creates isolated sandbox environments, runs commands, and tears them down securely.',
+    link: 'https://github.com/harshalvk/cage/',
     skills: ['Go', 'Docker', 'REST API', 'Systems Programming', 'Sandbox'],
     description: `Programmatically create isolated environments (sandboxes), run commands inside them, and tear them down — all through a simple REST API.
   - Spins up isolated Docker containers on demand via REST endpoints
