@@ -6,8 +6,10 @@ export const getCachedContributions = unstable_cache(
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
+      const currentYear = new Date().getFullYear();
+
       const res = await fetch(
-        `${process.env.GITHUB_CONTRIBUTIONS_API_URL || `https://github-contributions-api.jogruber.de`}/v4/${username}?y=last`,
+        `${process.env.GITHUB_CONTRIBUTIONS_API_URL || `https://github-contributions-api.jogruber.de`}/v4/${username}?y=${currentYear}`,
         { signal: controller.signal }
       );
 
