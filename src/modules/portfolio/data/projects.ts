@@ -54,10 +54,58 @@ export const PROJECTS: Project[] = [
     },
     link: 'https://quala-theta.vercel.app',
     skills: ['NextJs', 'Better-Auth', 'Prisma', 'PostgresSQL', 'Docker'],
-    description: `A lightweight, drop-in webhook analytics platform. Embed a single tracking link into any project — every request is instantly logged to a real-time dashboard and pushed to your team's messaging channels (Discord, Slack, and more). Zero SDK, zero config, just insights
+    description: `A lightweight, drop-in webhook analytics platform. Embed a single tracking link into any project — every request is instantly logged to a real-time dashboard and pushed to your team's messaging channels (Discord, Slack, and more). Zero SDK, zero config, just insights.
   - Generate a unique URL, embed it anywhere, and capture every request instantly
   - View structured logs in real time and route notifications to Discord, Slack, or any webhook
   - No instrumentation needed; just a link and immediate visibility into your traffic`,
+    logo: '',
+    isExpanded: false,
+  },
+  {
+    id: 'isonomy',
+    title: 'Isonomy',
+    period: {
+      start: '07.2026',
+    },
+    link: '',
+    skills: ['TypeScript', 'Distributed Systems', 'Crypto', 'Ledger', 'Wallet'],
+    description: `A high-throughput distributed ledger & wallet system, built from scratch in TypeScript.
+  - Implements a custom distributed ledger with cryptographic transaction validation
+  - Built-in wallet system for secure balance management and transfer execution
+  - Designed for high-throughput with consensus and fault-tolerance considerations
+  - End-to-end TypeScript architecture for type safety across the entire stack`,
+    logo: '',
+    isExpanded: false,
+  },
+  {
+    id: 'kairos',
+    title: 'Kairos',
+    period: {
+      start: '07.2026',
+    },
+    link: '',
+    skills: ['Go', 'Distributed Systems', 'Job Queue', 'Redis'],
+    description: `A distributed job queue built from scratch in Go — a mini Sidekiq/Celery built without off-the-shelf frameworks.
+  - Custom worker pool and task scheduler with reliable background job processing
+  - Distributed architecture supporting multiple producers and consumers
+  - Built in pure Go for systems-level performance and low memory overhead
+  - Handles retries, dead-letter queues, and concurrency control`,
+    logo: '',
+    isExpanded: false,
+  },
+  {
+    id: 'cage',
+    title: 'Cage',
+    period: {
+      start: '07.2026',
+    },
+    link: 'https://harshalvk.github.io/cage/',
+    skills: ['Go', 'Docker', 'REST API', 'Systems Programming', 'Sandbox'],
+    description: `Programmatically create isolated environments (sandboxes), run commands inside them, and tear them down — all through a simple REST API.
+  - Spins up isolated Docker containers on demand via REST endpoints
+  - Executes arbitrary commands securely inside sandboxes and captures output
+  - Handles automatic cleanup and resource teardown after execution
+  - Built with Go and Docker for systems-level performance and security`,
     logo: '',
     isExpanded: false,
   },
