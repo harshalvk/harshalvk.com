@@ -5,6 +5,11 @@ import { AlgorithmVisualizer } from '@/modules/theia/components/algorithm-visual
 import { PanelTitle } from '@/modules/portfolio/components/panel';
 import { getMLAlgorithm, ML_ALGORITHMS } from '@/modules/theia/data/ml-algorithms';
 import { MLAlgorithmPlayer } from '@/modules/theia/components/ml-algorithm-player';
+import { LinearRegressionLab } from '@/modules/theia/components/regression/linear-regression-lab';
+import { MarkdownClient } from '@/components/markdown';
+import { Prose } from '@/components/Typography';
+import fs from 'node:fs';
+import path from 'node:path';
 
 export async function generateStaticParams() {
   return [
@@ -66,6 +71,27 @@ export default async function AlgorithmPage({
   const algo = mlAlgo ? undefined : getAlgorithm(category, slug);
 
   if (!algo && !mlAlgo) notFound();
+
+  if (category === 'ml' && slug === 'linear-regression') {
+    const docsPath = path.join(process.cwd(), 'src/modules/theia/content/ml/linear-regression.md');
+    const docs = fs.readFileSync(docsPath, 'utf-8');
+
+    return (
+      <section className="flex-1 border-x">
+        {/* ...same header pattern as your other algo pages... */}
+        <div className="p-4">
+          <LinearRegressionLab />
+        </div>
+        <div className="screen-line-top screen-line-bottom bg-hatching h-4" />
+        <div className="p-4">
+          <h2 className="text-muted-foreground mb-3 text-sm font-medium">How It Works</h2>
+          <Prose className="prose-harshalvk max-w-none">
+            <MarkdownClient>{docs}</MarkdownClient>
+          </Prose>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex-1 border-x">
