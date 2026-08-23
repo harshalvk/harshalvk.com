@@ -33,7 +33,11 @@ export async function generateStaticParams() {
 }
 
 export default async function ComponentsPage() {
-  const docs = await getDocsByCategory('components');
+  const docs = (await getDocsByCategory('components'))
+    .slice()
+    .sort((a, b) =>
+      a.metadata.title.localeCompare(b.metadata.title, 'en', { sensitivity: 'base' })
+    );
 
   return (
     <section aria-labelledby="components-heading" className="flex-1 gap-3 border-x">
