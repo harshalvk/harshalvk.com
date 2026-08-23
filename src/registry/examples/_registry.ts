@@ -67,4 +67,15 @@ export const examples: Registry['items'] = [
       },
     ],
   },
+  {
+    name: 'ascii-dither-demo',
+    type: 'registry:example',
+    files: [
+      {
+        path: 'examples/ascii-dither-demo.tsx',
+        type: 'registry:example',
+        target: '@components/ascii-dither-demo.tsx',
+      },
+    ],
+  },
 ];

@@ -53,4 +53,10 @@ export const componentCategories = [
     description:
       'A canvas-based scratch-to-reveal card with built-in reward variants, scoped confetti, and an imperative handle for programmatic control — ideal for promotions, giveaways, and reward flows.',
   },
+  {
+    name: 'ascii-dither',
+    title: 'Ascii Dither',
+    description:
+      'An animated ASCII character field driven by a layered sine noise function and a Bayer 4×4 ordered-dither matrix. Use it as a decorative canvas backdrop behind hero content, cards, or anywhere a subtle animated texture is needed.',
+  },
 ];

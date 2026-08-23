@@ -1,0 +1,167 @@
+---
+title: Ascii Dither
+description: An animated ASCII character field driven by a layered sine noise function and a Bayer 4×4 ordered-dither matrix. Use it as a decorative canvas backdrop behind hero content, cards, or anywhere a subtle animated texture is needed.
+image: /ascii-dither.png
+category: components
+createdAt: 2026-08-27
+updatedAt: 2026-08-27
+---
+
+<ComponentPreview
+  className="**:data-[slot=component-preview]:min-h-40"
+  name="ascii-dither-demo"
+  openInV0Url="https://harshalvk.com/r/ascii-dither.json"
+/>
+
+## Features
+
+- Bayer 4×4 ordered-dither matrix maps a layered sine scalar field to a character ramp — the same dithering technique used in 1-bit print and early computer graphics, running at 60 fps in a canvas.
+- Cursor proximity brightens a local radius of characters, giving an interactive glow effect with zero DOM events leaking outside the component's container.
+- Fully configurable character ramp — swap the default ` .:-=+*#%@` for binary `01`, block elements `░▒▓█`, or any custom string. Ramp length sets how many brightness steps are available.
+- Three-stop color gradient (`colorLow`, `colorMid`, `colorHigh`) accepts any CSS color string. Pass CSS variables for automatic theme integration.
+- All tunable constants (`cellSize`, `speed`, `glowRadius`, `glowStrength`, `alphaBase`, `alphaMax`, `ditherSpread`) are live-reactive props — changes are picked up on the next frame with no loop restart.
+- Pointer listeners are scoped to the component's parent element, not `window` — two instances on the same page respond only to their own cursor and never leak global events.
+- `ResizeObserver` handles container resizes (sidebar collapse, panel resize) in addition to viewport resize, and redraws a static frame immediately to avoid a blank flash.
+- `prefers-reduced-motion` is tracked reactively via `MediaQueryList`, not checked once on mount — if the user changes their OS setting mid-session, animation stops or resumes on the next frame.
+- Set `interactive={false}` to skip all pointer listener setup entirely — zero interaction cost for purely decorative use.
+- Zero dependencies beyond React — no canvas library, no animation framework, no extra packages.
+
+## Installation
+
+<CodeTabs>
+
+<TabsListInstallType />
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://harshalvk.com/r/ascii-dither.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>No extra dependencies needed</Step>
+
+This component has no runtime dependencies beyond React. If you don't already have it, install `clsx`/`tailwind-merge` via the shadcn `cn` utility:
+
+```bash
+npx shadcn@latest init
+```
+
+<Step>Copy the component</Step>
+
+<ComponentSource name="ascii-dither" title="components/ascii-dither.tsx" />
+
+Update the import path for `cn` to match your project setup.
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AsciiDither } from '@/components/ascii-dither';
+```
+
+### As a full-bleed background
+
+Position the canvas absolutely inside a `relative` container. Your content sits on top via `z-index`.
+
+```tsx
+<div className="relative h-64 w-full overflow-hidden rounded-xl">
+  <AsciiDither className="absolute inset-0 h-full w-full" />
+  <div className="relative z-10 flex h-full items-center justify-center">
+    <h1 className="text-4xl font-bold">Your content here</h1>
+  </div>
+</div>
+```
+
+### Custom character ramp
+
+```tsx
+/* Binary — minimal, technical */
+<AsciiDither ramp="01 " />;
+
+/* Block elements — chunky and bold */
+<AsciiDither ramp=" ░▒▓█" cellSize={16} />;
+
+/* Dots only — subtle and quiet */
+<AsciiDither ramp=" ·∙●" ditherSpread={0.3} />;
+```
+
+### Custom colors — match your theme
+
+Pass CSS variables so it adapts to light/dark mode automatically.
+
+```tsx
+<AsciiDither
+  colorLow="rgba(var(--foreground), 0.1)"
+  colorMid="rgba(var(--foreground), 0.4)"
+  colorHigh="rgba(var(--foreground), 0.8)"
+/>
+```
+
+Or use explicit hex colors for a branded look:
+
+```tsx
+/* Blue to violet gradient */
+<AsciiDither
+  colorLow="rgba(30,58,138,1)"
+  colorMid="rgba(79,70,229,1)"
+  colorHigh="rgba(167,139,250,1)"
+  alphaBase={0.05}
+  alphaMax={0.7}
+/>
+```
+
+### Slow ambient texture
+
+A very slow speed with reduced glow works well as a full-page background texture:
+
+```tsx
+<AsciiDither speed={0.25} cellSize={11} glowStrength={0.3} alphaBase={0.04} alphaMax={0.5} />
+```
+
+### Non-interactive / decorative only
+
+Skip all pointer event setup when the cursor effect isn't needed:
+
+```tsx
+<AsciiDither interactive={false} />
+```
+
+## API Reference
+
+### AsciiDither
+
+| Prop           | Type      | Default               | Description                                                                                    |
+| -------------- | --------- | --------------------- | ---------------------------------------------------------------------------------------------- |
+| `ramp`         | `string`  | `" .:-=+*#%@"`        | Character ramp from sparse → dense. Length determines how many brightness steps are available. |
+| `cellSize`     | `number`  | `13`                  | Size of each character cell in px. Smaller = more detail, higher render cost.                  |
+| `speed`        | `number`  | `1`                   | Animation speed multiplier. `0` freezes the field, `2` doubles speed.                          |
+| `glowRadius`   | `number`  | `180`                 | Cursor glow radius in px.                                                                      |
+| `glowStrength` | `number`  | `0.55`                | How much the cursor boosts local brightness (0–1). `0` disables the cursor effect entirely.    |
+| `colorLow`     | `string`  | `"rgba(71,12,6,1)"`   | Character color at low brightness. Any CSS color string.                                       |
+| `colorMid`     | `string`  | `"rgba(183,65,14,1)"` | Character color at mid brightness.                                                             |
+| `colorHigh`    | `string`  | `"rgba(204,85,0,1)"`  | Character color at high brightness.                                                            |
+| `alphaBase`    | `number`  | `0.08`                | Minimum character opacity. Raise for denser appearance on dark backgrounds.                    |
+| `alphaMax`     | `number`  | `0.85`                | Maximum character opacity cap.                                                                 |
+| `ditherSpread` | `number`  | `0.5`                 | Bayer dither spread. `0` = smooth gradient, `1` = maximum contrast dithering.                  |
+| `interactive`  | `boolean` | `true`                | Whether to track pointer position for the cursor glow. Set `false` for purely decorative use.  |
+| `className`    | `string`  | —                     | Additional classes on the `<canvas>` element. Use to set `position`, `width`, `height`.        |
+
+## Notes
+
+- The canvas element renders with `pointer-events-none` by default so it never intercepts clicks on content layered above it.
+- `aria-hidden` is set on the canvas — the field carries no semantic meaning and should not be read by screen readers.
+- All props are held in a `useRef` and read by the draw loop on every frame, so changing any prop causes the next frame to pick up the new value without restarting the animation loop or re-running the `useEffect`.
+- The `useEffect` dependency array is intentionally empty — the loop is started once and reads live values from the ref. An ESLint disable comment documents this.
+- The sine-based scalar field is deterministic — given the same time input it always produces the same output. Two instances with the same props will animate identically unless you offset their time or field frequency.
+- `canvas.getContext("2d")` can return `null` in environments where the Canvas API is unavailable (some server-side rendering contexts, old browsers). The component guards against this and returns early — nothing renders, but nothing throws.

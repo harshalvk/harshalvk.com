@@ -84,7 +84,8 @@ export const components: Registry['items'] = [
     name: 'component-playground',
     type: 'registry:component',
     title: 'Component Playground',
-    description: '',
+    description:
+      "An interactive props editor that renders a component alongside live-editable controls — like Storybook's controls panel, but a plain component you can drop into MDX docs.",
     files: [
       {
         path: 'components/component-playground/component-playground.tsx',
@@ -94,5 +95,21 @@ export const components: Registry['items'] = [
     ],
     categories: ['developer-tools', 'documentation'],
     docs: 'https://harshalvk.com/components/component-playground',
+  },
+  {
+    name: 'ascii-dither',
+    type: 'registry:component',
+    title: 'Ascii Dither',
+    description:
+      'An animated ASCII character field driven by a layered sine noise function and a Bayer 4×4 ordered-dither matrix. Use it as a decorative canvas backdrop behind hero content, cards, or anywhere a subtle animated texture is needed.',
+    files: [
+      {
+        path: 'components/ascii-dither/ascii-dither.tsx',
+        type: 'registry:component',
+        target: '@components/ascii-dither.tsx',
+      },
+    ],
+    categories: [''],
+    docs: 'https://harshalvk.com/components/ascii-dither',
   },
 ];

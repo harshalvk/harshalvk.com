@@ -123,7 +123,8 @@ export const Index: Record<string, any> = {
   },
   'component-playground': {
     name: 'component-playground',
-    description: '',
+    description:
+      "An interactive props editor that renders a component alongside live-editable controls — like Storybook's controls panel, but a plain component you can drop into MDX docs.",
     type: 'registry:component',
     files: [
       {
@@ -142,6 +143,29 @@ export const Index: Record<string, any> = {
       return { default: mod.default || mod[exportName] };
     }),
     categories: ['developer-tools', 'documentation'],
+    meta: undefined,
+  },
+  'ascii-dither': {
+    name: 'ascii-dither',
+    description:
+      'An animated ASCII character field driven by a layered sine noise function and a Bayer 4×4 ordered-dither matrix. Use it as a decorative canvas backdrop behind hero content, cards, or anywhere a subtle animated texture is needed.',
+    type: 'registry:component',
+    files: [
+      {
+        path: 'src/registry/components/ascii-dither/ascii-dither.tsx',
+        type: 'registry:component',
+        target: '@components/ascii-dither.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/components/ascii-dither/ascii-dither.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: [''],
     meta: undefined,
   },
   'wallet-adapter-demo': {
@@ -267,6 +291,28 @@ export const Index: Record<string, any> = {
     ],
     component: React.lazy(async () => {
       const mod = await import('@/registry/examples/component-playground-demo.tsx');
+      const exportName =
+        Object.keys(mod).find(
+          (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
+        ) || item.name;
+      return { default: mod.default || mod[exportName] };
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  'ascii-dither-demo': {
+    name: 'ascii-dither-demo',
+    description: '',
+    type: 'registry:example',
+    files: [
+      {
+        path: 'src/registry/examples/ascii-dither-demo.tsx',
+        type: 'registry:example',
+        target: '@components/ascii-dither-demo.tsx',
+      },
+    ],
+    component: React.lazy(async () => {
+      const mod = await import('@/registry/examples/ascii-dither-demo.tsx');
       const exportName =
         Object.keys(mod).find(
           (key) => typeof mod[key] === 'function' || typeof mod[key] === 'object'
