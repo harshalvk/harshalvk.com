@@ -3,7 +3,7 @@
   "name": "component-playground",
   "title": "Component Playground",
   "author": "harshalvk <harshalvkhobragade@gmail.com>",
-  "description": "",
+  "description": "An interactive props editor that renders a component alongside live-editable controls — like Storybook's controls panel, but a plain component you can drop into MDX docs.",
   "files": [
     {
       "path": "src/registry/components/component-playground/component-playground.tsx",
