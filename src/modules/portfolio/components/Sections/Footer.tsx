@@ -1,22 +1,19 @@
 import { SectionCorners } from '@/components/shared/Navbar';
 import { Route } from 'next';
 import Link from 'next/link';
-import React from 'react';
 
 const importantLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Work', href: '/work' },
+  { name: 'About', href: '/#about' },
+  { name: 'Experience', href: '/#experiences' },
   { name: 'Blog', href: '/blog' },
 ];
 
 const socialLinks = [
-  { name: 'GitHub', href: 'https://github.com/Harshalvk/' },
+  { name: 'GitHub', href: 'https://github.com/harshalvk/' },
   { name: 'Twitter / X', href: 'https://x.com/Harshalvk_' },
   { name: 'Discord', href: 'https://discord.com/users/harsshal.' },
   { name: 'LinkedIn', href: 'https://www.linkedin.com/in/harshalvk/' },
 ];
-
-const otherLinks = [{ name: 'Contact', href: '/contact' }];
 
 const FooterLinkGroup = ({
   title,
@@ -45,18 +42,30 @@ const Footer = () => {
   return (
     <footer className="flex justify-center">
       <div className="mb-4 w-full max-w-5xl px-4 lg:px-0">
-        <div className="screen-line-top screen-line-bottom relative flex w-full flex-col gap-4 border-x px-4 py-3">
+        <div className="screen-line-top screen-line-bottom relative flex w-full flex-col gap-6 border-x px-6 py-6">
           <SectionCorners />
 
-          <p className="text-muted-foreground font-mono text-sm">
-            Copyright &#169; 2021 - 2026 Harshal Khobragade
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <span className="text-foreground font-mono text-base font-semibold tracking-tight">
+                harshalvk
+              </span>
+              <span className="text-muted-foreground font-mono text-xs">
+                Building things for the web.
+              </span>
+            </div>
 
-          <div className="flex w-full justify-between">
-            <FooterLinkGroup title="Important Links" links={importantLinks} />
-            <FooterLinkGroup title="Social" links={socialLinks} />
-            <FooterLinkGroup title="Other" links={otherLinks} />
+            <div className="flex gap-12">
+              <FooterLinkGroup title="Links" links={importantLinks} />
+              <FooterLinkGroup title="Social" links={socialLinks} />
+            </div>
           </div>
+
+          <div className="border-border/50 border-t" />
+
+          <p className="text-muted-foreground font-mono text-xs">
+            &copy; 2021 – 2026 Harshal Khobragade. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
