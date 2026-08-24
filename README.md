@@ -4,9 +4,7 @@ Personal portfolio, interactive component registry, technical blog, and algorith
 
 **Live:** https://harshalvk.com
 
-<img width="1367" height="977" alt="brave_Ro8yJz3c1w" src="https://github.com/user-attachments/assets/5cc2ece1-e400-4332-a875-753858e9b909" />
-
----
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/caa440f2-a724-479e-ae11-104e0b33b7b0" />
 
 ## Overview
 
