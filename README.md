@@ -433,7 +433,7 @@ Full-Stack Developer
 
 * Website: https://harshalvk.com
 * GitHub: https://github.com/Harshalvk
-* X: https://x.com/harshalvk_
+* X: [https://x.com/harshalvk_](https://x.com/harshalvk_)
 * LinkedIn: https://www.linkedin.com/in/harshalvk/
 
 ---
