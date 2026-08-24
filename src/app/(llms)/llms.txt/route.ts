@@ -67,12 +67,24 @@ ${allPosts
 ## Components
 
 ${allPosts
-  .filter((post) => post.metadata.category === 'components')
-  .map(
-    (post) =>
-      `- [${post.metadata.title}](${SITE_INFO.url}/components/${post.slug}): ${post.metadata.description ?? ''}`
+  .flatMap((post) =>
+    post.metadata.category === 'components'
+      ? [
+          `- [${post.metadata.title}](${SITE_INFO.url}/components/${post.slug}): ${post.metadata.description ?? ''}`,
+        ]
+      : []
   )
   .join('\n')}
+
+## Theia
+
+Theia is an interactive algorithm visualization and learning environment built into harshalvk.com. It provides step-by-step visualizations of DSA, machine learning, and cryptographic algorithms, allowing users to understand algorithms by watching their execution one operation at a time.
+
+- [Theia](${SITE_INFO.url}/theia): Interactive algorithm visualization hub
+- [Sorting Algorithms](${SITE_INFO.url}/theia/sorting): Step-by-step sorting algorithm visualizations
+- [Linked List](${SITE_INFO.url}/theia/linked-list): Interactive linked-list simulation and operations
+- [Machine Learning](${SITE_INFO.url}/theia/ml): Interactive machine-learning algorithm simulations
+- [DSA Problems](${SITE_INFO.url}/theia/problems): Interactive DSA problem visualizations
 `;
 
 export const revalidate = false;
