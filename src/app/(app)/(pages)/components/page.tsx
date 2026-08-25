@@ -41,7 +41,7 @@ export default async function ComponentsPage() {
 
   return (
     <section aria-labelledby="components-heading" className="flex-1 gap-3 border-x">
-      <div className="space-y-2 px-4 py-2">
+      <div className="space-y-1 px-4 py-2">
         <PanelTitle>{title}</PanelTitle>
         <p className="text-muted-foreground text-sm md:text-base">{description}</p>
       </div>

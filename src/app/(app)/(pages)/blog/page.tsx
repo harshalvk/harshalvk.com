@@ -1,5 +1,8 @@
+import { formatDate } from '@/lib/formatDate';
+import { getDocsByCategory } from '@/modules/doc/data/document';
 import { PanelTitle } from '@/modules/portfolio/components/panel';
-import type { Metadata } from 'next';
+import type { Metadata, Route } from 'next';
+import Link from 'next/link';
 
 const title = 'Blog';
 const description = 'Writing about code, systems, and everything in between.';
@@ -7,24 +10,60 @@ const description = 'Writing about code, systems, and everything in between.';
 export const metadata: Metadata = {
   title,
   description,
+  keywords: [
+    'blogs',
+    'blog',
+    'articles',
+    'technical blog',
+    'harshalvk blogs',
+    'harshal blogs',
+    'harshalvk blog',
+    'harshal blog',
+    'technical writing',
+  ],
   alternates: {
     canonical: 'blog',
   },
 };
 
-const BlogPage = () => {
+export async function generateStaticParams() {
+  const docs = await getDocsByCategory('blogs');
+  return docs.map((doc) => ({ slug: doc.slug }));
+}
+
+const BlogPage = async () => {
+  const docs = (await getDocsByCategory('blogs')).slice().sort((a, b) =>
+    a.metadata.title.localeCompare(b.metadata.title, 'en', {
+      sensitivity: 'base',
+    })
+  );
+
   return (
     <section aria-labelledby="blogs-heading" className="flex-1 gap-3 border-x">
-      <div className="space-y-2 px-4 py-2">
-        <PanelTitle>{title}</PanelTitle>
+      <div className="space-y-1 px-4 py-2">
+        <PanelTitle id="blogs-heading">{title}</PanelTitle>
         <p className="text-muted-foreground text-sm md:text-base">{description}</p>
       </div>
       <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
-      <p className="text-muted-foreground p-4 text-sm md:text-base">
-        Nothing to read. Please comback after some time.
-      </p>
+      <ul className="divide-y">
+        {docs.map((doc) => (
+          <li key={doc.slug}>
+            <Link
+              href={`/blog/${doc.slug}` as Route}
+              className="group flex items-baseline justify-between gap-4 px-4 py-3 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800/30"
+            >
+              <span className="text-sm leading-snug font-medium sm:text-base">
+                {doc.metadata.title}
+              </span>
+
+              <span className="text-muted-foreground shrink-0 font-mono text-xs tabular-nums">
+                {formatDate(doc.metadata.createdAt)}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 };
-
 export default BlogPage;

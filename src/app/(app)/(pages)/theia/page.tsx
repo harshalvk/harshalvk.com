@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function DsaVisualizerPage() {
   return (
     <section className="flex-1 border-x">
-      <div className="space-y-2 px-4 py-2">
+      <div className="space-y-1 px-4 py-2">
         <PanelTitle>
           {title}
           <PanelTitleSup>v1</PanelTitleSup>
