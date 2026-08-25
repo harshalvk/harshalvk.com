@@ -323,13 +323,12 @@ const CommandMenu = ({
 
               {componentsGroup}
 
-              {/* <CommandLinkGroup
+              <CommandLinkGroup
                 heading="Blog"
                 links={blogLinks}
-                fallbackIcon={<Newspaper />}
                 onLinkHighlight={handleLinkHighlight}
                 onLinkSelect={handleOpenLink}
-              /> */}
+              />
               <CommandLinkGroup
                 heading="Theia"
                 links={THEIA_LINKS}
