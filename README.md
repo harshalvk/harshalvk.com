@@ -92,122 +92,17 @@ This makes the components installable and reusable outside the portfolio itself.
 
 ---
 
-## Features
+## Features & Tech Stack
 
-### Portfolio
-
-The main portfolio contains:
-
-- Hero section
-- About
-- Experience
-- Projects
-- GitHub contribution information
-- Technology stack
-- Contact form
-
-### Interactive Components
-
-Reusable components are documented and presented through the component registry.
-
-Each component can have:
-
-- Documentation
-- Live examples
-- Interactive demos
-- Source implementation
-- Categorization
-
-### GitHub Integration
-
-Project pages can retrieve recent GitHub commits directly from the GitHub API.
-
-The project pages display:
-
-- Recent commits
-- Commit messages
-- Commit authors
-- Commit hashes
-- Commit dates
-- Links to the repository history
-
-### MDX Content
-
-Blog and component documentation use Markdown/MDX content.
-
-The project also exposes markdown versions of documents for LLM-friendly consumption.
-
-For example:
-
-```text
-/components/<slug>.mdx
-```
-
-and the corresponding LLM route:
-
-```text
-/doc.mdx/<slug>
-```
-
-### LLM-friendly Content
-
-The site exposes an `llms.txt` endpoint containing structured information about the portfolio, projects, technologies, blog posts, components, and other sections.
-
-This makes the site easier for AI assistants and other LLM-based tools to understand.
-
----
-
-## Tech Stack
-
-### Framework
-
-- Next.js 16
-- React 19
-- TypeScript
-
-### Styling
-
-- Tailwind CSS
-- shadcn/ui
-- Radix UI
-- Tailwind Typography
-- `prettier-plugin-tailwindcss`
-
-### Content
-
-- MDX
-- `next-mdx-remote`
-- `remark-gfm`
-- `remark-mdx`
-- `gray-matter`
-- Shiki
-
-### UI & Interaction
-
-- Motion
-- Lucide React
-- React Hotkeys Hook
-- Sonner
-- Jotai
-- React Hook Form
-
-### Data & Validation
-
-- Zod
-- TanStack Query
-- PapaParse
-
-### Web3
-
-- Solana Wallet Adapter
-- Phantom
-- Solflare
-
-### Infrastructure
-
-- Vercel
-- Vercel Analytics
-- Resend
+| Features | Tech Stack |
+| --- | --- |
+| **Portfolio**<br>• Hero section<br>• About<br>• Experience<br>• Projects<br>• GitHub contributions<br>• Technology stack<br>• Contact form | **Framework**<br>• Next.js 16<br>• React 19<br>• TypeScript |
+| **Interactive Components**<br>• Component documentation<br>• Live examples<br>• Interactive demos<br>• Source implementation<br>• Categorization | **Styling**<br>• Tailwind CSS<br>• shadcn/ui<br>• Radix UI<br>• Tailwind Typography<br>• Prettier Tailwind plugin |
+| **GitHub Integration**<br>• Recent commits<br>• Commit messages<br>• Commit authors<br>• Commit hashes<br>• Commit dates<br>• Repository history | **Content**<br>• MDX<br>• next-mdx-remote<br>• remark-gfm<br>• remark-mdx<br>• gray-matter<br>• Shiki |
+| **MDX Content**<br>• Markdown/MDX documentation<br>• Blog content<br>• Component documentation<br>• LLM-friendly markdown routes | **UI & Interaction**<br>• Motion<br>• Lucide React<br>• React Hotkeys Hook<br>• Sonner<br>• Jotai<br>• React Hook Form |
+| **LLM-friendly Content**<br>• `llms.txt` endpoint<br>• Structured portfolio information<br>• Blog and component metadata<br>• LLM-readable documentation | **Data & Validation**<br>• Zod<br>• TanStack Query<br>• PapaParse |
+| | **Web3**<br>• Solana Wallet Adapter<br>• Phantom<br>• Solflare |
+| | **Infrastructure**<br>• Vercel<br>• Vercel Analytics<br>• Resend |
 
 ---
 
