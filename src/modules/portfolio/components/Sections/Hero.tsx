@@ -44,7 +44,13 @@ const Hero = () => {
                 transition={{ duration: 0.4, ease: 'easeInOut' }}
                 className="absolute inset-0"
               >
-                <Image alt="Profile" src={IMAGES[index]} fill className="object-cover" />
+                <Image
+                  alt="Profile"
+                  src={IMAGES[index]}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover"
+                />
               </motion.div>
             </AnimatePresence>
           </div>
