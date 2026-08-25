@@ -1,27 +1,31 @@
-export function formatDate(date: string): string {
+export function formatDate(date: string | Date): string {
+  if (date instanceof Date) {
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      year: 'numeric',
+    });
+  }
+
   const parts = date.split('.');
 
-  // DD.MM.YYYY -> 1 Jan 2024
+  // DD.MM.YYYY
   if (parts.length === 3) {
-    const [day, month, year] = parts;
-
-    return new Date(Number(year), Number(month) - 1, Number(day)).toLocaleDateString('en-US', {
-      day: 'numeric',
+    const [, month, year] = parts;
+    return new Date(Number(year), Number(month) - 1).toLocaleString('en-US', {
       month: 'short',
       year: 'numeric',
     });
   }
 
-  // MM.YYYY -> Jan 2024
+  // MM.YYYY
   if (parts.length === 2) {
     const [month, year] = parts;
-
-    return new Date(Number(year), Number(month) - 1).toLocaleDateString('en-US', {
+    return new Date(Number(year), Number(month) - 1).toLocaleString('en-US', {
       month: 'short',
       year: 'numeric',
     });
   }
 
-  // YYYY -> 2024
+  // YYYY
   return date;
 }

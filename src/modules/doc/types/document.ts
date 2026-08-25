@@ -27,6 +27,7 @@ export type DocMetadata = {
    * Last updated date as an ISO date string (e.g. YYYY-MM-DD).
    */
   updatedAt: string;
+  readingTime?: string;
 };
 
 export type Doc = {
