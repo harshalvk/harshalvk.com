@@ -82,6 +82,7 @@ export function ModeToggle() {
         <motion.circle
           cx="12"
           cy="12"
+          initial={{ r: isDark ? 4 : 0 }}
           animate={{ r: isDark ? 0 : 4 }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
         />
@@ -90,6 +91,7 @@ export function ModeToggle() {
           <motion.line
             key={i}
             {...ray}
+            initial={{ pathLength: isDark ? 1 : 0, opacity: isDark ? 1 : 0 }}
             animate={{ pathLength: isDark ? 0 : 1, opacity: isDark ? 0 : 1 }}
             transition={{
               duration: 0.2,
@@ -101,6 +103,7 @@ export function ModeToggle() {
 
         <motion.path
           d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"
+          initial={{ pathLength: isDark ? 0 : 1, opacity: isDark ? 0 : 1 }}
           animate={{ pathLength: isDark ? 1 : 0, opacity: isDark ? 1 : 0 }}
           transition={{
             duration: 0.4,
@@ -114,6 +117,7 @@ export function ModeToggle() {
           y1="5"
           x2="22"
           y2="5"
+          initial={{ pathLength: isDark ? 0 : 1, opacity: isDark ? 0 : 1 }}
           animate={{ pathLength: isDark ? 1 : 0, opacity: isDark ? 1 : 0 }}
           transition={{
             duration: 0.2,
@@ -127,6 +131,7 @@ export function ModeToggle() {
           y1="3"
           x2="20"
           y2="7"
+          initial={{ pathLength: isDark ? 0 : 1, opacity: isDark ? 0 : 1 }}
           animate={{ pathLength: isDark ? 1 : 0, opacity: isDark ? 1 : 0 }}
           transition={{
             duration: 0.2,
