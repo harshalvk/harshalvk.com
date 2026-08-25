@@ -1,0 +1,263 @@
+---
+title: TTL - Time to Live Explained
+description: Time To Live Explained
+image:
+category: blogs
+readingTime: 9 min read
+createdAt: 2026-08-26
+updatedAt: 2026-08-26
+---
+
+# TTL (Time to Live) — The Expiry Mechanism Behind Almost Everything in Networking
+
+I kept running into TTL in different places — DNS records, HTTP caching, Redis keys, IP packets — and for a long time I just accepted it as "the expiry thing" without actually understanding what was happening under the hood.
+
+Turns out it's one of those deceptively simple concepts that shows up everywhere once you know what to look for. This is me writing it down properly.
+
+---
+
+## What TTL actually is?
+
+TTL stands for Time to Live. At its core it's just a number — a counter that tells a system how long something should be considered valid before it's discarded or refreshed.
+
+The exact meaning of that number changes depending on where you're looking at it. In some systems it's seconds. In others it's a hop count. Same name, different semantics — which is why it confused me for so long.
+
+Let's go through where it shows up and what it actually does in each place.
+
+---
+
+## TTL in IP packets
+
+This is where the concept originated, and the semantics here are different from everywhere else.
+
+In an IP packet, TTL is not a time measurement. It's a hop count — an integer that starts at some value (usually 64 or 128) and gets decremented by 1 every time the packet passes through a router.
+
+When TTL hits zero, the router drops the packet and sends an ICMP "Time Exceeded" message back to the sender.
+
+Why does this exist? To prevent packets from looping forever.
+
+Before TTL, a misconfigured router could send a packet into an infinite loop — bouncing between two routers endlessly, consuming bandwidth and resources with no way to stop. TTL is the kill switch. Every hop costs 1, and when the budget runs out the packet dies.
+
+The way `traceroute` works is actually built on this:
+
+```bash
+traceroute google.com
+```
+
+It sends packets with TTL=1, TTL=2, TTL=3, and so on. Each one dies at a different hop and triggers an ICMP response from that router. Traceroute collects those responses and maps out the exact path a packet takes across the network.
+
+```bash
+1  router.local (192.168.1.1)       1.2 ms
+2  10.0.0.1                         8.4 ms
+3  72.14.x.x  (Google edge)        12.1 ms
+4  142.250.x.x (Google server)     13.8 ms
+```
+
+---
+
+## TTL in DNS
+
+DNS TTL is where most developers actually encounter this for the first time — usually when they change a DNS record and wonder why it hasn't propagated yet.
+
+In DNS, TTL is measured in seconds and it tells resolvers how long to cache a record before fetching a fresh copy from the authoritative nameserver.
+
+When a recursive resolver looks up `example.com` and gets back an A record with TTL=3600, it caches that record for 3600 seconds — one hour. Any query that comes in during that window gets served from cache. The authoritative nameserver never gets hit.
+
+```bash
+example.com.    3600    IN    A    93.184.216.34
+                ↑
+                TTL in seconds
+```
+
+This is important to understand because TTL directly controls how fast DNS changes propagate.
+
+If your TTL is set to 86400 (24 hours) and you update your server's IP address, some users will keep hitting your old IP for up to 24 hours — until their cached record expires. There's no way to force-clear a cached record on someone else's resolver.
+
+**The standard practice:** lower your TTL to 300 (5 minutes) a day or two before making a DNS change. Once the change is live and stable, raise it back to a higher value.
+
+Different record types tend to have different TTL conventions:
+
+- A records (server IP) — 3600 to 86400 seconds
+- CNAME records — 3600 seconds
+- MX records (mail) — 3600 to 86400 seconds
+- TXT records (verification, SPF) — 300 to 3600 seconds
+
+Lower TTL means more DNS queries, which means more load on nameservers and slightly more latency. It's a tradeoff. Most production setups sit somewhere between 300 and 3600 depending on how dynamic the infrastructure is.
+
+---
+
+## TTL in HTTP caching
+
+HTTP caching TTL controls how long a browser or CDN holds onto a cached response before treating it as stale.
+
+It's set through response headers, most commonly `Cache-Control`:
+
+```http
+Cache-Control: max-age=86400
+```
+
+`max-age` is the TTL in seconds. The browser caches the response for 86400 seconds (24 hours). During that window, requests for the same resource get served from the local cache — the server never sees them.
+
+There's also the older `Expires` header:
+
+```http
+Expires: Wed, 26 Aug 2026 12:00:00 GMT
+```
+
+Same concept, different format — an absolute timestamp instead of a relative duration. `Cache-Control: max-age` is preferred in modern implementations because it doesn't depend on the client's clock being accurate.
+
+**A few modifiers worth knowing:**
+
+`no-cache` — cache the response but always revalidate with the server before using it. The server can return 304 Not Modified if nothing changed, saving the actual response body transfer.
+
+`no-store` — don't cache at all. Every request goes to the server.
+
+`public` — any cache (browser, CDN, proxy) can store this.
+
+`private` — only the browser can cache this, not shared caches like CDNs. Used for user-specific content.
+
+The tricky part of HTTP cache TTL is invalidation. If you cache `style.css` for 24 hours and push a new version, users who have the old version cached will keep seeing it until their TTL expires.
+
+The solution most production setups use is content hashing — the filename includes a hash of the content:
+
+```python
+style.abc123.css  →  style.def456.css  (when content changes)
+```
+
+The old filename is cached. The new filename is a cache miss. No invalidation needed — the URL itself changes.
+
+---
+
+## TTL in Redis
+
+Redis TTL is the most developer-facing one — you set it explicitly when storing a key and Redis handles the expiry automatically.
+
+```http
+SET session:user123 "{...}" EX 3600
+```
+
+`EX 3600` sets the TTL to 3600 seconds. After that the key is automatically deleted. You can also use `PX` for milliseconds.
+
+To check how much time is left on a key:
+
+```http
+TTL session:user123
+→ 2847   (seconds remaining)
+→ -1     (key exists but has no expiry)
+→ -2     (key doesn't exist)
+```
+
+Redis doesn't check every key every second — that would be expensive. Instead it uses two approaches:
+
+**Lazy expiration** — when you access a key, Redis checks if it's expired and deletes it right then if it is. If you never access an expired key, it just sits there.
+
+**Active expiration** — Redis periodically samples a random set of keys with TTLs, deletes the expired ones, and repeats. It's not exhaustive but it keeps memory from filling up with stale keys.
+
+In practice TTL shows up in Redis for:
+
+- Session storage — expire sessions after inactivity
+- Rate limiting — `INCR` a counter with a TTL window
+- Caching — store computed results, expire when stale
+- Distributed locks — auto-release locks if the holder crashes
+
+The auto-expiry on distributed locks is particularly useful. If a process acquires a lock and then crashes before releasing it, the TTL ensures the lock doesn't stay held forever and block everything else.
+
+---
+
+## TTL in CDNs
+
+CDN TTL determines how long edge servers cache your content before re-fetching from the origin.
+
+This is usually driven by the `Cache-Control` headers the origin sends. If your server returns `Cache-Control: max-age=3600`, the CDN caches it for one hour at the edge. Requests from users near that edge server get served in milliseconds without touching the origin.
+
+Most CDNs let you override the origin TTL from the CDN configuration — useful when you want long edge cache times but shorter browser cache times, or when the origin doesn't set headers properly.
+
+**Cache invalidation at the CDN level** is a common pain point. Changing a file on the origin doesn't automatically clear it from edge caches. You either:
+
+- Wait for the TTL to expire (simplest, not always acceptable)
+- Trigger a cache purge via the CDN API (instant but adds operational complexity)
+- Use content hashing so changed files have new URLs (best long-term approach)
+
+---
+
+## How they interact in a real request
+
+Here's what actually happens when a user visits your site and the caching layers come into play:
+
+```txt
+user requests example.com/style.abc123.css
+
+1. browser checks local cache
+   → found, TTL not expired → serve from cache, done
+
+   → not found / expired → continue
+
+2. browser does DNS lookup for example.com
+   → resolver cache hit (TTL not expired) → returns IP
+   → resolver cache miss → full DNS resolution chain → returns IP
+
+3. browser connects to CDN edge server
+   → CDN has cached response (TTL not expired) → returns it
+   → CDN cache miss → CDN fetches from origin
+
+4. origin server responds
+   → CDN caches the response per Cache-Control headers
+   → CDN returns response to browser
+   → browser caches per Cache-Control headers
+
+5. user sees the page
+```
+
+Each layer has its own TTL. A request can hit cache at any layer and short-circuit all the layers below it. The further up the chain the cache hit happens, the faster the response and the less load on the origin.
+
+---
+
+## The common TTL mistakes I've seen
+
+**Not lowering DNS TTL before a migration**
+
+The number of times I've seen people change a server's IP address and then wonder why some users are still hitting the old server twelve hours later. Always lower TTL before DNS changes, not after.
+
+**Setting Redis TTLs without thinking about stampedes**
+
+If you cache a database query result with a 60 second TTL and you have 10,000 concurrent users, when that TTL expires you potentially get 10,000 simultaneous cache misses hitting the database at once — a thundering herd.
+
+One fix: jitter. Add a small random offset to your TTL so keys don't all expire at exactly the same time.
+
+```ts
+const TTL = 60 + Math.floor(Math.random() * 10); // 60-70 seconds
+```
+
+**Setting HTTP cache TTL too long without content hashing**
+
+Cache `main.js` for 24 hours with no content hashing, push a bug fix, and now some users are running the buggy version for the rest of the day with no way to force-refresh them. Either keep TTLs short or use content hashing — ideally both.
+
+**Forgetting that CDN TTL and browser TTL are different**
+
+You can set long CDN cache times (for performance) and short browser cache times (for freshness) using `s-maxage` vs `max-age`:
+
+```http
+Cache-Control: max-age=60, s-maxage=86400
+```
+
+`max-age=60` — browser caches for 60 seconds  
+`s-maxage=86400` — CDN caches for 24 hours
+
+The browser revalidates frequently. The CDN absorbs the load.
+
+---
+
+## The pattern across all of them
+
+Once you look at TTL across all these different systems, the underlying idea is always the same: **make a tradeoff between freshness and performance.**
+
+Short TTL → fresher data, more requests, more load  
+Long TTL → staler data, fewer requests, less load
+
+The right TTL depends entirely on how often your data actually changes and how much staleness your users can tolerate. For static assets with content hashing, long TTL is fine — the URL changes when the content changes. For session tokens or rate limit counters, short TTL is essential.
+
+Every system that involves caching or distribution will make you think about TTL eventually. Better to understand it properly before you're debugging a DNS propagation issue at 2am.
+
+---
+
+_Still learning as i go. Writing things down helps them stick._
