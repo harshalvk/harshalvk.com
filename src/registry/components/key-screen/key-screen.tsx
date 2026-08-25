@@ -163,7 +163,8 @@ export function KeyScreen({
   const pushCombo = useCallback(
     (keys: string[]) => {
       if (keys.length === 0) return;
-      const id = `${Date.now()}-${Math.random()}`;
+      // Create stable ID based on keys content to avoid hydration mismatches
+      const id = keys.join('-');
       currentIdRef.current = id;
       setHistory((prev) => {
         const next = [...prev, { id, keys, timestamp: Date.now() }];
