@@ -77,14 +77,20 @@ export function ProjectItem({ project }: { project: Project }) {
             </div>
 
             <div className="flex items-center gap-4">
-              <Link href={`/projects/${project.title.toLowerCase()}`} className="flex items-center">
+              <div className="relative">
+                <Link
+                  href={`/projects/${project.title.toLowerCase()}`}
+                  className="flex items-center"
+                >
+                  <SquareArrowOutUpRight className="text-muted-foreground size-4" />
+                </Link>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <SquareArrowOutUpRight className="text-muted-foreground size-4" />
+                  <TooltipTrigger asChild>
+                    <div className="absolute -top-2 -right-2" />
                   </TooltipTrigger>
                   <TooltipContent>Project Details</TooltipContent>
                 </Tooltip>
-              </Link>
+              </div>
               <Link
                 href={project.link as Route}
                 target="_blank"
