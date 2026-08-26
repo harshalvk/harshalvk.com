@@ -173,13 +173,11 @@ function generateOGImage(title: string, description: string) {
   const interBoldPath = path.join(process.cwd(), 'public', 'fonts', 'InterDisplay-Medium.ttf');
 
   const interRegular = fs.readFileSync(interRegularPath);
-
   const interBold = fs.readFileSync(interBoldPath);
 
-  const element = React.createElement(
-    'div',
-    {
-      style: {
+  return new ImageResponse(
+    <div
+      style={{
         width: '2400px',
         height: '1260px',
         position: 'relative',
@@ -189,13 +187,10 @@ function generateOGImage(title: string, description: string) {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         fontFamily: 'Inter',
-      },
-    },
-
-    React.createElement(
-      'div',
-      {
-        style: {
+      }}
+    >
+      <div
+        style={{
           display: 'flex',
           position: 'absolute',
           ...buildPositionStyle(TITLE_POSITION),
@@ -207,15 +202,13 @@ function generateOGImage(title: string, description: string) {
           letterSpacing: '3px',
           textAlign: 'center',
           justifyContent: 'center',
-        },
-      },
-      title
-    ),
+        }}
+      >
+        {title}
+      </div>
 
-    React.createElement(
-      'div',
-      {
-        style: {
+      <div
+        style={{
           display: 'flex',
           position: 'absolute',
           ...buildPositionStyle(DESCRIPTION_POSITION),
@@ -227,29 +220,28 @@ function generateOGImage(title: string, description: string) {
           letterSpacing: '2px',
           textAlign: 'center',
           justifyContent: 'center',
+        }}
+      >
+        {description}
+      </div>
+    </div>,
+    {
+      width: 2400,
+      height: 1260,
+      fonts: [
+        {
+          name: 'Inter',
+          data: interRegular,
+          weight: 400,
+          style: 'normal',
         },
-      },
-      description
-    )
+        {
+          name: 'Inter',
+          data: interBold,
+          weight: 700,
+          style: 'normal',
+        },
+      ],
+    }
   );
-
-  return new ImageResponse(element, {
-    width: 2400,
-    height: 1260,
-
-    fonts: [
-      {
-        name: 'Inter',
-        data: interRegular,
-        weight: 400,
-        style: 'normal',
-      },
-      {
-        name: 'Inter',
-        data: interBold,
-        weight: 700,
-        style: 'normal',
-      },
-    ],
-  });
 }
