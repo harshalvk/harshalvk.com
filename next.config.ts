@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
     ];
   },
   outputFileTracingIncludes: {
-    'src/app/og/[...slug]/route.ts': ['./public/og/**/*', './public/fonts/**/*'],
+    '/og/\\[\\.\\.\\.slug\\]': ['./public/og/**/*', './public/fonts/**/*'],
   },
 };
 
