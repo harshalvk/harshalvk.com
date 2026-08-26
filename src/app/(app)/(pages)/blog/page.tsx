@@ -3,9 +3,9 @@ import { getDocsByCategory } from '@/modules/doc/data/document';
 import { PanelTitle } from '@/modules/portfolio/components/panel';
 import type { Metadata, Route } from 'next';
 import Link from 'next/link';
+import { ogPages } from '@/config/og';
 
-const title = 'Blog';
-const description = 'Writing about code, systems, and everything in between.';
+const { title, description } = ogPages.blog;
 
 export const metadata: Metadata = {
   title,
@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: 'blog',
+  },
+  openGraph: {
+    images: ['/og/blog'],
   },
 };
 

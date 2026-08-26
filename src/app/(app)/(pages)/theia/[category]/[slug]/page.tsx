@@ -10,6 +10,7 @@ import { MarkdownClient } from '@/components/markdown';
 import { Prose } from '@/components/Typography';
 import fs from 'node:fs';
 import path from 'node:path';
+import { X_HANDLE } from '@/config/site';
 
 export async function generateStaticParams() {
   return [
@@ -28,6 +29,19 @@ export async function generateMetadata({
   const algo = mlAlgo ? undefined : getAlgorithm(category, slug);
 
   if (!algo && !mlAlgo) return notFound();
+
+  const ogTitle = algo?.title ?? mlAlgo?.title;
+  const ogDescription = algo?.description ?? mlAlgo?.description;
+
+  if (!ogTitle || !ogDescription) {
+    return notFound();
+  }
+
+  const portUrl = `/theia/${category}/${algo?.slug ?? slug}`;
+
+  const ogImage = `/og/custom?title=${encodeURIComponent(
+    ogTitle
+  )}&description=${encodeURIComponent(ogDescription)}`;
 
   return {
     title: algo?.title ?? mlAlgo!.title,
@@ -58,6 +72,22 @@ export async function generateMetadata({
       'Technical Interview',
     ],
     alternates: { canonical: `theia/${category}/${slug}` },
+    openGraph: {
+      url: portUrl,
+      type: 'website',
+      images: {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: category,
+      },
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: X_HANDLE,
+      creator: X_HANDLE,
+      images: [ogImage],
+    },
   };
 }
 

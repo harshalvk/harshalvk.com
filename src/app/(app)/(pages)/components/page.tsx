@@ -3,9 +3,9 @@ import { getDocsByCategory } from '@/modules/doc/data/document';
 import { PanelTitle } from '@/modules/portfolio/components/panel';
 import type { Metadata, Route } from 'next';
 import Link from 'next/link';
+import { ogPages } from '@/config/og';
 
-const title = 'Components';
-const description = 'A curated component registry built on shadcn/ui. More coming soon.';
+const { title, description } = ogPages.components;
 
 export const metadata: Metadata = {
   title,
@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   ],
   alternates: {
     canonical: 'components',
+  },
+  openGraph: {
+    images: ['/og/components'],
   },
 };
 

@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (!cat) return notFound();
 
   const portUrl = `/theia/${cat.slug}`;
-  const ogImage = '/theia.png';
+  const ogImage = `/og/custom?title=${encodeURIComponent(cat.title)}+&description=${encodeURIComponent(cat.description)}`;
 
   return {
     title: cat.title,

@@ -3,14 +3,13 @@ import { ListGrid } from '@/modules/theia/components/lislt-grid';
 import { PanelTitle, PanelTitleSup } from '@/modules/portfolio/components/panel';
 import { X_HANDLE } from '@/config/site';
 import { CATEGORIES } from '@/modules/theia/data/algorithms';
+import { ogPages } from '@/config/og';
 
-const title = 'Theia';
-const description =
-  'Step-by-step visualizations of algorithms — DSA, ML, and cryptographic — explained one move at a time.';
+const { title, description } = ogPages.theia;
 
 export async function generateMetadata(): Promise<Metadata> {
   const postUrl = `/theia`;
-  const ogImage = '/theia.png';
+  const ogImage = '/og/theia';
 
   return {
     title,
