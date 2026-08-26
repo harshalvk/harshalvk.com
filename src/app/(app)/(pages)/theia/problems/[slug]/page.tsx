@@ -10,6 +10,7 @@ import { MarkdownClient } from '@/components/markdown';
 import { Prose } from '@/components/Typography';
 import { cn } from '@/lib/utils';
 import { DIFFICULTY_CLASS } from '@/modules/theia/lib/constants';
+import { SITE_INFO, X_HANDLE } from '@/config/site';
 
 export async function generateStaticParams() {
   return PROBLEMS.map((p) => ({ slug: p.slug }));
@@ -21,13 +22,54 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+
   const problem = getProblem(slug);
-  if (!problem) return notFound();
+
+  if (!problem) {
+    return notFound();
+  }
+
+  const title = problem.title;
+  const description = problem.summary;
+
+  const canonicalUrl = `${SITE_INFO.url}/theia/problems/${slug}`;
+
+  const ogImage =
+    `${SITE_INFO.url}/og/custom?title=${encodeURIComponent(title)}` +
+    `&description=${encodeURIComponent(description)}`;
 
   return {
-    title: problem.title,
-    description: problem.summary,
-    alternates: { canonical: `theia/problems/${slug}` },
+    title,
+    description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: 'website',
+      url: canonicalUrl,
+      title,
+      description,
+      siteName: SITE_INFO.name,
+      images: [
+        {
+          url: ogImage,
+          width: 2400,
+          height: 1260,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: X_HANDLE,
+      creator: X_HANDLE,
+      title,
+      description,
+      images: [ogImage],
+    },
+    icons: {
+      icon: '/profile.png',
+    },
   };
 }
 

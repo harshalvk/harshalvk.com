@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { CATEGORIES, getAlgorithmsByCategory, getCategory } from '@/modules/theia/data/algorithms';
 import { AlgorithmList } from '@/modules/theia/components/algorithm-list';
 import { PanelTitle } from '@/modules/portfolio/components/panel';
-import { X_HANDLE } from '@/config/site';
+import { SITE_INFO, X_HANDLE } from '@/config/site';
 import { LinkedListPlayground } from '@/modules/theia/components/linked-list-playground';
 import { MLAlgorithmList } from '@/modules/theia/components/ml-algorithm-list';
 import { getMLAlgorithmsByCategory } from '@/modules/theia/data/ml-algorithms';
@@ -16,11 +16,18 @@ export async function generateMetadata({
   params,
 }: PageProps<'/theia/[category]'>): Promise<Metadata> {
   const { category } = await params;
-  const cat = getCategory(category);
-  if (!cat) return notFound();
 
-  const portUrl = `/theia/${cat.slug}`;
-  const ogImage = `/og/custom?title=${encodeURIComponent(cat.title)}+&description=${encodeURIComponent(cat.description)}`;
+  const cat = getCategory(category);
+
+  if (!cat) {
+    return notFound();
+  }
+
+  const portUrl = `${SITE_INFO.url}/theia/${cat.slug}`;
+
+  const ogImage =
+    `${SITE_INFO.url}/og/custom?title=${encodeURIComponent(cat.title)}` +
+    `&description=${encodeURIComponent(cat.description)}`;
 
   return {
     title: cat.title,
@@ -50,22 +57,34 @@ export async function generateMetadata({
       'Software Engineering',
       'Technical Interview',
     ],
-    alternates: { canonical: `theia/${cat.slug}` },
+    alternates: {
+      canonical: portUrl,
+    },
     openGraph: {
-      url: portUrl,
       type: 'website',
-      images: {
-        url: ogImage,
-        width: 1200,
-        height: 630,
-        alt: cat.title,
-      },
+      url: portUrl,
+      title: cat.title,
+      description: cat.description,
+      siteName: SITE_INFO.name,
+      images: [
+        {
+          url: ogImage,
+          width: 2400,
+          height: 1260,
+          alt: cat.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       site: X_HANDLE,
       creator: X_HANDLE,
+      title: cat.title,
+      description: cat.description,
       images: [ogImage],
+    },
+    icons: {
+      icon: '/profile.png',
     },
   };
 }

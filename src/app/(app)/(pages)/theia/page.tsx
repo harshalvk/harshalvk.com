@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ListGrid } from '@/modules/theia/components/lislt-grid';
 import { PanelTitle, PanelTitleSup } from '@/modules/portfolio/components/panel';
-import { X_HANDLE } from '@/config/site';
+import { SITE_INFO, X_HANDLE } from '@/config/site';
 import { CATEGORIES } from '@/modules/theia/data/algorithms';
 import { ogPages } from '@/config/og';
 
@@ -43,10 +43,13 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       url: postUrl,
       type: 'website',
+      title: `${title} \u2013 ${SITE_INFO.author}`,
+      description,
+      siteName: SITE_INFO.name,
       images: {
         url: ogImage,
-        width: 1200,
-        height: 630,
+        width: 2400,
+        height: 1260,
         alt: title,
       },
     },

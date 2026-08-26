@@ -4,6 +4,7 @@ import { PanelTitle } from '@/modules/portfolio/components/panel';
 import type { Metadata, Route } from 'next';
 import Link from 'next/link';
 import { ogPages } from '@/config/og';
+import { SITE_INFO, X_HANDLE } from '@/config/site';
 
 const { title, description } = ogPages.blog;
 
@@ -22,10 +23,33 @@ export const metadata: Metadata = {
     'technical writing',
   ],
   alternates: {
-    canonical: 'blog',
+    canonical: `${SITE_INFO.url}/blog`,
   },
   openGraph: {
-    images: ['/og/blog'],
+    type: 'website',
+    locale: 'en_US',
+    url: `${SITE_INFO.url}/blog`,
+    title: `${title} \u2013 ${SITE_INFO.name}`,
+    description,
+    siteName: SITE_INFO.name,
+    images: [
+      {
+        url: `${SITE_INFO.url}/og/blog`,
+        width: 2400,
+        height: 1260,
+        alt: title,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: [`${SITE_INFO.url}/og/blog`],
+    creator: X_HANDLE,
+  },
+  icons: {
+    icon: '/profile.png',
   },
 };
 

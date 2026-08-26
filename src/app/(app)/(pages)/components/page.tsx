@@ -4,12 +4,14 @@ import { PanelTitle } from '@/modules/portfolio/components/panel';
 import type { Metadata, Route } from 'next';
 import Link from 'next/link';
 import { ogPages } from '@/config/og';
+import { SITE_INFO, X_HANDLE } from '@/config/site';
 
 const { title, description } = ogPages.components;
 
 export const metadata: Metadata = {
   title,
   description,
+
   keywords: [
     'components',
     'ui',
@@ -23,10 +25,32 @@ export const metadata: Metadata = {
     'harshal components',
   ],
   alternates: {
-    canonical: 'components',
+    canonical: `${SITE_INFO.url}/components`,
   },
   openGraph: {
-    images: ['/og/components'],
+    type: 'website',
+    url: `${SITE_INFO.url}/components`,
+    title: `${title} \u2013 ${SITE_INFO.author}`,
+    description,
+    siteName: SITE_INFO.name,
+    images: [
+      {
+        url: `${SITE_INFO.url}/og/components`,
+        width: 2400,
+        height: 1260,
+        alt: title,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title,
+    description,
+    images: [`${SITE_INFO.url}/og/components`],
+    creator: X_HANDLE,
+  },
+  icons: {
+    icon: '/profile.png',
   },
 };
 

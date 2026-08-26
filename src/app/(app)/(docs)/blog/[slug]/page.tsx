@@ -21,18 +21,15 @@ import { WithContext, BlogPosting as PageSchema } from 'schema-dts';
 
 export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
   const slug = (await params).slug;
-  const doc = await getDocBySlug(slug);
 
+  const doc = await getDocBySlug(slug);
   if (!doc || doc.metadata.category !== 'blogs') {
     return notFound();
   }
 
   const { title, description, image, createdAt, updatedAt } = doc.metadata;
-
-  const postUrl = `/blog/${doc.slug}`;
-  const ogImage =
-    image ||
-    `/og/simple?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}`;
+  const postUrl = `${SITE_INFO.url}/blog/${doc.slug}`;
+  const ogImage = image || `${SITE_INFO.url}/og/blog/${doc.slug}`;
 
   return {
     title,
@@ -41,18 +38,28 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
       canonical: postUrl,
     },
     openGraph: {
-      url: postUrl,
       type: 'article',
+      url: postUrl,
+      title: `${title} \u2013 ${SITE_INFO.name}`,
+      description,
+      siteName: SITE_INFO.name,
       publishedTime: new Date(createdAt).toISOString(),
       modifiedTime: new Date(updatedAt).toISOString(),
-      images: {
-        url: ogImage,
-      },
+      images: [
+        {
+          url: ogImage,
+          width: 2400,
+          height: 1260,
+          alt: title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       site: X_HANDLE,
       creator: X_HANDLE,
+      title,
+      description,
       images: [ogImage],
     },
   };
