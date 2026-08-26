@@ -219,7 +219,6 @@ This makes the components installable and reusable outside the portfolio itself.
 The application is organized around feature modules rather than putting all application logic directly inside the Next.js routes.
 
 ```text
-.
 ├── src/
 │   ├── actions/
 │   │
