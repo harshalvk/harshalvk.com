@@ -30,9 +30,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  outputFileTracingIncludes: {
-    '/og/\\[\\.\\.\\.slug\\]': ['./public/og/**/*', './public/fonts/**/*'],
-  },
 };
 
 export default withBundleAnalyzer({
