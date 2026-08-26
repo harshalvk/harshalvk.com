@@ -92,26 +92,133 @@ This makes the components installable and reusable outside the portfolio itself.
 
 ---
 
-## Features & Tech Stack
+## Features 
 
-| Features | Tech Stack |
-| --- | --- |
-| **Portfolio**<br>• Hero section<br>• About<br>• Experience<br>• Projects<br>• GitHub contributions<br>• Technology stack<br>• Contact form | **Framework**<br>• Next.js 16<br>• React 19<br>• TypeScript |
-| **Interactive Components**<br>• Component documentation<br>• Live examples<br>• Interactive demos<br>• Source implementation<br>• Categorization | **Styling**<br>• Tailwind CSS<br>• shadcn/ui<br>• Radix UI<br>• Tailwind Typography<br>• Prettier Tailwind plugin |
-| **GitHub Integration**<br>• Recent commits<br>• Commit messages<br>• Commit authors<br>• Commit hashes<br>• Commit dates<br>• Repository history | **Content**<br>• MDX<br>• next-mdx-remote<br>• remark-gfm<br>• remark-mdx<br>• gray-matter<br>• Shiki |
-| **MDX Content**<br>• Markdown/MDX documentation<br>• Blog content<br>• Component documentation<br>• LLM-friendly markdown routes | **UI & Interaction**<br>• Motion<br>• Lucide React<br>• React Hotkeys Hook<br>• Sonner<br>• Jotai<br>• React Hook Form |
-| **LLM-friendly Content**<br>• `llms.txt` endpoint<br>• Structured portfolio information<br>• Blog and component metadata<br>• LLM-readable documentation | **Data & Validation**<br>• Zod<br>• TanStack Query<br>• PapaParse |
-| | **Web3**<br>• Solana Wallet Adapter<br>• Phantom<br>• Solflare |
-| | **Infrastructure**<br>• Vercel<br>• Vercel Analytics<br>• Resend |
+<table>
+  <tr>
+    <td valign="top" align="left">
+      <strong>Portfolio</strong><br>
+      • Hero section<br>
+      • About<br>
+      • Experience<br>
+      • Projects<br>
+      • GitHub contributions<br>
+      • Technology stack<br>
+      • Contact form
+    </td>
+    <td valign="top" align="left">
+      <strong>Interactive Components</strong><br>
+      • Component documentation<br>
+      • Live examples<br>
+      • Interactive demos<br>
+      • Source implementation<br>
+      • Categorization
+    </td>
+    <td valign="top" align="left">
+      <strong>GitHub Integration</strong><br>
+      • Recent commits<br>
+      • Commit messages<br>
+      • Commit authors<br>
+      • Commit hashes<br>
+      • Commit dates<br>
+      • Repository history
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      <strong>MDX Content</strong><br>
+      • Markdown/MDX documentation<br>
+      • Blog content<br>
+      • Component documentation<br>
+      • LLM-friendly markdown routes
+    </td>
+    <td valign="top" align="left">
+      <strong>LLM-friendly Content</strong><br>
+      • <code>llms.txt</code> endpoint<br>
+      • Structured portfolio information<br>
+      • Blog and component metadata<br>
+      • LLM-readable documentation
+    </td>
+    <td valign="top" align="left">
+      <strong>Dynamic OG Images</strong><br>
+      • Dynamic page OG images<br>
+      • Blog and component OG images<br>
+      • Theia OG images<br>
+      • Custom titles and descriptions<br>
+      • Shared OG design
+    </td>
+  </tr>
+</table>
 
 ---
+
+## Tech Stack
+
+<table>
+  <tr>
+    <td valign="top" align="left">
+      <strong>Framework</strong><br>
+      • Next.js 16<br>
+      • React 19<br>
+      • TypeScript
+    </td>
+    <td valign="top" align="left">
+      <strong>Styling</strong><br>
+      • Tailwind CSS<br>
+      • shadcn/ui<br>
+      • Radix UI<br>
+      • Tailwind Typography<br>
+      • Prettier Tailwind plugin
+    </td>
+    <td valign="top" align="left">
+      <strong>MDX</strong><br>
+      • next-mdx-remote<br>
+      • remark-gfm<br>
+      • remark-mdx<br>
+      • gray-matter<br>
+      • Shiki
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      <strong>UI & Interaction</strong><br>
+      • Motion<br>
+      • Lucide React<br>
+      • React Hotkeys Hook<br>
+      • Sonner<br>
+      • Jotai<br>
+      • React Hook Form
+    </td>
+    <td valign="top" align="left">
+      <strong>Data & Validation</strong><br>
+      • Zod<br>
+      • TanStack Query<br>
+      • PapaParse
+    </td>
+    <td valign="top" align="left">
+      <strong>Web3</strong><br>
+      • Solana Wallet Adapter<br>
+      • Phantom<br>
+      • Solflare
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" align="left">
+      <strong>Infrastructure</strong><br>
+      • Vercel<br>
+      • Vercel Analytics<br>
+      • Resend
+    </td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 
 ## Project Structure
 
 The application is organized around feature modules rather than putting all application logic directly inside the Next.js routes.
 
 ```text
-.
 ├── src/
 │   ├── actions/
 │   │
@@ -273,6 +380,7 @@ The application includes:
 - Twitter cards
 - JSON-LD structured data
 - Dynamic sitemap
+- Dynamic OpenGraph image
 - `robots.txt`
 
 The sitemap is generated dynamically from:
