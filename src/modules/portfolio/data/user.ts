@@ -31,7 +31,7 @@ export const USER: User = {
 - I enjoy solving real-world problems with code and constantly aim to improve while staying current with tech trends.
 `,
   avatar: `${baseUrl}/profile.png`,
-  ogImage: `${baseUrl}/opengraph-image.png`,
+  ogImage: `${baseUrl}/og/opengraph-image.png`,
   timeZone: 'Asia/Kolkata',
   keywords: [
     'harshalvk',

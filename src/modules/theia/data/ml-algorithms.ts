@@ -26,7 +26,7 @@ export const ML_ALGORITHMS: MLAlgorithmMeta[] = [
   {
     slug: 'linear-regression',
     category: 'ml',
-    title: 'Linear Regression (Gradient Descent)',
+    title: 'Linear Regression',
     description: 'Fits a line to data by iteratively minimizing mean squared error.',
     kind: 'regression',
   },
