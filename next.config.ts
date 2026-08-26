@@ -30,6 +30,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  outputFileTracingIncludes: {
+    'src/app/og/[...slug]/route.ts': ['./public/og/**/*', './public/fonts/**/*'],
+  },
 };
 
 export default withBundleAnalyzer({
