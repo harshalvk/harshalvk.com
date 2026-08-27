@@ -4,8 +4,16 @@ export function extractToc(content: string): TocItem[] {
   const lines = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
   const items: TocItem[] = [];
   const idCount = new Map<string, number>();
+  let inCodeBlock = false;
 
   for (const line of lines) {
+    if (line.trimStart().startsWith('```')) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+
+    if (inCodeBlock) continue;
+
     const match = line.match(/^(#{1,3})\s+(.+)$/);
     if (!match) continue;
 
@@ -19,7 +27,6 @@ export function extractToc(content: string): TocItem[] {
       .replace(/-+/g, '-')
       .trim();
 
-    // Track duplicates and make unique
     const count = idCount.get(baseId) ?? 0;
     idCount.set(baseId, count + 1);
     const id = count === 0 ? baseId : `${baseId}-${count}`;

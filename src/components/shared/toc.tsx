@@ -34,39 +34,134 @@ function useActiveHeading(items: TocItem[]) {
     );
 
     headingElements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+
+    // ── Bottom of page detection ──────────────────────────────
+    const handleScroll = () => {
+      const scrollBottom = window.scrollY + window.innerHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+
+      // Within 50px of page bottom → force last heading active
+      if (pageHeight - scrollBottom < 50) {
+        setActiveId(items[items.length - 1].id);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [items]);
 
   return activeId;
 }
 
 function DesktopToc({ items }: { items: TocItem[] }) {
+  const navRef = useRef<HTMLElement>(null);
   const activeId = useActiveHeading(items);
   const listRef = useRef<HTMLUListElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ top: 0, height: 0 });
+  const [tocTop, setTocTop] = useState<number | null>(null);
+
+  const NAVBAR_HEIGHT = 96; // adjust to your navbar bottom
+
+  const [maxHeight, setMaxHeight] = useState('calc(100vh - 96px - 24px)');
+
+  useEffect(() => {
+    if (tocTop === null) return; // ← guard against null
+
+    const footer = document.querySelector('footer');
+
+    const updateMaxHeight = () => {
+      if (!footer) return;
+
+      const footerRect = footer.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const footerVisibleHeight = Math.max(0, viewportHeight - footerRect.top);
+      const available = viewportHeight - tocTop - footerVisibleHeight - 24;
+      setMaxHeight(`${Math.max(100, available)}px`);
+    };
+
+    updateMaxHeight();
+    window.addEventListener('scroll', updateMaxHeight, { passive: true });
+    window.addEventListener('resize', updateMaxHeight);
+
+    return () => {
+      window.removeEventListener('scroll', updateMaxHeight);
+      window.removeEventListener('resize', updateMaxHeight);
+    };
+  }, [tocTop]); // ← tocTop in deps so it re-runs once it's set
+
+  useEffect(() => {
+    const sentinel = document.getElementById('toc-sentinel');
+    if (!sentinel) return;
+
+    const handleScroll = () => {
+      const rect = sentinel.getBoundingClientRect();
+      // rect.top = sentinel's current distance from viewport top
+      // clamp it: never go above NAVBAR_HEIGHT
+      const top = Math.max(NAVBAR_HEIGHT, rect.top);
+      setTocTop(top);
+    };
+
+    // Measure after fonts/images load to get correct position
+    const measure = () => {
+      handleScroll();
+    };
+
+    measure();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', measure);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', measure);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!activeId || !listRef.current || !navRef.current) return;
+
+    const activeEl = listRef.current.querySelector<HTMLElement>(`[data-id="${activeId}"]`);
+    if (!activeEl) return;
+
+    const nav = navRef.current;
+    const navHeight = nav.clientHeight;
+    const itemTop = activeEl.offsetTop;
+    const itemHeight = activeEl.clientHeight;
+
+    // Scroll the TOC so active item is centered vertically
+    const targetScrollTop = itemTop - navHeight / 2 + itemHeight / 2;
+
+    nav.scrollTo({
+      top: targetScrollTop,
+      behavior: 'smooth',
+    });
+  }, [activeId]);
 
   useEffect(() => {
     if (!listRef.current || !activeId) return;
     const activeEl = listRef.current.querySelector<HTMLElement>(`[data-id="${activeId}"]`);
     if (!activeEl) return;
-    setIndicatorStyle({
-      top: activeEl.offsetTop,
-      height: activeEl.offsetHeight,
-    });
+    setIndicatorStyle({ top: activeEl.offsetTop, height: activeEl.offsetHeight });
   }, [activeId]);
 
   const handleClick = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  if (tocTop === null) return null;
+
   return (
     <nav
-      className="fixed hidden xl:block"
+      ref={navRef}
+      className="fixed hidden pr-10 2xl:block"
       style={{
-        top: '10rem',
+        top: `${tocTop}px`,
         left: 'calc(50% + 512px + 24px)',
-        width: '200px',
-        maxHeight: 'calc(100vh - 10rem - 24px)',
+        width: '18.5vw',
+        maxHeight: maxHeight,
         overflowY: 'auto',
         scrollbarWidth: 'none',
       }}
@@ -75,33 +170,22 @@ function DesktopToc({ items }: { items: TocItem[] }) {
         table of content
       </p>
 
-      <div className="relative pl-0.5">
+      <div className="relative pl-4">
         <div className="bg-border absolute top-0 left-0 h-full w-px" />
-
         <motion.div
-          className="bg-foreground absolute left-0 w-px"
-          animate={{
-            top: indicatorStyle.top,
-            height: indicatorStyle.height,
-          }}
+          className="bg-foreground absolute left-0 w-px rounded-full"
+          animate={{ top: indicatorStyle.top, height: indicatorStyle.height }}
           transition={{ type: 'spring', stiffness: 380, damping: 30 }}
         />
-        <ul className="space-y-0.5 pl-4" ref={listRef}>
+        <ul ref={listRef} className="space-y-0.5">
           {items.map((item) => {
             const isActive = activeId === item.id;
             return (
               <li
                 key={item.id}
+                data-id={item.id}
                 style={{ paddingLeft: `${(item.depth - 1) * 10}px` }}
-                className="relative"
               >
-                {isActive && (
-                  <motion.span
-                    layoutId="toc-active-dot"
-                    className="bg-foreground absolute top-1/2 -left-[19px] h-3 w-0.5 -translate-y-1/2 rounded-full"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
                 <button
                   onClick={() => handleClick(item.id)}
                   className={cn(
@@ -121,8 +205,6 @@ function DesktopToc({ items }: { items: TocItem[] }) {
     </nav>
   );
 }
-
-// ── Mobile TOC ────────────────────────────────────────────────────────────────
 
 function MobileToc({ items }: { items: TocItem[] }) {
   const activeId = useActiveHeading(items);
@@ -172,7 +254,7 @@ function MobileToc({ items }: { items: TocItem[] }) {
       </AnimatePresence>
 
       {/* Bottom sheet + trigger — centered, never shifts */}
-      <div className="fixed right-0 bottom-6 left-0 z-[70] flex flex-col items-center xl:hidden">
+      <div className="fixed right-0 bottom-6 left-0 z-[70] flex flex-col items-center 2xl:hidden">
         {/* Sheet — slides up from trigger */}
         <AnimatePresence>
           {open && (

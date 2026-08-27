@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { SITE_INFO, X_HANDLE } from '@/config/site';
+import { formatDate } from '@/lib/formatDate';
 import { DocKeyboardShortcuts } from '@/modules/doc/components/doc-keyboard-shortcuts';
 import { DocContentCol } from '@/modules/doc/components/doc-layout';
 import { LLMCopyButtonWithViewOptions } from '@/modules/doc/components/doc-page.actions';
 import { DocShareMenu } from '@/modules/doc/components/doc-share-menu';
 import { findNeighbour, getDocBySlug, getDocsByCategory } from '@/modules/doc/data/document';
 import { Doc } from '@/modules/doc/types/document';
+import { PanelTitle } from '@/modules/portfolio/components/panel';
 import { USER } from '@/modules/portfolio/data/user';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Metadata, Route } from 'next';
@@ -185,14 +187,25 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
             </div>
           </div>
           <div className="screen-line-top screen-line-bottom bg-hatching h-4" />
+          <div className="px-4 py-1">
+            <PanelTitle>{doc.metadata.title}</PanelTitle>
+            <p className="text-muted-foreground text-sm md:text-base">{doc.metadata.description}</p>
+          </div>
+          <div className="text-foreground/80 screen-line-top flex w-full justify-between gap-2 px-4 py-1 text-sm md:text-base">
+            <p>{formatDate(doc.metadata.createdAt)}</p>
+            <p>{doc.metadata.readingTime}</p>
+          </div>
+          <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
           <Prose className="p-4">
+            <div id="toc-sentinel" />
             <div>
               <MDX code={doc.content} />
             </div>
           </Prose>
-          <TableOfContents items={toc} />
         </DocContentCol>
       </section>
+
+      <TableOfContents items={toc} />
     </>
   );
 };
