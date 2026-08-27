@@ -63,7 +63,7 @@ export const mdxCodeBlockComponents = {
 
     return (
       <>
-        <div className="group/pre bg-code rounded-[9px] border">
+        <div className="group/pre bg-code rounded-[11px] border">
           <pre
             className={cn(
               __rawString__ && !__withMeta__ && '[--code-padding-right:6rem]',
@@ -79,7 +79,7 @@ export const mdxCodeBlockComponents = {
                 className={cn(
                   "text-muted-foreground absolute top-2 right-2 z-10 size-7 rounded-[5px] border-none [&_svg:not([class*='size-'])]:size-4",
                   __withMeta__ && 'top-1.5 right-1.5 rounded-md',
-                  !__withMeta__ && 'opacity-0 group-hover/pre:opacity-100'
+                  !__withMeta__ && 'opacity-0 group-hover/pre:opacity-100' // remove this if you want the copy-button to display always
                 )}
                 variant="ghost"
                 text={__rawString__}

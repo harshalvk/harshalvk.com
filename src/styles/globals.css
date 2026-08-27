@@ -284,7 +284,7 @@
 
 @layer components {
   [data-rehype-pretty-code-figure] {
-    @apply bg-surface text-surface-foreground inset-ring-border/64 relative my-[1.25em] rounded-md p-1 inset-ring-1;
+    @apply bg-surface text-surface-foreground inset-ring-border/64 relative my-[1.25em] rounded-xl p-1 inset-ring-1;
     @apply has-data-rehype-pretty-code-title:pt-0;
     @apply has-data-[slot=code-block-command]:pt-0;
 
