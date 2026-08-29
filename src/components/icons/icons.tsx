@@ -20,7 +20,7 @@ export const Icons = {
       <path
         fill="none"
         stroke="#FFF"
-        stroke-width="10"
+        strokeWidth="10"
         d="M15 5h178a10 10 0 0 1 10 10v98a10 10 0 0 1-10 10H15a10 10 0 0 1-10-10V15A10 10 0 0 1 15 5z"
       />
       <path
@@ -1248,9 +1248,9 @@ export const Icons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <rect x="1" y="9" width="6" height="6" rx="1" />
       <rect x="9.5" y="9" width="6" height="6" rx="1" />
@@ -1270,14 +1270,14 @@ export const Icons = {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <line x1="3" y1="2" x2="3" y2="20" />
       <line x1="3" y1="20" x2="21" y2="20" />
 
-      <path d="M5 16 L19 5" stroke-dasharray="2.5 2.5" stroke-width="1.5" />
+      <path d="M5 16 L19 5" strokeDasharray="2.5 2.5" strokeWidth="1.5" />
 
       <circle cx="6" cy="12" r="1.3" fill="currentColor" stroke="none" />
       <circle cx="8" cy="17" r="1.3" fill="currentColor" stroke="none" />
@@ -1297,8 +1297,8 @@ export const Icons = {
       viewBox="0 0 180 180"
       fill="none"
       stroke="currentColor"
-      stroke-width="6"
-      stroke-linecap="round"
+      strokeWidth="6"
+      strokeLinecap="round"
     >
       <line x1="90" y1="45" x2="55" y2="90" />
       <line x1="90" y1="45" x2="125" y2="90" />

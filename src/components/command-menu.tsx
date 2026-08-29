@@ -2,7 +2,6 @@
 
 import {
   ArrowUpDown,
-  Book,
   BriefcaseBusiness,
   CornerDownLeftIcon,
   FileTextIcon,
@@ -18,6 +17,7 @@ import {
   ZapIcon,
   SignatureIcon,
   UserSearchIcon,
+  BotIcon,
 } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { SOCIAL_LINKS } from '@/modules/portfolio/data/social-links';
@@ -41,7 +41,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { useRouter } from '@bprogress/next/app';
 import { Icons } from './icons/icons';
 
-type CommandKind = 'command' | 'page' | 'link' | 'component' | 'block';
+type CommandKind = 'command' | 'page' | 'link' | 'component' | 'block' | 'blog';
 
 type CommandLinkItem = {
   title: string;
@@ -73,7 +73,7 @@ const MENU_LINKS: CommandLinkItem[] = [
     title: 'Blogs',
     href: '/blog',
     kind: 'page',
-    icon: <Book />,
+    icon: <FileTextIcon />,
     shortcut: 'GB',
   },
   {
@@ -131,7 +131,7 @@ const OTHER_LINK_ITEMS: CommandLinkItem[] = [
     title: 'llms.txt',
     href: '/llms.txt',
     kind: 'link',
-    icon: <FileTextIcon />,
+    icon: <BotIcon />,
     openInNewTab: true,
   },
   {
@@ -267,6 +267,28 @@ const CommandMenu = ({
     [docs]
   );
 
+  const blogGroup = useMemo(() => {
+    if (!blogLinks || blogLinks.length === 0) return null;
+
+    return (
+      <CommandGroup heading="Blogs">
+        {blogLinks.map((blog) => (
+          <CommandMenuItem
+            key={blog.title}
+            keywords={['blog']}
+            onHighlight={() => {
+              setSelectedCommandKind('blog');
+            }}
+            onSelect={() => handleOpenLink(blog.href)}
+          >
+            <FileTextIcon />
+            <p className="line-clamp-1">{blog.title}</p>
+          </CommandMenuItem>
+        ))}
+      </CommandGroup>
+    );
+  }, [blogLinks, handleOpenLink]);
+
   const handleLinkHighlight = useCallback((link: CommandLinkItem) => {
     setSelectedCommandKind(link.kind);
   }, []);
@@ -322,13 +344,13 @@ const CommandMenu = ({
               />
 
               {componentsGroup}
-
-              <CommandLinkGroup
+              {blogGroup}
+              {/* <CommandLinkGroup
                 heading="Blog"
                 links={blogLinks}
                 onLinkHighlight={handleLinkHighlight}
                 onLinkSelect={handleOpenLink}
-              />
+              /> */}
               <CommandLinkGroup
                 heading="Theia"
                 links={THEIA_LINKS}
@@ -508,6 +530,7 @@ const ENTER_ACTION_LABELS: Record<CommandKind, string> = {
   link: 'Open Link',
   component: 'Go to Component',
   block: 'Go to Block',
+  blog: 'Go to Blog',
 };
 
 function CommandMenuFooter({ selectedCommandKind }: { selectedCommandKind: CommandKind | null }) {
