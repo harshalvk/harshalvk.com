@@ -1,0 +1,280 @@
+---
+title: How Memory Works?
+description: A deep dive into how operating systems manage memory — stack vs heap allocation, virtual memory, page faults.
+image: /og/blog/how-memory-works
+category: blogs
+readingTime: 14 min read
+createdAt: 2026-08-28
+updatedAt: 2026-08-28
+---
+
+## What "Memory" Actually Means at Runtime
+
+When you run a program, it doesn't get direct access to physical RAM chips. The OS sits in between and gives every process its own **virtual address space** — a large, contiguous block of memory addresses the process believes are real.
+
+The CPU's Memory Management Unit (MMU) translates those virtual addresses to physical addresses using **page tables** maintained by the kernel. Your program never sees this translation. It just reads and writes to addresses, and the hardware figures out where the actual bytes live.
+
+This indirection gives you three important things:
+
+- **Isolation** — your process can't accidentally (or maliciously) read another process's memory
+- **Flexibility** — the OS can move your memory around in physical RAM without your program knowing
+- **The illusion of more memory than exists** — the foundation of virtual memory
+
+---
+
+## The Stack
+
+Every time a function is called, a **stack frame** is pushed onto the call stack. That frame contains:
+
+- The function's local variables
+- The parameters passed into it
+- The return address — where execution should resume when the function returns
+
+When the function returns, its frame is popped off. The memory is immediately reclaimed. No cleanup required.
+
+<FramedImage
+  src="https://assets.harshalvk.com/image/upload/v1787988244/memroy-stack-dark.png"
+  darkSrc="https://assets.harshalvk.com/image/upload/v1787987844/memory-stack-dark.png"
+  alt="Memory stack diagram"
+  width={1904}
+  height={1332}
+/>
+
+Stack allocation is essentially free — it's just moving a pointer up or down. That's also why it's limited. Each frame costs space, and if you recurse too deep, you exhaust it. That's a stack overflow, and it terminates your program immediately.
+
+On Linux the default stack size is 8MB. You can check it:
+
+```bash
+$ ulimit -s
+8192
+```
+
+8MB sounds like a lot until you write a recursive DFS on a large graph or call a deeply nested parser. The limit is real.
+
+---
+
+## The Heap
+
+The heap is for memory that needs to outlive the function that created it. When you call `malloc` in C, `new` in C++, or `make`/`new` in Go, you're allocating from the heap.
+
+Unlike the stack, heap memory doesn't get freed automatically when the allocating function returns. Something has to explicitly give it back — either your code, or a garbage collector.
+
+```c
+// Classic memory leak in C
+void process_request() {
+    char *buffer = malloc(1024);
+    // forgot to call free(buffer)
+    // this 1024 bytes is orphaned until the process exits
+}
+```
+
+In garbage-collected languages — Go, Java, JavaScript — the runtime tracks which heap allocations are still reachable from live references. Anything unreachable gets freed. That's what a GC pause is: the collector stopping execution, walking the reference graph, and freeing objects that nothing points to anymore.
+
+**The fundamental tradeoff:**
+
+Stack allocation costs roughly 1 CPU cycle — it's pointer arithmetic. Heap allocation costs 100–1000 cycles minimum: finding a free block, updating allocator metadata, handling concurrent access between threads. For hot paths in performance-critical code, this difference matters.
+
+Go's compiler uses **escape analysis** to blur this line — if it can prove an allocation doesn't outlive the function, it puts it on the stack automatically, even if you used `new`. You don't control this explicitly; the compiler decides.
+
+---
+
+## Virtual Memory
+
+Your program uses virtual addresses. The OS and MMU translate those to physical addresses through **page tables**. Memory is divided into fixed-size chunks called **pages** — typically 4KB on x86 systems.
+
+<FramedImage
+  src="https://assets.harshalvk.com/image/upload/v1787999268/virtual-memory-dark.png"
+  darkSrc="https://assets.harshalvk.com/image/upload/v1787999268/virtual-memory-light.png"
+  alt="Memory stack diagram"
+  width={1904}
+  height={1332}
+/>
+
+When a page isn't in physical RAM, it lives in **swap space** on disk. When your program accesses that page, a **page fault** occurs. The CPU traps into the kernel, the OS loads the page from disk into a free physical frame, updates the page table, and resumes your program. From your program's perspective, nothing happened.
+
+This is how you can allocate more virtual memory than you have physical RAM. It also explains why swap kills performance:
+
+- Cache miss against L1: ~4 ns
+- Cache miss against RAM: ~100 ns
+- Page fault against SSD: ~100 µs (1000x slower than RAM)
+- Page fault against spinning disk: ~10 ms (100,000x slower than RAM)
+
+If your program's working set doesn't fit in RAM, you don't just slow down — you fall off a cliff.
+
+---
+
+## How the OS Decides What to Evict
+
+When physical RAM fills up, the OS has to pick pages to evict — write them to swap and free the physical frames.
+
+The classic eviction algorithms:
+
+- **FIFO** — evict the oldest page. Simple. Performs poorly.
+- **LRU (Least Recently Used)** — evict the page that hasn't been accessed in the longest time. Better in theory, expensive to implement exactly at scale.
+- **Clock** — a practical approximation of LRU used in most production kernels.
+- **MGLRU (Multi-Generation LRU)** — the modern approach. Tracks access generations across multiple time windows instead of a single recency bit. Google shipped this into mainline Linux. On Chrome OS it reduced low-memory process kills by 85% and cut `kswapd` CPU overhead by 40%.
+
+When eviction can't keep up with demand, you get **thrashing** — the system spends more time moving pages between RAM and disk than doing actual work. A machine in full thrash is effectively frozen even though it's technically still running.
+
+---
+
+## Why Programs Actually Run Out of Memory
+
+There are three distinct failure modes. They look similar from the outside but have very different fixes.
+
+### 1. Memory Leaks
+
+Allocated memory that's never returned — either because the code forgot to free it, or in GC'd languages, because something still holds a reference to it.
+
+The Go service I mentioned at the start: the map was reachable, so the GC correctly left it alone. It was doing its job. The bug was mine — I was adding entries but never removing them. Adding a TTL-based eviction policy fixed it in one afternoon.
+
+Common sources of leaks in GC'd languages:
+
+- Caches with no eviction policy
+- Event listeners that are never removed
+- Goroutines or threads that block forever and hold references
+- Global variables that grow unbounded
+
+### 2. Legitimate High Demand
+
+The program genuinely needs more memory than is available. In-memory databases, large ML model weights, media processing, caches sized for production traffic.
+
+The fix here is vertical (more RAM), horizontal (distribute the load), or architectural (stop keeping it all in memory).
+
+### 3. Heap Fragmentation
+
+This one is subtle. Free memory exists, but it's not contiguous. Small allocations and deallocations punch holes in the heap over time. When you need a large contiguous block, there might not be one — even if total free memory exceeds your request.
+
+```txt
+Fragmented heap:
+[ used ][ free ][ used ][ free ][ used ][ free ][ used ]
+         128B           64B            256B
+
+→ Total free: 448 bytes
+→ Largest contiguous free block: 256 bytes
+→ malloc(400) fails despite "enough" free memory
+```
+
+Modern allocators fight fragmentation with:
+
+- **Slab allocation** — pre-allocated pools of fixed-size objects
+- **Buddy allocation** — blocks kept in power-of-2 sizes to simplify splitting and merging
+- **tcmalloc / jemalloc** — per-thread caching and fine-grained size classes to reduce both fragmentation and lock contention
+
+---
+
+## What Happens When Memory Is Exhausted
+
+Different operating systems handle exhaustion differently.
+
+**Linux** triggers the **OOM Killer** — a kernel thread that scans all running processes, assigns each a badness score based on memory usage and other heuristics, and kills the highest scorer. You see it in `dmesg`:
+
+```txt
+Out of memory: Kill process 4821 (node) score 847 or sacrifice child
+Killed process 4821 (node) total-vm:2048000kB, anon-rss:1843200kB
+```
+
+Linux servers idle at 250–400MB RAM usage. That headroom is why most backend infrastructure runs on Linux — more room for actual workloads before OOM fires.
+
+**macOS** uses memory compression first. Cold pages get compressed at roughly 2.3x before the OS touches swap. If compression isn't enough, it falls back to disk. There's no OOM killer — instead the system gradually slows as it thrashes under pressure.
+
+**Windows** writes aggressively to the pagefile. With SysMain pre-caching, a fresh Windows install can show 8–10GB used at idle on a 32GB machine — most of it warm cache, not actual usage.
+
+---
+
+## Reading Your Own Memory Layout
+
+On Linux you can inspect exactly how a process's virtual address space is structured:
+
+```bash
+$ cat /proc/self/maps
+```
+
+```txt
+00400000-00452000 r-xp  /usr/bin/cat    ← text: executable code
+00651000-00652000 r--p  /usr/bin/cat    ← read-only data
+00652000-00653000 rw-p  /usr/bin/cat    ← read-write data
+024d2000-024f3000 rw-p  [heap]          ← heap region
+7f0a8d600000-7f0a8d800000 rw-p [anon]  ← mmap'd anonymous regions
+7ffd12000000-7ffd14000000 rw-p [stack] ← main thread stack
+```
+
+The heap grows upward through `brk` and `mmap` syscalls. The stack grows downward. Everything in between is free space. When they meet — heap exhaustion or stack overflow.
+
+---
+
+## Debugging Memory Problems
+
+**For Go:**
+
+```bash
+# Add to your server
+import _ "net/http/pprof"
+
+# Capture a heap profile
+go tool pprof http://localhost:6060/debug/pprof/heap
+
+# Inside pprof
+(pprof) top10          # top allocators by memory
+(pprof) list myFunc    # line-level allocation breakdown
+```
+
+**For Linux system-level inspection:**
+
+```bash
+# Memory pressure over time
+$ vmstat 1
+
+# Detailed memory breakdown
+$ cat /proc/meminfo
+
+# Per-process accurate memory usage
+# (top lies about shared libraries — smem gives proportional set size)
+$ smem -t -k
+
+# PSI (Pressure Stall Information) — new and very useful
+$ cat /proc/pressure/memory
+```
+
+**For C/C++:**
+
+```bash
+$ valgrind --leak-check=full --show-leak-kinds=all ./your_program
+```
+
+**For Java:** `jmap -histo <pid>` or attach VisualVM.
+
+**For Node.js:** `--inspect` flag + Chrome DevTools memory tab + heap snapshots.
+
+---
+
+## Common Misconceptions
+
+**"VSZ is my program's memory usage"**
+
+No. VSZ (Virtual Size) is the total virtual address space mapped — includes shared libraries, mapped files, heap pages allocated but not yet touched. RSS (Resident Set Size) is what's actually in physical RAM right now. RSS is the number that matters for capacity planning. Even RSS overstates true private usage because shared libraries are counted per-process.
+
+**"Garbage collection prevents memory leaks"**
+
+It prevents dangling pointer crashes. You can absolutely leak memory in Go, Java, or Python by holding references you no longer need. A reachable object is not the same as a needed object. The GC does exactly what it's supposed to — your architecture is the problem.
+
+**"More free memory means I can allocate what I need"**
+
+Not if the heap is fragmented. Total free memory and allocatable contiguous memory are different things. If you're seeing allocation failures despite apparent free memory, fragmentation is a real possibility.
+
+**"Stack overflow only happens with recursion"**
+
+Mostly true but not entirely. Very large local variables can also overflow the stack — a 10MB array declared as a local variable will overflow an 8MB stack immediately, no recursion required.
+
+---
+
+## The Pattern
+
+Stack is fast, automatic, and limited. Heap is flexible, manually managed or GC'd, and where most problems live. Virtual memory hides physical constraints behind an abstraction, but page faults have real costs. The OS mediates all of it through page tables, the MMU, and replacement algorithms that decide what lives in RAM and what gets pushed to disk.
+
+Most of the time this machinery is invisible. Then one day your service starts leaking, your container gets OOM killed, or a customer reports slowdowns and you pull up the metrics to find a 90% page fault rate.
+
+Understanding the system before you need to debug it is the difference between a three-hour investigation and a three-day one. I know which I'd rather have.
+
+--- 
+_Happy reading!_
