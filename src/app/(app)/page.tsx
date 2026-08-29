@@ -8,6 +8,8 @@ import SectionBorders from '@/components/shared/SectionBorders';
 
 import { inter } from '@/lib/fonts';
 import Experiences from '@/modules/portfolio/components/Sections/Experiences';
+import Components from '@/modules/portfolio/components/Sections/Components';
+import Blogs from '@/modules/portfolio/components/Sections/Blogs';
 
 export default function Home() {
   return (
@@ -28,6 +30,8 @@ export default function Home() {
       <Experiences />
       <Projects />
       <GitHubContri />
+      <Components />
+      <Blogs />
       <MyTechnologies />
       <ContactMe />
     </section>
