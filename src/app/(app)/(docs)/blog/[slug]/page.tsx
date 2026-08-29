@@ -20,6 +20,7 @@ import { Metadata, Route } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { WithContext, BlogPosting as PageSchema } from 'schema-dts';
+import { FigCounterProvider } from '@/components/fig-counter';
 
 export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
   const slug = (await params).slug;
@@ -198,9 +199,9 @@ const BlogPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
           <div className="screen-line-top screen-line-bottom bg-hatching h-10" />
           <Prose className="p-4">
             <div id="toc-sentinel" />
-            <div>
+            <FigCounterProvider>
               <MDX code={doc.content} />
-            </div>
+            </FigCounterProvider>
           </Prose>
         </DocContentCol>
       </section>
