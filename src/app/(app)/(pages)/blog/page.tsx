@@ -84,7 +84,7 @@ const BlogPage = async () => {
               </span>
 
               <span className="text-muted-foreground shrink-0 font-mono text-xs tabular-nums">
-                {formatDate(doc.metadata.createdAt)}
+                {doc.metadata.readingTime} &bull; {formatDate(doc.metadata.createdAt)}
               </span>
             </Link>
           </li>
