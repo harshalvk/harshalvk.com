@@ -1,0 +1,44 @@
+# Global ownership
+
+- @harshalvk
+
+# Application
+
+/src/app/ @harshalvk
+
+# Components
+
+/src/components/ @harshalvk
+
+# Documentation system
+
+/src/modules/doc/ @harshalvk
+
+# Theia algorithm visualization system
+
+/src/modules/theia/ @harshalvk
+
+# Component registry
+
+/src/registry/ @harshalvk
+
+# Configuration
+
+/src/config/ @harshalvk
+
+# GitHub workflows
+
+/.github/ @harshalvk
+
+# Dependency configuration
+
+/package.json @harshalvk
+/pnpm-lock.yaml @harshalvk
+
+# Project documentation
+
+/README.md @harshalvk
+/CONTRIBUTING.md @harshalvk
+/SECURITY.md @harshalvk
+/CODE_OF_CONDUCT.md @harshalvk
+/AGENTS.md @harshalvk
