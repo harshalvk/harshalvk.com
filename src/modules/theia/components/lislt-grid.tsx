@@ -2,6 +2,8 @@ import Link from 'next/link';
 import type { Route } from 'next';
 import { ArrowRightIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ComponentItemIcon } from '@/modules/portfolio/components/component-item';
+import ComponentsIcon from '@/components/components-icon';
 
 type ListGridItem = {
   slug: string;
@@ -27,11 +29,14 @@ export function ListGrid<T extends ListGridItem>({
           href={`${basePath}/${item.slug}` as Route}
           className="group hover:bg-muted-foreground/5 flex h-full items-start justify-between gap-4 border-b border-dashed p-5 sm:odd:border-r"
         >
+          <ComponentItemIcon>
+            <ComponentsIcon slug={item.slug} />
+          </ComponentItemIcon>
           <div className="flex-1">
             <h3 className="font-medium">{item.title}</h3>
             <p className="text-muted-foreground text-sm">{item.description ?? item.summary}</p>
           </div>
-          <ArrowRightIcon className="mt-1 size-4 shrink-0 transition-transform group-hover:-rotate-45" />
+          <ArrowRightIcon className="text-muted-foreground mt-1 size-4 shrink-0 transition-transform group-hover:-rotate-45" />
         </Link>
       ))}
     </div>

@@ -10,6 +10,10 @@ const COMPONENT_ICON: Record<string, React.ReactNode> = {
   'masonry-feed': <Icons.masonryFeed />,
   'scratch-card': <Icons.scratchCard />,
   'wallet-adapter': <Icons.walletAdapter />,
+  sorting: <Icons.sorting />,
+  ml: <Icons.ml />,
+  'linked-list': <Icons.linkedList />,
+  problems: <Icons.decisionTree />,
 };
 
 const ComponentsIcon = ({ slug }: { slug: string }) => {
