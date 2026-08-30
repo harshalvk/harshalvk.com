@@ -24,7 +24,7 @@ const Components = async () => {
         </PanelTitle>
       </PanelHeader>
       <PanelContent>
-        <div className="grid auto-rows-fr grid-cols-2 sm:grid-cols-3">
+        <div className="grid auto-rows-fr grid-cols-1 sm:grid-cols-3">
           {docs.map((doc) => (
             <ComponentItem
               className={cn(

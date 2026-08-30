@@ -84,7 +84,8 @@ export default async function ComponentsPage() {
             className={cn(
               'border-b border-dashed',
               'odd:border-r sm:odd:border-r-0',
-              'sm:[&:not(:nth-child(3n))]:border-r'
+              'sm:[&:not(:nth-child(3n))]:border-r',
+              'transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800/30'
             )}
             key={doc.slug}
             href={`/components/${doc.slug}` as Route}

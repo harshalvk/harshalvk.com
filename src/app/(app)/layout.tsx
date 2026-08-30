@@ -12,7 +12,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     <>
       <Navbar />
       <div className="bg-background h-19" />
-      <main className="flex flex-2 flex-col">{children}</main>
+      <main className="flex flex-1 flex-col">{children}</main>
       <Footer />
       <ScrollToTop />
     </>
