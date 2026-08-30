@@ -7,6 +7,8 @@ import { Route } from 'next';
 import { getDocsByCategory } from '@/modules/doc/data/document';
 import { buttonVariants } from '@/components/ui/button';
 import { ArrowRightIcon } from 'lucide-react';
+import ComponentsIcon from '@/components/components-icon';
+import { ComponentItem, ComponentItemIcon, ComponentItemTitle } from '../component-item';
 
 const ID = 'components';
 
@@ -33,6 +35,9 @@ const Components = async () => {
               key={doc.slug}
               href={`/components/${doc.slug}` as Route}
             >
+              <ComponentItemIcon>
+                <ComponentsIcon slug={doc.slug} />
+              </ComponentItemIcon>
               <ComponentItemTitle>{doc.metadata.title}</ComponentItemTitle>
             </ComponentItem>
           ))}
@@ -46,7 +51,7 @@ const Components = async () => {
                 className: 'bg-muted/30 p-0 text-xs ring-1 ring-zinc-700/10 dark:ring-zinc-100/10',
               })
             )}
-            href={'/components'}
+            href={'/components' as Route}
           >
             All Components{' '}
             <ArrowRightIcon className="transition-transform group-hover:-rotate-45" />
@@ -58,40 +63,3 @@ const Components = async () => {
 };
 
 export default Components;
-
-function ComponentItem({ className, ...props }: React.ComponentProps<typeof Link>) {
-  return (
-    <Link
-      className={cn('text-foreground flex w-full items-center gap-3 p-4 sm:py-5', className)}
-      {...props}
-    />
-  );
-}
-
-function ComponentItemDot({ className, ...props }: Omit<React.ComponentProps<'span'>, 'children'>) {
-  return (
-    <span
-      className={cn('bg-info ring-background size-2 shrink-0 rounded-full ring-1', className)}
-      {...props}
-    />
-  );
-}
-
-type HeadingTypes = 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-type HeadingProps<T extends HeadingTypes> = React.ComponentProps<T> & {
-  as?: T;
-};
-export function ComponentItemTitle<T extends HeadingTypes = 'h2'>({
-  as,
-  className,
-  ...props
-}: HeadingProps<T>) {
-  const Comp = as ?? 'h2';
-
-  return (
-    <Comp
-      className={cn('line-clamp-1 leading-snug font-medium text-balance', className)}
-      {...props}
-    />
-  );
-}

@@ -1336,6 +1336,138 @@ export const Icons = {
       <rect x="30" y="143" width="135" height="2" />
     </svg>
   ),
+  asciiDither: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      {...props}
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor" />
+      <rect x="13" y="3" width="8" height="8" rx="1.5" />
+      <rect x="3" y="13" width="8" height="8" rx="1.5" />
+      <rect x="13" y="13" width="8" height="8" rx="1.5" fill="currentColor" />
+    </svg>
+  ),
+  masonryFeed: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      {...props}
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="3" width="5.5" height="10" rx="1" />
+      <rect x="2" y="14.5" width="5.5" height="7" rx="1" />
+      <rect x="8.5" y="3" width="5.5" height="14" rx="1" />
+      <rect x="8.5" y="18" width="5.5" height="3.5" rx="1" />
+      <rect x="15" y="3" width="5" height="8" rx="1" />
+      <rect x="15" y="12" width="5" height="11.5" rx="1" />
+    </svg>
+  ),
+  scratchCard: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      {...props}
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="5" width="15" height="14" rx="2" />
+      <rect x="8" y="2" width="15" height="14" rx="2" fill="currentColor" />
+      <path d="M8 9 L12 6 L16 10 L20 6" />
+      <path d="M20 6 L16 14" />
+      <path d="M5 10 L5.5 11.5 L7 12 L5.5 12.5 L5 14 L4.5 12.5 L3 12 L4.5 11.5 Z" />
+    </svg>
+  ),
+  componentPlayground: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      {...props}
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="11" height="20" rx="2" />
+      <rect x="4" y="4" width="7" height="7" rx="1" />
+      <circle cx="7.5" cy="16" r="2.5" />
+      <rect x="14" y="2" width="8" height="20" rx="2" />
+      <line x1="16" y1="7" x2="20" y2="7" />
+      <circle cx="17" cy="7" r="1" fill="currentColor" />
+      <line x1="16" y1="11" x2="20" y2="11" />
+      <circle cx="18.5" cy="11" r="1" fill="currentColor" />
+      <line x1="16" y1="15" x2="20" y2="15" />
+      <circle cx="17.5" cy="15" r="1" fill="currentColor" />
+    </svg>
+  ),
+  dragToConfirm: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      {...props}
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="9" width="20" height="6" rx="3" />
+      <rect x="2" y="9" width="13" height="6" rx="3" fill="currentColor" />
+      <circle cx="15" cy="12" r="4" fill="#0f0f1a" stroke="currentColor" />
+      <path d="M13.5 12 L16 12 M15 10.5 L16.5 12 L15 13.5" />
+    </svg>
+  ),
+  walletAdapter: (props: IconProps) => (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      {...props}
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="5" width="17" height="14" rx="2" />
+      <path d="M2 9 L19 9" />
+      <rect x="5" y="12" width="3.5" height="3" rx="0.5" fill="currentColor" />
+      <path d="M16 11.5 A2 2 0 0 1 16 15.5" />
+      <path d="M17.5 10.5 A4 4 0 0 1 17.5 16.5" />
+      <line x1="5" y1="10" x2="9" y2="10" />
+    </svg>
+  ),
+  keyScreen: (props: IconProps) => (
+    <svg
+      {...props}
+      aria-hidden
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="5" width="18" height="14" rx="3" />
+      <path d="M8 16l4-7 4 7" />
+      <path d="M9.5 12.5h5" />
+    </svg>
+  ),
 };
 
 export function getIconForPackageManager(manager: string) {
