@@ -1,8 +1,20 @@
+<!-- # [harshalvk.com](https://harshalvk.com) -->
+
+<p>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/dots.svg?title=harshalvk.com&subtitle=My+personal+developer+portfolio+and+a+place+where+I+experiment+with+interactive+web+experiences.&logo=https%3A%2F%2Fres.cloudinary.com%2Fdev-work%2Fimage%2Fupload%2Fv1788246815%2Fdf6b767f-a8cb-4288-ab5a-4fe76c0c748a.png&size=wide&mode=dark&theme=zinc&brand=harshalvk" /><img alt="header" src="https://shieldcn.dev/header/dots.svg?title=harshalvk.com&subtitle=My+personal+developer+portfolio+and+a+place+where+I+experiment+with+interactive+web+experiences.&logo=https%3A%2F%2Fres.cloudinary.com%2Fdev-work%2Fimage%2Fupload%2Fv1788246815%2Fdf6b767f-a8cb-4288-ab5a-4fe76c0c748a.png&size=wide&mode=dark&theme=zinc&brand=harshalvk" /></picture>
+</p>
+
+<p>
+<a href="https://github.com/harshalvk/harshalvk.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/harshalvk/harshalvk.com/license.svg?variant=secondary&amp;mode=dark"><img alt="badge" src="https://shieldcn.dev/github/harshalvk/harshalvk.com/license.svg?variant=secondary&amp;mode=light"></picture></a>
+ <a href="https://github.com/harshalvk/harshalvk.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/views/repo/harshalvk/harshalvk.com.svg?variant=secondary&amp;mode=dark"><img alt="badge" src="https://shieldcn.dev/views/repo/harshalvk/harshalvk.com.svg?variant=secondary&amp;mode=light"></picture></a>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/Agent--friendly-AGENTS.md.svg?variant=secondary&amp;mode=dark"><img alt="badge" src="https://shieldcn.dev/badge/Agent--friendly-AGENTS.md.svg?variant=secondary&amp;mode=light"></picture>
+</p>
+
 # harshalvk.com
 
 Personal portfolio, interactive component registry, technical blog, and algorithm visualization platform built with Next.js.
 
-**Live:** https://harshalvk.com
+**Live:** [harshalvk.com](https://harshalvk.com)
 
 <img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/caa440f2-a724-479e-ae11-104e0b33b7b0" />
 
