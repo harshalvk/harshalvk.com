@@ -92,7 +92,7 @@ This makes the components installable and reusable outside the portfolio itself.
 
 ---
 
-## Features 
+## Features
 
 <table>
   <tr>
@@ -417,6 +417,18 @@ This is primarily a personal project, but issues, suggestions, and improvements 
 If you find a bug or have an idea for Theia or the component registry, feel free to open an issue or submit a pull request.
 
 ---
+
+## AI-Agent Friendliness
+
+This project is designed to be accessible and usable by AI coding agents through:
+
+- **AGENTS.md**: Entry point that defines project identity, tech stack, architecture, and common workflows
+- **CLAUDE.md**: Technical standards, coding conventions, and development commands
+- **.agents/skills/**: Project-specific skills like the registry-icon-generator for creating Lucide-style SVG icons
+- **.agents/AGENT-WORKFLOWS.md**: Detailed procedures for common tasks (adding components, blog posts, Theia visualizations, etc.)
+- **LLM-friendly endpoints**: `/llms.txt` for structured portfolio information and `/r/{name}.json` for component registry access
+
+These resources enable AI agents to understand project conventions, perform standard development tasks, and contribute effectively while maintaining consistency with the project's design philosophy.
 
 ## License
 
