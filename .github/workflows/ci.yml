@@ -21,6 +21,9 @@ jobs:
     name: Validate
     runs-on: ubuntu-latest
 
+    env:
+      NEXT_PUBLIC_APP_URL: https://harshalvk.com
+
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -31,7 +34,7 @@ jobs:
           bun-version: 1.2.8
 
       - name: Install dependencies
-        run: bun install --forzen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build application
         run: bun run build
