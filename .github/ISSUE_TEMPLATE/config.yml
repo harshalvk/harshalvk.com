@@ -1,11 +1,9 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 
 contact_links:
-
-* name: Security Vulnerability
-  url: https://github.com/harshalvk/harshalvk.com/security/advisories/new
-  about: Please report security vulnerabilities privately instead of opening a public issue.
-
-* name: GitHub Discussions
-  url: https://github.com/harshalvk/harshalvk.com/discussions
-  about: Use GitHub Discussions for questions, ideas, and general project discussions.
+  - name: Questions & Discussions
+    url: https://github.com/harshalvk/Portfolio/discussions
+    about: Ask questions, share ideas, or discuss the project.
+  - name: Security Vulnerability
+    url: https://github.com/harshalvk/Portfolio/security/policy
+    about: Please report security vulnerabilities privately using the security policy.
