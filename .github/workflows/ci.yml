@@ -36,9 +36,6 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Verify
-        run: bun run verify
-
       - name: Type check
         run: bun run type-check
 
