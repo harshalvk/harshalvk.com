@@ -36,7 +36,7 @@ The site is divided into several sections:
 
 It is designed around the idea that algorithms are easier to understand when you can see every step of their execution rather than only reading their implementation.
 
-> Step-by-step visualizations of algorithms — DSA, ML, and cryptographic — explained one move at a time.
+> Interactive algorithm visualizations and computer science concepts.
 
 ### What Theia includes
 
