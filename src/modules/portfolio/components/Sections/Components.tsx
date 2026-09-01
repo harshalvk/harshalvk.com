@@ -25,11 +25,11 @@ const Components = async () => {
       </PanelHeader>
       <PanelContent>
         <div className="grid auto-rows-fr grid-cols-1 sm:grid-cols-3">
-          {docs.map((doc) => (
+          {docs.slice(0, 6).map((doc) => (
             <ComponentItem
               className={cn(
                 'border-b border-dashed',
-                'odd:border-r sm:odd:border-r-0',
+                'odd:border-r-0 sm:odd:border-r',
                 'sm:[&:not(:nth-child(3n))]:border-r'
               )}
               key={doc.slug}

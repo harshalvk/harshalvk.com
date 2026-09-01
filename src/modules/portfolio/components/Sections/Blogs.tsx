@@ -24,7 +24,7 @@ const Blogs = async () => {
       </PanelHeader>
       <PanelContent>
         <ul className="grid w-full grid-cols-1 divide-y md:grid-cols-2 md:divide-y-0">
-          {docs.map((doc) => (
+          {docs.slice(0, 6).map((doc) => (
             <li
               key={doc.slug}
               className="md:[&:nth-child(odd)]:border-border border-b md:[&:nth-child(odd)]:border-r"
