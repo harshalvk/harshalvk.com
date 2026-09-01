@@ -14,7 +14,8 @@
     "type-check": "tsc --noEmit",
     "analyze": "ANALYZE=true next build",
     "registry:build": "bun run ./src/scripts/build-registry.mts && npx shadcn@latest build",
-    "registry:validate": "shadcn registry validate ./public/r/registry.json"
+    "registry:validate": "shadcn registry validate ./public/r/registry.json",
+    "content:validate": "tsx src/scripts/validate-content.ts"
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",
