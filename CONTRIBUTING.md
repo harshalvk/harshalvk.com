@@ -21,7 +21,7 @@ Before making changes:
 ### Requirements
 
 - Node.js 20+
-- pnpm
+- [bun](https://bun.sh/)
 - Git
 
 ### Clone the repository
@@ -34,13 +34,13 @@ cd <repository-directory>
 ### Install dependencies
 
 ```bash
-pnpm install
+bun install
 ```
 
 ### Start the development server
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 The application will be available at:
@@ -205,16 +205,16 @@ A commit should ideally represent one logical change.
 Before opening a pull request:
 
 ```bash
-pnpm type-check
-pnpm lint
-pnpm format:check
-pnpm build
+bun run type-check
+bun run  lint
+bun run format:check
+bun run build
 ```
 
 If the repository provides a unified verification command, prefer:
 
 ```bash
-pnpm verify
+bun run verify
 ```
 
 ### Pull request description

@@ -25,38 +25,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 10
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 20
-          cache: pnpm
+          bun-version: latest
 
       - name: Install dependencies
-        run: pnpm install --forzen-lockfile
+        run: bun install --forzen-lockfile
 
       - name: Type check
-        run: pnpm type-check
+        run: bun run type-check
 
       - name: Lint
-        run: pnpm lint
+        run: bun run lint
 
       - name: Check formatting
-        run: pnpm format:check
+        run: bun run format:check
 
       - name: Validate content
-        run: pnpm content:validate
+        run: bun run content:validate
 
       - name: Build component registry
-        run: pnpm registry:build
+        run: bun run registry:build
 
       - name: Validate component registry
-        run: pnpm registry:validate
+        run: bun run registry:validate
 
       - name: Build application
-        run: pnpm build
+        run: bun run build

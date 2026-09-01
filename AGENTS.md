@@ -101,6 +101,30 @@ pnpm registry:validate    # Validate registry integrity
 
 ---
 
+## Package Manager
+
+This repository uses Bun.
+
+Always use Bun for package management and scripts.
+
+Preferred commands:
+
+- `bun install`
+- `bun add <package>`
+- `bun remove <package>`
+- `bun run <script>`
+- `bunx <package>`
+
+Do not use pnpm, npm, or yarn unless explicitly required.
+
+The dependency lockfile is:
+
+`bun.lock`
+
+## When dependencies change, update `bun.lock` and include it in the commit.
+
+---
+
 ## Available Agents
 
 | Agent               | Role                          | When to Use                                                                     |
