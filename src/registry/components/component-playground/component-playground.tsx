@@ -106,9 +106,9 @@ function generateCode(
 
 function ControlRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between gap-3 py-2">
-      <label className="text-muted-foreground text-sm">{label}</label>
-      <div className="flex max-w-[60%] items-center justify-end gap-2">{children}</div>
+    <div className="flex flex-col gap-1.5 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+      <label className="text-muted-foreground text-xs font-medium sm:text-sm">{label}</label>
+      <div className="flex w-full items-center justify-end gap-2 sm:w-auto">{children}</div>
     </div>
   );
 }
@@ -146,7 +146,7 @@ function StringControl({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="h-8 w-40"
+        className="h-9 w-full sm:w-40"
       />
     </ControlRow>
   );
@@ -172,15 +172,19 @@ function NumberControl({
   if (min != null && max != null) {
     return (
       <ControlRow label={label}>
-        <Slider
-          value={[value]}
-          min={min}
-          max={max}
-          step={step ?? 1}
-          onValueChange={([v]) => onChange(v)}
-          className="w-32"
-        />
-        <span className="text-muted-foreground w-8 text-right text-xs">{value}</span>
+        <div className="flex w-full items-center gap-3 sm:w-auto sm:flex-col">
+          <Slider
+            value={[value]}
+            min={min}
+            max={max}
+            step={step ?? 1}
+            onValueChange={([v]) => onChange(v)}
+            className="flex-1 sm:w-32"
+          />
+          <span className="text-muted-foreground w-10 shrink-0 text-right text-xs sm:text-left">
+            {value}
+          </span>
+        </div>
       </ControlRow>
     );
   }
@@ -192,7 +196,7 @@ function NumberControl({
         value={value}
         step={step}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="h-8 w-24"
+        className="h-9 w-full sm:w-24"
       />
     </ControlRow>
   );
@@ -212,7 +216,7 @@ function SelectControl({
   return (
     <ControlRow label={label}>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-8 w-32">
+        <SelectTrigger className="h-9 w-full sm:w-32">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -238,18 +242,20 @@ function ColorControl({
 }) {
   return (
     <ControlRow label={label}>
-      <input
-        type="color"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="h-8 w-8 cursor-pointer rounded border bg-transparent p-0"
-        aria-label={`${label} color`}
-      />
-      <Input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="h-8 w-24 font-mono text-xs"
-      />
+      <div className="flex w-full items-center gap-2 sm:w-auto">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9 w-9 cursor-pointer rounded border bg-transparent p-0.5"
+          aria-label={`${label} color`}
+        />
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-9 flex-1 font-mono text-xs sm:w-24"
+        />
+      </div>
     </ControlRow>
   );
 }
@@ -314,7 +320,18 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-// ─── Main component ──────────────────────────────────────────────────────────
+// ─── Code block ──────────────────────────────────────────────────────────────
+
+function CodeBlock({ code }: { code: string }) {
+  return (
+    <div className="bg-muted/50 flex items-center justify-between border-t px-4 py-2">
+      <code className="text-muted-foreground overflow-x-auto font-mono text-xs whitespace-pre">
+        {code}
+      </code>
+      <CopyButton text={code} />
+    </div>
+  );
+}
 
 /**
  * Renders a component next to live-editable controls for its props —
@@ -359,13 +376,13 @@ export function ComponentPlayground({
       <div className="grid md:grid-cols-[1fr_240px]">
         <div
           className={cn(
-            'flex min-h-48 items-center justify-center p-8',
+            'flex min-h-24 items-center justify-center p-3 sm:min-w-[30rem]',
             'bg-[image:repeating-linear-gradient(45deg,var(--muted)_0,var(--muted)_1px,transparent_0,transparent_50%)]',
-            'bg-[size:16px_16px]',
+            'bg-[size:12px_12px]',
             previewClassName
           )}
         >
-          <div className="flex h-full w-full min-w-[400px] items-center justify-center">
+          <div className="flex h-full w-full items-center justify-center">
             <Component {...staticProps} {...values} />
           </div>
         </div>
@@ -384,7 +401,7 @@ export function ComponentPlayground({
               <RotateCcw className="size-3.5" />
             </Button>
           </div>
-          <div className="divide-y">
+          <div className="max-h-[300px] divide-y overflow-y-auto md:max-h-none">
             {Object.entries(controls).map(([key, control]) => {
               const label = control.label ?? key;
               const value = values[key];
@@ -446,12 +463,7 @@ export function ComponentPlayground({
         </div>
       </div>
 
-      <div className="bg-muted/50 flex items-center justify-between border-t px-4 py-2">
-        <code className="text-muted-foreground overflow-x-auto font-mono text-xs whitespace-pre">
-          {code}
-        </code>
-        <CopyButton text={code} />
-      </div>
+      <CodeBlock code={code} />
     </div>
   );
 }
