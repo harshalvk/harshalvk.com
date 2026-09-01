@@ -463,6 +463,12 @@ Full-Stack Developer
 
 ---
 
+<div align="center">
+## Stats
+  
+![Stats](https://repobeats.axiom.co/api/embed/1d52a6e9f1a590c6d87eced843a6efdc9b851a81.svg "Repobeats analytics image")
+</div>
+
 <p align="center">
   Built and maintained by <strong>Harshal V Khobragade</strong>.
 </p>
