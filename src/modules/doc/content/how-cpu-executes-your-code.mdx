@@ -1,0 +1,269 @@
+---
+title: How the CPU Executes Your Code?
+description: What actually happens when your code runs — how the CPU fetches instructions, what registers are, the fetch-decode-execute cycle, and why some code is faster than others.
+image: /og/blog/cpu
+category: blogs
+readingTime: 13 min read
+createdAt: 2026-09-02
+updatedAt: 2026-09-02
+---
+
+# How the CPU Executes Your Code: Machine Instructions, Registers, and Why Some Code Is Faster Than Others
+
+Here's something most developers never think about: the CPU has no idea what Python is. Or JavaScript. Or Go. Or any language you've ever written in.
+
+It only understands one thing — binary instructions. Sequences of bits that tell it to move a number from one place to another, add two values, compare something, or jump to a different part of the program.
+
+Every line of code you've ever written eventually becomes those instructions. The compiler translates it. The CPU executes it, billions of times per second, one instruction at a time.
+
+I've been building distributed systems long enough to know that performance problems are usually blamed on the wrong layer. People blame the database, the network, the framework — and rarely look at what the CPU is actually doing. This article is about that layer. What happens when your code runs, why some code is dramatically faster than other code that looks nearly identical, and how the CPU actually works.
+
+---
+
+## The CPU Doesn't Know What a Function Is
+
+Before anything else, it helps to let go of the abstractions you think in every day.
+
+Functions, objects, loops, variables — these are ideas that exist in your source code and in your head. The CPU doesn't have any of those concepts. What it has is:
+
+- A chunk of memory containing instructions (your compiled program)
+- A set of tiny, ultra-fast storage slots called **registers**
+- A program counter that tracks which instruction to execute next
+- Arithmetic and logic circuits that do the actual computation
+
+That's roughly it. Everything you write in high-level code is translated into operations on these primitives.
+
+---
+
+## Registers: The CPU's Working Memory
+
+Registers are the fastest storage that exists in a computer. Reading from a register takes about 1 clock cycle. Reading from RAM takes 100–300 cycles. The difference is enormous.
+
+A modern x86-64 CPU has:
+
+- **General purpose registers** — `rax`, `rbx`, `rcx`, `rdx`, `rsi`, `rdi`, `rsp`, `rbp`, and `r8` through `r15`. These hold integers, memory addresses, and return values.
+- **The stack pointer (`rsp`)** — tracks the top of the call stack
+- **The base pointer (`rbp`)** — marks the bottom of the current stack frame
+- **The instruction pointer (`rip`)** — holds the address of the next instruction to execute. You never write to this directly; it's updated automatically.
+- **Flags register** — a set of single-bit flags that record the result of the last operation: was it zero? was there overflow? was it negative?
+- **Floating point / SIMD registers** — `xmm0` through `xmm15` and beyond, for floating point math and vector operations
+
+On a 64-bit system, each general purpose register holds 64 bits — 8 bytes. That's one pointer, one integer, or one memory address.
+
+When you write `int x = 5`, the compiler decides which register to put `x` in. When registers run out, it spills values to the stack. That spill costs cycles.
+
+---
+
+## Machine Instructions
+
+A machine instruction is a binary-encoded operation. When you see assembly code, you're seeing a human-readable representation of those binary instructions. Each instruction has an **opcode** (what to do) and **operands** (what to do it to).
+
+```asm
+; Add two integers and return the result
+; In C: int add(int a, int b) { return a + b; }
+
+add:
+    mov eax, edi       ; move first argument (edi) into eax
+    add eax, esi       ; add second argument (esi) to eax
+    ret                ; return (caller reads result from eax)
+```
+
+Three instructions. That's the whole function. The compiler figured out that `a` arrives in `edi`, `b` arrives in `esi`, and the return value goes in `eax` — that's the calling convention on x86-64 Linux (System V ABI).
+
+The binary encoding of `mov eax, edi` is `89 F8` — two bytes. `add eax, esi` is `01 F0`. `ret` is `C3`. That's what lives in your compiled binary.
+
+---
+
+## The Fetch-Decode-Execute Cycle
+
+The CPU operates in a loop. Every clock cycle it does roughly the same thing:
+
+**1. Fetch** — The CPU reads the next instruction from memory using the address in the instruction pointer (`rip`). This goes through the instruction cache first. If the instruction is already cached, this is fast (~1 cycle). If not, the CPU stalls while waiting for memory — potentially 100+ cycles.
+
+**2. Decode** — The CPU figures out what the instruction is asking it to do. Modern x86 instructions are variable-length (1 to 15 bytes). The decoder figures out the boundaries and translates the instruction into one or more micro-operations (µops) — simpler internal operations the CPU's execution units understand.
+
+**3. Execute** — The µops are dispatched to the appropriate execution units. There are separate units for integer arithmetic, floating point math, memory loads, memory stores, and branch prediction. Multiple µops can execute in parallel if they don't depend on each other.
+
+**4. Write back** — The result is written to the destination register or memory location.
+
+Then it starts over for the next instruction.
+
+```txt
+        ┌─────────────────────────────────────────┐
+        │              CPU Core                   │
+        │                                         │
+   ┌────▼────┐    ┌─────────┐    ┌────────────┐  │
+   │  Fetch  │───▶│ Decode  │───▶│  Execute   │  │
+   │  (rip)  │    │ (µops)  │    │  (ALU/FPU) │  │
+   └─────────┘    └─────────┘    └─────────┘  │  │
+        ▲                              │        │  │
+        │                              ▼        │  │
+        │                       ┌────────────┐ │  │
+        └───────────────────────│ Write Back │ │  │
+                                └────────────┘ │  │
+        │                                         │
+        └─────────────────────────────────────────┘
+```
+
+Modern CPUs do all of this in parallel across multiple instructions using a technique called **pipelining** — while one instruction is executing, the next one is being decoded, and the one after that is being fetched. A deep pipeline means more instructions in flight simultaneously.
+
+---
+
+## Why Some Code Is Faster Than Others
+
+This is where it gets useful. The fetch-decode-execute cycle explains most of the performance differences you'll encounter in real code.
+
+### Cache Misses
+
+When the CPU needs data that isn't in cache, it stalls. The cache hierarchy looks like this:
+
+```txt
+L1 cache   ~32KB    ~4 cycles      ← closest to the core
+L2 cache   ~256KB   ~12 cycles
+L3 cache   ~8-32MB  ~40 cycles
+RAM        GBs      ~200 cycles    ← catastrophically slow by comparison
+```
+
+This is why iterating over an array is faster than traversing a linked list — even if they hold the same number of elements.
+
+An array stores elements contiguously. When you read element 0, the CPU fetches a 64-byte cache line that contains elements 0 through 7 (for 8-byte integers). Elements 1 through 7 are already in cache when you need them.
+
+A linked list stores nodes scattered across the heap. Each node holds a pointer to the next. Every dereference is potentially a cache miss — the CPU has to wait for main memory to respond before it knows where the next node lives.
+
+```go
+// This is fast — sequential memory access, hardware prefetcher helps
+for i := range slice {
+    sum += slice[i]
+}
+
+// This is slower — random memory access, cache misses on every node
+for node := head; node != nil; node = node.next {
+    sum += node.value
+}
+```
+
+For a slice of 1 million integers, the difference can be 10x or more.
+
+### Branch Misprediction
+
+Modern CPUs don't wait to find out whether a branch (`if`, `for`, loop condition) is taken — they predict it and speculatively execute instructions on the predicted path. If the prediction is wrong, the CPU has to discard the speculatively executed work and restart from the correct branch. This penalty is typically 10–20 cycles.
+
+CPUs are good at predicting branches with consistent patterns. An `if` that's almost always true will be predicted correctly almost always. A branch that alternates randomly between taken and not-taken will mispredict roughly half the time.
+
+```go
+// Predictable — the branch is almost always false (no mismatch)
+if err != nil {
+    return err
+}
+
+// Potentially unpredictable — depends on data distribution
+if value > threshold {
+    doSomething()
+}
+```
+
+A classic trick to avoid branches is to express conditionals arithmetically — but modern compilers usually figure this out themselves.
+
+### Instruction-Level Parallelism
+
+The CPU can execute multiple independent instructions simultaneously across its execution units. If instruction B doesn't depend on the output of instruction A, they can run in parallel.
+
+```asm
+; These two are independent — can execute in parallel
+add rax, rbx
+add rcx, rdx
+
+; These are dependent — the second must wait for the first
+add rax, rbx
+add rax, rcx    ; needs rax from the line above
+```
+
+Long dependency chains serialize execution and limit how much the CPU can parallelize. This is why some seemingly simple loops are hard to optimize — each iteration depends on the result of the previous one.
+
+### SIMD: Doing More Per Instruction
+
+SIMD stands for Single Instruction, Multiple Data. Instead of operating on one value at a time, SIMD instructions operate on vectors — 128, 256, or 512 bits at once.
+
+An AVX2 `addpd` instruction can add four 64-bit floating point numbers simultaneously. The throughput is 4x compared to scalar addition.
+
+```c
+// Scalar: 4 separate additions
+a[0] += b[0];
+a[1] += b[1];
+a[2] += b[2];
+a[3] += b[3];
+
+// SIMD: 1 instruction does all four
+_mm256_add_pd(va, vb);  // AVX2 intrinsic
+```
+
+Most compilers auto-vectorize loops that fit the pattern, but it requires the data to be contiguous in memory and the operations to be independent across iterations. This is another reason array-of-structs vs struct-of-arrays matters in performance-critical code.
+
+---
+
+## What the Compiler Does For You
+
+Writing assembly by hand is rare. The compiler translates your source code to machine instructions and applies optimizations you'd never bother with manually:
+
+- **Register allocation** — decides which variables live in registers vs on the stack
+- **Instruction selection** — picks the most efficient sequence of instructions for a given operation
+- **Inlining** — replaces a function call with the function body directly, eliminating call overhead and enabling further optimization
+- **Loop unrolling** — duplicates loop body to reduce branch overhead and expose more parallelism
+- **Auto-vectorization** — rewrites scalar loops as SIMD operations where safe
+- **Constant folding** — evaluates constant expressions at compile time instead of runtime
+
+You can see what your compiler produces with:
+
+```bash
+# Go
+go build -gcflags="-S" ./...
+
+# C/C++ — Compiler Explorer (godbolt.org) is more readable
+gcc -O2 -S -o output.s input.c
+
+# Rust
+rustc --emit=asm -C opt-level=3 input.rs
+```
+
+Reading compiler output is a skill worth developing. When you see that a simple function compiles to two instructions, you understand why it's fast. When you see it compiles to forty, you start asking why.
+
+---
+
+## Seeing It In Practice
+
+The gap between knowing this and using it isn't as wide as it seems. A few concrete habits:
+
+**Prefer contiguous data structures.** Slices and arrays over linked lists and trees when you're iterating. The cache behavior difference is real and measurable.
+
+**Keep hot data together.** If a struct has fields you access in a hot loop and fields you rarely touch, put the hot fields at the front. The CPU fetches in 64-byte cache lines — if the fields you need fit in one line, you pay one cache miss instead of many.
+
+**Be suspicious of indirection.** Every pointer dereference is a potential cache miss. Interfaces in Go, virtual dispatch in C++, dynamic dispatch in general — these hide pointer chases that kill cache locality.
+
+**Profile before optimizing.** Most of the time your code is fast enough and the bottleneck is somewhere you didn't expect. `pprof` in Go, `perf` on Linux, Instruments on macOS — use them before rewriting anything.
+
+**Don't fight the compiler.** Modern compilers are very good. Clever bit manipulation tricks that were useful in 1995 often prevent auto-vectorization today. Write clear code, let the compiler optimize it, and only intervene when profiling shows you need to.
+
+---
+
+## The Pattern
+
+The CPU is a simple machine running a tight loop: fetch, decode, execute, write back. Everything your program does is that loop, billions of times per second.
+
+Performance comes from staying in cache, feeding the CPU independent instructions it can execute in parallel, and avoiding the things that make it stall — cache misses, branch mispredictions, and long dependency chains.
+
+Most of the time you don't need to think about this. But when something is inexplicably slow — and you've already ruled out the database and the network — this is the layer to look at.
+
+---
+
+**Resources I referenced writing this:**
+
+- _Computer Systems: A Programmer's Perspective_ — Bryant & O'Hallaron. Chapters 5 and 6 are the best treatment of CPU performance and cache behavior I've found.
+- [What Every Programmer Should Know About Memory](https://people.freebsd.org/~lstewart/articles/cpumemory.pdf) — Ulrich Drepper. Long, but essential.
+- [Latency Numbers Every Programmer Should Know](https://gist.github.com/jboner/2841832) — the reference card for cache, memory, and disk latencies.
+- [Matt Godbolt's CppCon talk](https://www.youtube.com/watch?v=bSkpMdDe4g4) — "What Has My Compiler Done for Me Lately?" — the best intro to reading compiler output.
+- [Compiler Explorer](https://godbolt.org) — paste code, see assembly in real time.
+- [Performance Engineering of Software Systems — MIT OCW](https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/) — the full course is free. Lecture 3 covers bit manipulation and instruction-level optimization in depth.
+
+---
+
+_Writing these as I go deeper into systems. Next: Processes and Threads — what a process actually is, how threads share memory, and why Go goroutines are different._
