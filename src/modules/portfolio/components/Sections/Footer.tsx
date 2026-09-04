@@ -18,29 +18,34 @@ const socialLinks = [
 const FooterLinkGroup = ({
   title,
   links,
+  className,
 }: {
   title: string;
   links: { name: string; href: string }[];
+  className?: string;
 }) => (
-  <div className="flex flex-col gap-1">
+  <nav aria-label={title} className={className}>
     <h2 className="mb-1 text-sm font-medium">{title}</h2>
-    {links.map((link) => (
-      <Link
-        key={link.name}
-        href={link.href as Route}
-        target={link.href.startsWith('http') ? '_blank' : undefined}
-        rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-        className="text-muted-foreground font-mono text-sm underline-offset-4 hover:underline"
-      >
-        {link.name}
-      </Link>
-    ))}
-  </div>
+    <ul className="flex flex-col gap-1">
+      {links.map((link) => (
+        <li key={link.name}>
+          <Link
+            href={link.href as Route}
+            target={link.href.startsWith('http') ? '_blank' : undefined}
+            rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            className="text-muted-foreground font-mono text-sm underline-offset-4 hover:underline"
+          >
+            {link.name}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </nav>
 );
 
 const Footer = () => {
   return (
-    <footer className="flex justify-center">
+    <footer className="flex justify-center" aria-label="Site footer">
       <div className="mb-4 w-full max-w-5xl px-4 lg:px-0">
         <div className="screen-line-top screen-line-bottom relative flex w-full flex-col gap-6 border-x px-6 py-6">
           <SectionCorners />

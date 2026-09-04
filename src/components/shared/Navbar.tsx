@@ -38,16 +38,27 @@ const Navbar = async () => {
   return (
     <div className="bg-background fixed top-0 right-0 left-0 z-50 flex justify-center">
       <div className="mt-4 w-full max-w-5xl px-4 lg:px-0">
-        <nav className="screen-line-top screen-line-bottom pointer-events-auto relative flex w-full items-center justify-between border-x px-4 py-3">
+        <nav
+          aria-label="Main navigation"
+          className="screen-line-top screen-line-bottom pointer-events-auto relative flex w-full items-center justify-between border-x px-4 py-3"
+        >
           <SectionCorners />
-          <Link href={'/'} className={cn('text-shadow text-sm sm:text-base', inter.className)}>
+          <Link
+            href={'/'}
+            className={cn('text-shadow text-sm sm:text-base', inter.className)}
+            aria-label="harshalvk home"
+          >
             @harshalvk
           </Link>
           <div className="flex items-center">
             <div className="mr-1 flex items-center gap-4">
               <ul className="hidden gap-4 md:flex">
                 {navLinks.map((navLink, idx) => (
-                  <Link key={idx} href={navLink.link as unknown as UrlObject}>
+                  <Link
+                    key={idx}
+                    href={navLink.link as unknown as UrlObject}
+                    aria-label={navLink.name}
+                  >
                     {navLink.name}
                   </Link>
                 ))}

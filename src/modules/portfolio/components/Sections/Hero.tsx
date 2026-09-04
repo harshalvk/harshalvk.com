@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Image from 'next/image';
 import SectionCorners from '@/components/shared/SectionBorders';
 import { inter } from '@/lib/fonts';
@@ -11,17 +11,27 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useWebHaptics } from 'web-haptics/react';
 import PagesView from '../pages-view';
 
-const IMAGES = ['/profile.png', '/profile4.jpg'];
+// Hoist static arrays outside component to prevent recreation
+const IMAGES = ['/profile.png', '/profile4.jpg'] as const;
 
 const Hero = () => {
   const [index, setIndex] = useState(0);
 
-  const handleClick = () => {
+  // Cache haptic trigger to avoid recreation
+  const { trigger: haptic } = useWebHaptics();
+
+  // Use useCallback for stable event handlers
+  const handleClick = useMemo(() => () => {
     haptic('success');
     setIndex((prev) => (prev === 0 ? 1 : 0));
-  };
+  }, [haptic]);
 
-  const { trigger: haptic } = useWebHaptics();
+  const handleKeyDown = useMemo(() => (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  }, [handleClick]);
 
   return (
     <section className="border-border relative border border-y-0 p-4">
@@ -34,6 +44,10 @@ const Hero = () => {
           <div
             className="relative h-32 w-32 shrink-0 cursor-pointer overflow-hidden rounded-sm sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-52 lg:w-52"
             onClick={handleClick}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label="Toggle profile image"
           >
             <AnimatePresence initial={false}>
               <motion.div
@@ -45,11 +59,12 @@ const Hero = () => {
                 className="absolute inset-0"
               >
                 <Image
-                  alt="Profile"
+                  alt="Harshal Khobragade profile photo"
                   src={IMAGES[index]}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover"
+                  priority
                 />
               </motion.div>
             </AnimatePresence>

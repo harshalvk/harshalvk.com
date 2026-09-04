@@ -10,10 +10,22 @@ const ScrollToTop = dynamic(() =>
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Navbar />
+      <a
+        href="#main-content"
+        className="focus:bg-primary focus:text-primary-foreground sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded focus:px-4 focus:py-2"
+      >
+        Skip to main content
+      </a>
+      <header role="banner">
+        <Navbar />
+      </header>
       <div className="bg-background h-19" />
-      <main className="flex flex-1 flex-col">{children}</main>
-      <Footer />
+      <main id="main-content" className="flex flex-1 flex-col" role="main">
+        {children}
+      </main>
+      <footer role="contentinfo">
+        <Footer />
+      </footer>
       <ScrollToTop />
     </>
   );

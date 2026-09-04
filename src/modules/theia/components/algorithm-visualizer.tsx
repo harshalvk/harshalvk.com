@@ -86,51 +86,58 @@ export function AlgorithmVisualizer({ algorithm }: { algorithm: AlgorithmMeta })
   const step = steps[currentStep];
 
   return (
-    <div className="flex flex-col gap-4">
-      <ArrayBars step={step} />
+    <>
+      {/* Screen reader announcement for algorithm steps */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {`Algorithm step ${currentStep + 1} of ${steps.length}: ${step.description}`}
+      </div>
 
-      <StepExplanation
-        steps={steps}
-        currentStep={currentStep}
-        onStepSelect={handleStepSelect}
-        totalSteps={steps.length}
-      />
-      <div className="flex flex-col gap-4 md:flex-row">
-        <VisualizerControls
-          isPlaying={isPlaying}
-          onTogglePlay={() => setIsPlaying((p) => !p)}
-          onStepBack={() => setCurrentStep((s) => Math.max(0, s - 1))}
-          onStepForward={() => setCurrentStep((s) => Math.min(steps.length - 1, s + 1))}
-          onReset={handleReset}
-          onShuffle={handleShuffle}
-          speed={speed}
-          onSpeedChange={setSpeed}
-          arraySize={arraySize}
-          onArraySizeChange={handleArraySizeChange}
+      <div className="flex flex-col gap-4">
+        <ArrayBars step={step} />
+
+        <StepExplanation
+          steps={steps}
           currentStep={currentStep}
+          onStepSelect={handleStepSelect}
           totalSteps={steps.length}
         />
-        {codeForAlgo ? (
-          <div className="flex flex-1 flex-col gap-2">
-            <Tabs value={lang} onValueChange={(v) => setLang(v as CodeLang)}>
-              <TabsList>
-                {LANGUAGES.map((l) => (
-                  <TabsTrigger key={l.value} value={l.value} className="font-mono text-xs">
-                    {l.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-            <CodeBlock code={codeForAlgo[lang]} lang={lang} activeLine={step.line} />
-          </div>
-        ) : (
-          <div className="bg-surface inset-ring-border/64 flex h-72 items-center justify-center rounded-xl text-sm inset-ring-1">
-            <p className="text-muted-foreground">
-              Code walkthrough coming soon for this algorithm.
-            </p>
-          </div>
-        )}
+        <div className="flex flex-col gap-4 md:flex-row">
+          <VisualizerControls
+            isPlaying={isPlaying}
+            onTogglePlay={() => setIsPlaying((p) => !p)}
+            onStepBack={() => setCurrentStep((s) => Math.max(0, s - 1))}
+            onStepForward={() => setCurrentStep((s) => Math.min(steps.length - 1, s + 1))}
+            onReset={handleReset}
+            onShuffle={handleShuffle}
+            speed={speed}
+            onSpeedChange={setSpeed}
+            arraySize={arraySize}
+            onArraySizeChange={handleArraySizeChange}
+            currentStep={currentStep}
+            totalSteps={steps.length}
+          />
+          {codeForAlgo ? (
+            <div className="flex flex-1 flex-col gap-2">
+              <Tabs value={lang} onValueChange={(v) => setLang(v as CodeLang)}>
+                <TabsList>
+                  {LANGUAGES.map((l) => (
+                    <TabsTrigger key={l.value} value={l.value} className="font-mono text-xs">
+                      {l.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+              <CodeBlock code={codeForAlgo[lang]} lang={lang} activeLine={step.line} />
+            </div>
+          ) : (
+            <div className="bg-surface inset-ring-border/64 flex h-72 items-center justify-center rounded-xl text-sm inset-ring-1">
+              <p className="text-muted-foreground">
+                Code walkthrough coming soon for this algorithm.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
