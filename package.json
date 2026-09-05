@@ -15,7 +15,7 @@
     "content:validate": "bun src/scripts/validate-content.ts",
     "registry:build": "bun run ./src/scripts/build-registry.mts && bunx shadcn@latest build",
     "registry:validate": "bunx shadcn registry validate ./public/r/registry.json",
-    "verify": "bun run type-check && bun run lint && bun run format:check && bun run content:validate && bun run registry:build && bun run registry:validate && bun run build"
+    "verify": "bun run type-check && bun run lint && bun run format && bun run format:check && bun run content:validate && bun run registry:build && bun run registry:validate && bun run build"
   },
   "dependencies": {
     "@bprogress/next": "^3.2.12",
