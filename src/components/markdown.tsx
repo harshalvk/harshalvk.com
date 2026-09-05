@@ -1,11 +1,16 @@
 'use client';
 
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeExternalLinks from 'rehype-external-links';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
-export function MarkdownClient({ children }: { children: string }) {
+export const MarkdownClient = React.memo(function MarkdownClient({
+  children,
+}: {
+  children: string;
+}) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -23,4 +28,4 @@ export function MarkdownClient({ children }: { children: string }) {
       {children}
     </ReactMarkdown>
   );
-}
+});

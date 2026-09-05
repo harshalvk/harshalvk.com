@@ -11,29 +11,47 @@ import Experiences from '@/modules/portfolio/components/Sections/Experiences';
 import Components from '@/modules/portfolio/components/Sections/Components';
 import Blogs from '@/modules/portfolio/components/Sections/Blogs';
 
+const heroStyle = { backgroundSize: '15px 15px' };
+
 export default function Home() {
   return (
     <section className="container mx-auto max-w-5xl px-4 lg:px-0">
       <div
         className="border-border relative flex h-[9rem] w-full items-center justify-center border border-t-0 bg-[radial-gradient(circle,rgba(0,0,0,0.1)_1px,transparent_1px)] sm:h-[12rem] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)]"
-        style={{
-          backgroundSize: '15px 15px',
-        }}
+        style={heroStyle}
       >
         <SectionBorders />
         <h1 className={`text-foreground text-lg sm:text-2xl ${inter.className}`}>
           Build | Ship | Execute
         </h1>
       </div>
-      <Hero />
-      <AboutMe />
-      <Experiences />
-      <Projects />
-      <GitHubContri />
-      <Components />
-      <Blogs />
-      <MyTechnologies />
-      <ContactMe />
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 500px' }}>
+        <Hero />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 300px' }}>
+        <AboutMe />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 400px' }}>
+        <Experiences />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 600px' }}>
+        <Projects />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 300px' }}>
+        <GitHubContri />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 400px' }}>
+        <Components />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 400px' }}>
+        <Blogs />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 300px' }}>
+        <MyTechnologies />
+      </div>
+      <div className="content-visibility-auto" style={{ containIntrinsicSize: '0 400px' }}>
+        <ContactMe />
+      </div>
     </section>
   );
 }
