@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     creator: X_HANDLE,
   },
   icons: {
-    icon: '/profile.png',
+    icon: '/profile.webp',
   },
 };
 

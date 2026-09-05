@@ -84,7 +84,7 @@ export async function generateMetadata({
       images: [ogImage],
     },
     icons: {
-      icon: '/profile.png',
+      icon: '/profile.webp',
     },
   };
 }

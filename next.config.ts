@@ -9,8 +9,40 @@ const nextConfig: NextConfig = {
         hostname: 'api.micolink.io',
       },
     ],
+    // Optimize image formats and quality
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
   },
   typedRoutes: true,
+  // Optimize compilation
+  transpilePackages: ['geist'],
+  // Reduce server bundle size
+  experimental: {
+    // Enable optimal CSS loading
+    optimizeCss: true,
+  },
+  async headers() {
+    return [
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/(favicon.ico|robots.txt|sitemap.xml)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600',
+          },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return [
       {

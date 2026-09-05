@@ -30,7 +30,7 @@ export const USER: User = {
 - In this time, I've worked with various technologies to create fast, responsive applications, from backend architecture to frontend development and deployment.
 - I enjoy solving real-world problems with code and constantly aim to improve while staying current with tech trends.
 `,
-  avatar: `${baseUrl}/profile.png`,
+  avatar: `${baseUrl}/profile.webp`,
   ogImage: `${baseUrl}/og/opengraph-image.png`,
   timeZone: 'Asia/Kolkata',
   keywords: [

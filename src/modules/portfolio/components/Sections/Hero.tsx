@@ -12,7 +12,8 @@ import { useWebHaptics } from 'web-haptics/react';
 import PagesView from '../pages-view';
 
 // Hoist static arrays outside component to prevent recreation
-const IMAGES = ['/profile.png', '/profile4.jpg'] as const;
+// Using WebP for profile.webp (87KB vs 1.8MB PNG) for better performance
+const IMAGES = ['/profile.webp', '/profile4.jpg'] as const;
 
 const Hero = () => {
   const [index, setIndex] = useState(0);
@@ -21,17 +22,23 @@ const Hero = () => {
   const { trigger: haptic } = useWebHaptics();
 
   // Use useCallback for stable event handlers
-  const handleClick = useMemo(() => () => {
-    haptic('success');
-    setIndex((prev) => (prev === 0 ? 1 : 0));
-  }, [haptic]);
+  const handleClick = useMemo(
+    () => () => {
+      haptic('success');
+      setIndex((prev) => (prev === 0 ? 1 : 0));
+    },
+    [haptic]
+  );
 
-  const handleKeyDown = useMemo(() => (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleClick();
-    }
-  }, [handleClick]);
+  const handleKeyDown = useMemo(
+    () => (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick]
+  );
 
   return (
     <section className="border-border relative border border-y-0 p-4">
