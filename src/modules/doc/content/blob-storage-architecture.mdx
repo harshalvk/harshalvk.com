@@ -1,0 +1,173 @@
+---
+title: Blob Storage Internal Architecture — How S3 Actually Works
+description: A deep dive into how blob storage systems like S3, R2, and GCS work internally — chunk splitting, metadata stores, availability zone replication, CDN integration, and storage classes.
+image: /og/blog/blob-storage
+category: blogs
+readingTime: 12 min read
+createdAt: 2026-09-10
+updatedAt: 2026-09-10
+---
+
+# Blob Storage Internal Architecture: How S3 Actually Works
+
+From the outside, S3 looks like a simple key-value store.
+
+You `PUT` a file with a key. You `GET` it back with the same key. It's there. It's fast. It doesn't lose things. The API is clean and the documentation makes it look obvious.
+
+What's actually happening underneath is considerably more interesting, and understanding it changes how you design systems that depend on it.
+
+This article walks through the full internal architecture of a blob storage system, using the diagram above as a reference. The same architecture applies to AWS S3, Google Cloud Storage, Cloudflare R2, and Azure Blob Storage. The implementations differ in detail, but the structure is the same.
+
+<FramedImage
+  src="https://assets.harshalvk.com/image/upload/v1789120662/blob-storage-architecture-light.png"
+  darkSrc="https://assets.harshalvk.com/image/upload/v1789120391/blob-storage-architecture-dark.png"
+  alt="Memory stack diagram"
+  width={1904}
+  height={1332}
+/>
+
+## Starting Point: The Client Request
+
+Everything starts with a `PUT` request from the client; a browser, a mobile app, or a backend service uploading a file.
+
+The request carries the file bytes and an authorization token. It hits the API layer first, before the actual file goes anywhere near storage.
+
+This is intentional. Authentication and routing happen at the edge, not deep in the storage pipeline.
+
+## The API Layer: Auth, Routing, and Presigning
+
+The API layer does three things:
+
+- **Authentication**: verifies the request is authorized to write to this bucket with this key. On S3, this is AWS Signature V4. The signature is computed from the request headers, the bucket name, the object key, and a timestamp. If it doesn't match, the request is rejected before a single byte touches storage.
+
+- **Routing**: determines which internal service handles the request based on the bucket region, the request type (single-part vs multipart), and the object size.
+
+- **Presigning**: when an application asks S3 to generate a presigned URL, this layer creates a time-limited token (typically 15 minutes) that allows a client to upload directly to S3 without the request going through the application server. The API layer generates the signature, embeds the expiry, and returns the URL. The client uploads directly.
+
+This is why presigned URLs are the correct pattern for media uploads. The application server is involved for one round trip → generating the URL → and then the client handles the upload entirely.
+
+## The Metadata Store: Where Location Lives
+
+The metadata store is separate from the actual file storage. This is a critical architectural decision.
+
+When a file is stored, the metadata store records:
+
+- The object key (the "path" you used: `photos/2026/profile.jpg`)
+- The physical location of the chunks across storage nodes
+- The checksum (MD5 or SHA-256 depending on the system)
+- The object size
+- The ACL (access control - public, private, specific principals)
+- The storage class
+- The creation timestamp and ETag
+
+The key insight: **the object key is not a path**. It looks like one because slashes are legal characters in keys, but `photos/2026/profile.jpg` is a flat string in a key-value namespace, not a file in a directory tree. There are no directories in blob storage. The prefix-based "folder" view in the S3 console is a UI fiction built on top of flat key enumeration.
+
+When you `GET` an object, the API layer hits the metadata store first to find out where the chunks live. The metadata store returns the physical locations. Only then does the system fetch the actual bytes from the storage nodes.
+
+This separation is what allows the storage layer to move chunks around, for rebalancing, for hardware replacement, for migration between storage classes without changing the key the client uses to retrieve the object.
+
+## The Chunk Splitter: Why Files Get Split
+
+Once authentication passes and metadata is initialized, the file bytes stream into the chunk splitter.
+
+Large files are not stored as single units. They are split into chunks, typically 5MB to 512MB per chunk depending on the system, and each chunk is written independently to the storage layer.
+
+This serves several purposes:
+
+- **Parallel writes**: chunks can be written to different storage nodes simultaneously. A 1GB file written as one unit is limited by the throughput of a single node. The same file split into 10 chunks and written to 10 nodes in parallel is roughly 10x faster.
+
+- **Resumable uploads**: if the network drops mid-upload, only the in-progress chunk needs to be retried. Completed chunks are already durable. S3's multipart upload API exposes this explicitly: you initiate a multipart upload, upload parts independently, and complete the upload by assembling the parts. Each part has its own ETag for verification.
+
+- **Efficient replication**: chunks are the unit of replication. The system can verify and re-replicate individual chunks rather than entire files, which matters when a storage node fails.
+
+The chunk splitter also computes a checksum for each chunk. This checksum is stored in the metadata store and verified on every read. If a storage node returns corrupted data, the read fails and the system fetches the chunk from a different replica.
+
+## Availability Zone Replication: Where Durability Comes From
+
+This is the core of why S3's durability guarantee is 11 nines (99.999%).
+
+Each chunk is written to storage nodes across a minimum of three Availability Zones; physically separate data centers within a region, with independent power, networking, and cooling. They are close enough that replication latency is milliseconds, but far enough apart that a flood, fire, or power failure in one doesn't affect the others.
+
+Looking at the diagram: chunks flow from the chunk splitter to AZ 1, AZ 2, and AZ 3 simultaneously. Once a write is confirmed by a majority of AZs, the `PUT` request returns success to the client.
+
+The sync arrows between the AZs in the diagram represent ongoing reconciliation not just the initial write. Storage systems run continuous background processes that:
+
+- Verify checksums on stored data (bit rot detection)
+- Re-replicate chunks that have fallen below the minimum replica count
+- Rebalance chunks across nodes as hardware is added or replaced
+
+This is why S3 can absorb the failure of an entire availability zone without data loss and with minimal availability impact. The other two zones continue serving reads and writes. When the failed zone recovers, it syncs from the surviving zones.
+
+**Consistency model:** S3 provides strong read-after-write consistency for new object writes as of December 2020. Before that, it was eventual consistency — you could `PUT` a file and immediately `GET` it back and receive a 404. The change required significant infrastructure work and is worth knowing if you're working with older architectures that were built around the eventual consistency behavior.
+
+## CDN Integration: Serving at the Edge
+
+Once an object is stored, most production systems don't serve it directly from the storage layer. They put a CDN in front.
+
+The CDN, Cloudflare, CloudFront, Fastly - operates a network of edge nodes distributed globally. When a user requests a file, the request goes to the nearest edge node rather than the origin storage.
+
+The flow:
+
+1. First request for an object, edge node has no cached copy, fetches from S3 origin, caches it, returns to user
+2. Subsequent requests for the same object, served from edge cache, origin is never touched
+3. Cache expiry is controlled by the `Cache-Control` header set on the object
+
+For static assets with content hashing `profile.abc123.jpg` the CDN TTL can be set to a year. The file never changes. When you update the profile picture, the key changes, the CDN sees a new cache miss, and the old cached version is irrelevant.
+
+For dynamic or user-specific content, the CDN is typically bypassed or the `Cache-Control` header is set to `private` so shared edge caches don't store it.
+
+**Cloudflare R2 specifically** is designed so the storage layer and the CDN edge are the same network. There are no egress fees because the file doesn't leave Cloudflare's infrastructure to reach the CDN. AWS S3 charges per GB transferred out to CloudFront or to the internet. At scale for petabytes of video traffic that difference is significant.
+
+## Storage Classes: Cost vs Access Latency
+
+Not everything stored needs the same performance characteristics. A profile picture that gets requested on every page load has very different requirements from a security audit log from 2019 that nobody will ever read.
+
+Storage classes let you optimize cost against access latency:
+
+- **Standard**: the default. Data stored across three AZs, millisecond retrieval latency. Most expensive per GB stored, no retrieval cost.
+
+- **Infrequent Access (IA)**: same durability, same AZ replication, same millisecond latency. Cheaper per GB stored, but a per-retrieval fee. Makes sense for data accessed less than once a month.
+
+- **Glacier Instant Retrieval**: archival storage, millisecond retrieval. Much cheaper storage, higher retrieval cost.
+
+- **Glacier Flexible Retrieval**: retrieval takes minutes to hours. Used for backups and data that needs to be stored but almost never accessed.
+
+- **Deep Archive**: the cheapest option. Retrieval takes up to 12 hours. For compliance data that must be retained for years but will almost certainly never be needed.
+
+The metadata store records the storage class for each object. S3 Lifecycle policies can automatically transition objects between classes based on age — move to IA after 30 days, Glacier after 90 days, Deep Archive after 365 days. The object key stays the same. The physical storage location changes.
+
+## What Happens on a Read
+
+A `GET` request follows the reverse path:
+
+1. API layer authenticates the request
+2. API layer queries the metadata store for the object's chunk locations and checksum
+3. Storage nodes return the chunks (in parallel for large objects)
+4. Checksums are verified against the stored values
+5. Chunks are reassembled and streamed to the client
+
+If any chunk fails verification, the system fetches that chunk from a different AZ replica. If a storage node is slow, the system can issue speculative reads to multiple replicas and use whichever responds first — this is the hedged request pattern used in high-availability storage systems.
+
+## The Flat Namespace and Why It Matters for Performance
+
+One practical consequence of the flat namespace: listing objects with a prefix (`ListObjectsV2` with `Prefix=photos/2026/`) scans the key-value index, not a directory structure. For buckets with millions of objects, this can be slow.
+
+This is why some architectures maintain a separate database table that indexes object keys for querying your database and for a list of a user's photos and then fetching each by key is faster than listing the S3 prefix every time.
+
+It's also why S3 request rate limits used to be tied to key prefix. Before 2018, there was a hard limit of 100 requests per second per prefix. The workaround was to randomize the start of every key — `ab12/photos/profile.jpg` instead of `photos/profile.jpg` — so objects distributed across the internal index. AWS removed this limitation in 2018, but older codebases sometimes still randomize prefixes as a legacy artifact.
+
+## Summary
+
+Blob storage looks simple from the API surface. But underneath, it's a distributed system solving the same problems every distributed system has to solve: parallel writes, fault tolerance, consistency, and cost-performance tradeoffs at scale.
+
+The architecture in the diagram is not specific to S3. Google Cloud Storage, Cloudflare R2, Azure Blob Storage, and MinIO (the open-source S3-compatible implementation) all follow the same structure: flat key-value namespace, separated metadata, chunk-based storage, multi-zone replication, CDN at the edge.
+
+Understanding it makes you better at designing systems on top of it. Presigned URLs make sense once you understand what the API layer is actually doing. Storage class selection makes sense once you understand what the replication and retrieval costs actually are. Prefix design makes sense once you know the namespace is flat.
+
+**Resources:**
+
+- [Amazon S3 — How It Works](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html) — official architecture documentation
+- [Cloudflare R2 Architecture](https://blog.cloudflare.com/r2-open-beta/) — Cloudflare's blog post on why they built R2 and how it differs from S3
+- [Backblaze B2 — How It Works](https://www.backblaze.com/b2/docs/) — a cheaper S3-alternative with good architectural documentation
+- [MinIO Architecture](https://min.io/docs/minio/linux/operations/concepts.html) — the open-source S3-compatible storage, useful for understanding the internals without the AWS abstraction
+- [Designing Data-Intensive Applications](https://dataintensive.net/) — Martin Kleppmann, Chapter 3 covers storage engines and the principles that apply to blob storage
