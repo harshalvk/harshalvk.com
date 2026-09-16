@@ -40,7 +40,6 @@ The site is divided into several sections:
 - **Blog** — Technical writing and notes
 - **Theia** — Interactive algorithm and data-structure visualizations
 
----
 
 ## Theia
 
@@ -72,7 +71,6 @@ It is designed around the idea that algorithms are easier to understand when you
 
 The application generates dedicated pages for individual algorithms and supports both standard algorithms and ML algorithms through the same visualization system.
 
----
 
 ## Component Registry
 
@@ -102,7 +100,6 @@ https://harshalvk.com/r/{name}.json
 
 This makes the components installable and reusable outside the portfolio itself.
 
----
 
 ## Features
 
@@ -162,7 +159,6 @@ This makes the components installable and reusable outside the portfolio itself.
   </tr>
 </table>
 
----
 
 ## Tech Stack
 
@@ -277,7 +273,6 @@ The application is organized around feature modules rather than putting all appl
 └── README.md
 ```
 
----
 
 ## Getting Started
 
@@ -317,7 +312,6 @@ The application will be available at:
 http://localhost:3000
 ```
 
----
 
 ## Component Registry
 
@@ -349,7 +343,6 @@ To validate it:
 pnpm registry:validate
 ```
 
----
 
 ## LLM Support
 
@@ -380,7 +373,6 @@ https://harshalvk.com/<section>/<slug>.mdx
 
 The application internally maps these requests to the document system and returns markdown content.
 
----
 
 ## SEO & Metadata
 
@@ -401,7 +393,6 @@ The sitemap is generated dynamically from:
 - Blog documents
 - Component documents
 
----
 
 ## Development Philosophy
 
@@ -420,7 +411,6 @@ The goal is to use the portfolio itself as a place to experiment with:
 
 Theia is part of that philosophy: instead of only listing projects and technologies, the site provides interactive demonstrations of concepts that are useful to developers and computer-science students.
 
----
 
 ## Contributing
 
@@ -428,7 +418,6 @@ This is primarily a personal project, but issues, suggestions, and improvements 
 
 If you find a bug or have an idea for Theia or the component registry, feel free to open an issue or submit a pull request.
 
----
 
 ## AI-Agent Friendliness
 
@@ -448,7 +437,6 @@ Unless otherwise specified, the source code and content of this project are main
 
 Please check individual files and components for their applicable licensing information.
 
----
 
 ## Author
 
@@ -461,7 +449,6 @@ Full-Stack Developer
 - X: [https://x.com/harshalvk\_](https://x.com/harshalvk_)
 - LinkedIn: https://www.linkedin.com/in/harshalvk/
 
----
 
 ## Stats
 
