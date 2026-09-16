@@ -40,7 +40,6 @@ The site is divided into several sections:
 - **Blog** — Technical writing and notes
 - **Theia** — Interactive algorithm and data-structure visualizations
 
-
 ## Theia
 
 **Theia** is an interactive algorithm visualization and learning environment built directly into the portfolio.
@@ -71,7 +70,6 @@ It is designed around the idea that algorithms are easier to understand when you
 
 The application generates dedicated pages for individual algorithms and supports both standard algorithms and ML algorithms through the same visualization system.
 
-
 ## Component Registry
 
 The project also contains a reusable component registry built around **shadcn/ui**.
@@ -99,7 +97,6 @@ https://harshalvk.com/r/{name}.json
 ```
 
 This makes the components installable and reusable outside the portfolio itself.
-
 
 ## Features
 
@@ -158,7 +155,6 @@ This makes the components installable and reusable outside the portfolio itself.
     </td>
   </tr>
 </table>
-
 
 ## Tech Stack
 
@@ -273,7 +269,6 @@ The application is organized around feature modules rather than putting all appl
 └── README.md
 ```
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -312,7 +307,6 @@ The application will be available at:
 http://localhost:3000
 ```
 
-
 ## Component Registry
 
 The project uses the shadcn registry format.
@@ -343,7 +337,6 @@ To validate it:
 pnpm registry:validate
 ```
 
-
 ## LLM Support
 
 The project exposes content specifically for LLM consumption.
@@ -373,7 +366,6 @@ https://harshalvk.com/<section>/<slug>.mdx
 
 The application internally maps these requests to the document system and returns markdown content.
 
-
 ## SEO & Metadata
 
 The application includes:
@@ -393,7 +385,6 @@ The sitemap is generated dynamically from:
 - Blog documents
 - Component documents
 
-
 ## Development Philosophy
 
 This project is intentionally built as more than a traditional portfolio.
@@ -411,13 +402,11 @@ The goal is to use the portfolio itself as a place to experiment with:
 
 Theia is part of that philosophy: instead of only listing projects and technologies, the site provides interactive demonstrations of concepts that are useful to developers and computer-science students.
 
-
 ## Contributing
 
 This is primarily a personal project, but issues, suggestions, and improvements are welcome.
 
 If you find a bug or have an idea for Theia or the component registry, feel free to open an issue or submit a pull request.
-
 
 ## AI-Agent Friendliness
 
@@ -437,7 +426,6 @@ Unless otherwise specified, the source code and content of this project are main
 
 Please check individual files and components for their applicable licensing information.
 
-
 ## Author
 
 **Harshal Vasant Khobragade**
@@ -445,10 +433,9 @@ Please check individual files and components for their applicable licensing info
 Full-Stack Developer
 
 - Website: https://harshalvk.com
-- GitHub: https://github.com/Harshalvk
+- GitHub: https://github.com/harshalvk
 - X: [https://x.com/harshalvk\_](https://x.com/harshalvk_)
 - LinkedIn: https://www.linkedin.com/in/harshalvk/
-
 
 ## Stats
 
