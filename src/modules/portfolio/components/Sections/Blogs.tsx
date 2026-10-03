@@ -34,9 +34,9 @@ const Blogs = async () => {
                 className="group hover:bg-muted/40 flex h-full flex-col justify-between gap-4 p-4 transition-colors"
               >
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm leading-snug font-medium sm:text-base">
+                  <h3 className="text-sm leading-snug font-medium sm:text-base">
                     {doc.metadata.title}
-                  </span>
+                  </h3>
                   <p className="text-muted-foreground line-clamp-2 text-xs">
                     {doc.metadata.description}
                   </p>

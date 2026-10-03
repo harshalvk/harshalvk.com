@@ -5,7 +5,7 @@ import { SITE_INFO, X_HANDLE } from './site';
 export const defaultWebsiteMetadata: Metadata = {
   metadataBase: new URL(SITE_INFO.url),
   title: {
-    default: `${SITE_INFO.name} \u2013 Engineer`,
+    default: `${SITE_INFO.name} \u007C Software Engineer`,
     template: `%s — ${SITE_INFO.name}`,
   },
   description: SITE_INFO.description,
@@ -21,7 +21,7 @@ export const defaultWebsiteMetadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: SITE_INFO.url,
-    title: `${SITE_INFO.name} \u2013 Engineer`,
+    title: `${SITE_INFO.name} \u007C Software Engineer`,
     description: SITE_INFO.description,
     siteName: SITE_INFO.name,
     images: [
@@ -29,19 +29,30 @@ export const defaultWebsiteMetadata: Metadata = {
         url: SITE_INFO.ogImage,
         width: 1200,
         height: 630,
-        alt: `${SITE_INFO.name} \u2013 Engineer`,
+        alt: `${SITE_INFO.name} \u007C Software Engineer`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE_INFO.name} \u2013 Engineer`,
+    title: `${SITE_INFO.name} \u007C Software Engineer`,
     description: SITE_INFO.description,
     images: [SITE_INFO.ogImage],
     creator: X_HANDLE,
   },
   icons: {
     icon: '/profile.webp',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: '/',
   },
 };
 
@@ -66,7 +77,7 @@ export function generateWebsiteMetadata({
   publishedTime,
   modifiedTime,
 }: GenerateMetadataParams = {}): Metadata {
-  const finalTitle = title || `${SITE_INFO.name} \u2013 Engineer`;
+  const finalTitle = title || `${SITE_INFO.name} \u007C Software Engineer`;
   const finalDescription = description || SITE_INFO.description;
   const finalImage = image || SITE_INFO.ogImage;
   const finalKeywords = keywords

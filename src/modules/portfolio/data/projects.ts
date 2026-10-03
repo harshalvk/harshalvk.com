@@ -9,7 +9,7 @@ export const PROJECTS: Project[] = [
     },
     oneLiner:
       'An AI-powered meeting assistant that records, transcribes, and summarizes your conversations in real time.',
-    link: '',
+    link: 'https://github.com/harshalvk/meetlume',
     skills: [
       'NextJS',
       'TypeScript',
@@ -111,7 +111,7 @@ export const PROJECTS: Project[] = [
     },
     oneLiner:
       'A REST API that programmatically creates isolated sandbox environments, runs commands, and tears them down securely.',
-    link: 'https://github.com/harshalvk/cage/',
+    link: 'https://cage.harshalvk.com',
     skills: ['Go', 'Docker', 'REST API', 'Systems Programming', 'Sandbox'],
     description: `Programmatically create isolated environments (sandboxes), run commands inside them, and tear them down — all through a simple REST API.
   - Spins up isolated Docker containers on demand via REST endpoints

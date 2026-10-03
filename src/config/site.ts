@@ -8,7 +8,7 @@ export type NavItem<T extends string = string> = {
 };
 
 export const SITE_INFO = {
-  name: USER.firstName,
+  name: `${USER.firstName} ${USER.lastName}`,
   url: process.env.NEXT_PUBLIC_APP_URL!,
   ogImage: USER.ogImage,
   description: USER.bio,

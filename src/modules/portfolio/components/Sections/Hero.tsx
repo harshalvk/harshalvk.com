@@ -11,17 +11,13 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useWebHaptics } from 'web-haptics/react';
 import PagesView from '../pages-view';
 
-// Hoist static arrays outside component to prevent recreation
-// Using WebP for profile.webp (87KB vs 1.8MB PNG) for better performance
 const IMAGES = ['/profile.webp', '/profile4.jpg'] as const;
 
 const Hero = () => {
   const [index, setIndex] = useState(0);
 
-  // Cache haptic trigger to avoid recreation
   const { trigger: haptic } = useWebHaptics();
 
-  // Use useCallback for stable event handlers
   const handleClick = useMemo(
     () => () => {
       haptic('success');
@@ -56,25 +52,41 @@ const Hero = () => {
             tabIndex={0}
             aria-label="Toggle profile image"
           >
-            <AnimatePresence initial={false}>
+            {IMAGES.map((src, i) => (
+              <link key={src} rel="preload" as="image" href={src} />
+            ))}
+
+            <AnimatePresence mode="sync" initial={false}>
               <motion.div
                 key={index}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
                 className="absolute inset-0"
+                style={{ zIndex: 1 }}
               >
                 <Image
                   alt="Harshal Khobragade profile photo"
                   src={IMAGES[index]}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  width={400}
+                  height={400}
                   className="object-cover"
                   priority
                 />
               </motion.div>
             </AnimatePresence>
+
+            <div className="absolute inset-0" style={{ zIndex: 0 }}>
+              <Image
+                alt=""
+                src={IMAGES[index === 0 ? 1 : 0]}
+                width={400}
+                height={400}
+                className="object-cover"
+                aria-hidden
+              />
+            </div>
           </div>
           <div className="flex w-full items-center justify-between">
             <div>
@@ -83,13 +95,13 @@ const Hero = () => {
               >
                 Hey, I&apos;m Harshal
               </h1>
-              <h3
+              <h2
                 className={`flex flex-wrap items-baseline gap-x-2 text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl lg:text-5xl ${inter.className}`}
               >
                 <FlipWords
                   words={USER.flipSentences ?? ['Full Stack Developer', 'Backend Engineer']}
                 />
-              </h3>
+              </h2>
             </div>
           </div>
         </div>

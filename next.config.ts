@@ -9,16 +9,12 @@ const nextConfig: NextConfig = {
         hostname: 'api.micolink.io',
       },
     ],
-    // Optimize image formats and quality
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 60 * 60 * 24,
   },
   typedRoutes: true,
-  // Optimize compilation
   transpilePackages: ['geist'],
-  // Reduce server bundle size
   experimental: {
-    // Enable optimal CSS loading
     optimizeCss: true,
   },
   async headers() {

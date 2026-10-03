@@ -13,8 +13,6 @@ import { LinkIcon, LinkIconHandle } from '@/components/icons/link-icon';
 import type { Experience, ExperiencePosition } from '@/modules/portfolio/types/experiences';
 import { Route } from 'next';
 
-// ── Position item ─────────────────────────────────────────────────────────────
-
 function PositionItem({ position, isLast }: { position: ExperiencePosition; isLast: boolean }) {
   const [isOpen, setIsOpen] = React.useState(position.isExpanded ?? false);
   const chevronTopRef = useRef<ChevronDownIconHandle>(null);
@@ -145,8 +143,6 @@ function PositionItem({ position, isLast }: { position: ExperiencePosition; isLa
     </Collapsible>
   );
 }
-
-// ── Experience item (company level) ──────────────────────────────────────────
 
 export function ExperienceItem({
   experience,

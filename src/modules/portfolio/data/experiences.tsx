@@ -5,7 +5,7 @@ export const EXPERIENCES: Experience[] = [
   {
     id: 'wisnolect',
     companyName: 'Wisnolect',
-    companyLogo: 'https://www.wisnolect.com/winolect_logo.svg',
+    companyLogo: '',
     companyWebsite: 'https://www.wisnolect.com',
     positions: [
       {

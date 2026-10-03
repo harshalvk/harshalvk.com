@@ -27,12 +27,12 @@ type HeadingProps<T extends HeadingTypes> = React.ComponentProps<T> & {
   as?: T;
 };
 
-export function ComponentItemTitle<T extends HeadingTypes = 'h2'>({
+export function ComponentItemTitle<T extends HeadingTypes = 'h3'>({
   as,
   className,
   ...props
 }: HeadingProps<T>) {
-  const Comp = as ?? 'h2';
+  const Comp = as ?? 'h3';
 
   return (
     <Comp

@@ -4,14 +4,14 @@ import { Slot } from 'radix-ui';
 
 export const Title = ({ text, className }: { text: string; className?: string }) => {
   return (
-    <h1
+    <h2
       className={cn(
         'text-xl font-medium tracking-tight sm:text-2xl md:text-3xl lg:text-4xl',
         className
       )}
     >
       {text}
-    </h1>
+    </h2>
   );
 };
 

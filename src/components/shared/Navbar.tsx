@@ -54,13 +54,11 @@ const Navbar = async () => {
             <div className="mr-1 flex items-center gap-4">
               <ul className="hidden gap-4 md:flex">
                 {navLinks.map((navLink, idx) => (
-                  <Link
-                    key={idx}
-                    href={navLink.link as unknown as UrlObject}
-                    aria-label={navLink.name}
-                  >
-                    {navLink.name}
-                  </Link>
+                  <li key={idx}>
+                    <Link href={navLink.link as unknown as UrlObject} aria-label={navLink.name}>
+                      {navLink.name}
+                    </Link>
+                  </li>
                 ))}
               </ul>
               <CommandMenu docs={docPreview} />

@@ -39,6 +39,7 @@ export function ProjectItem({ project }: { project: Project }) {
         <button
           type="button"
           className="flex w-full items-center border-b text-left hover:bg-zinc-100/30 dark:hover:bg-zinc-800/30"
+          aria-label={`Toggle details for ${project.title}`}
         >
           <div className="flex aspect-square items-center justify-center self-stretch p-5">
             {project.logo ? (
@@ -76,42 +77,48 @@ export function ProjectItem({ project }: { project: Project }) {
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Link
-                  href={`/projects/${project.title.toLowerCase()}`}
-                  className="flex items-center"
-                >
-                  <SquareArrowOutUpRight className="text-muted-foreground size-4" />
-                </Link>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="absolute -top-2 -right-2" />
-                  </TooltipTrigger>
-                  <TooltipContent>Project Details</TooltipContent>
-                </Tooltip>
-              </div>
+            <div className="flex shrink-0 items-center gap-2">
               <Link
-                href={project.link as Route}
-                target="_blank"
+                href={`/projects/${project.title.toLowerCase()}`}
+                aria-label={`Read more about ${project.title}`}
+                className="text-muted-foreground hover:text-foreground inline-flex size-6 shrink-0 items-center justify-center"
                 onClick={(e) => e.stopPropagation()}
               >
+                <SquareArrowOutUpRight aria-hidden="true" className="size-4" />
+              </Link>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="absolute -top-2 -right-2" />
+                </TooltipTrigger>
+                <TooltipContent>Project Details</TooltipContent>
+              </Tooltip>
+
+              <a
+                href={project.link as Route}
+                aria-label={`Visit ${project.title} source code`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-muted-foreground hover:text-foreground inline-flex size-6 shrink-0 items-center justify-center"
+              >
                 <LinkIcon
+                  aria-hidden="true"
                   ref={linkRef}
-                  className="text-muted-foreground h-4 w-4"
-                  tooltip="Open Project Link"
+                  className="size-4"
                   onMouseEnter={() => linkRef.current?.startAnimation()}
                   onMouseLeave={() => linkRef.current?.stopAnimation()}
                 />
-              </Link>
-              <div className="flex flex-col items-center gap-0.5">
+              </a>
+
+              <div aria-hidden="true" className="flex shrink-0 flex-col items-center">
                 <ChevronDownIcon
                   ref={chevronBottomRef}
-                  className="text-muted-foreground -mb-1 h-4 w-4 rotate-180"
+                  className="text-muted-foreground -mb-1 size-4 rotate-180"
                 />
                 <ChevronDownIcon
                   ref={chevronTopRef}
-                  className="text-muted-foreground -mt-1 h-4 w-4"
+                  className="text-muted-foreground -mt-1 size-4"
                 />
               </div>
             </div>
